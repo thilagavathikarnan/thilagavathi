@@ -79,6 +79,7 @@ class _EditProfileState extends State<EditProfile> {
                 Text("Last Name",style: TextStyle(color: Colors.black.withOpacity(0.7)),),
                 SizedBox(height: 8,),
                 Container(
+
                   height: 45,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),

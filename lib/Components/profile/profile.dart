@@ -24,39 +24,42 @@ class _ProfileApiState extends State<ProfileApi> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  color: Colors.grey.shade100,
-                  padding: EdgeInsets.all(20),
-                  // height: 180,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 90,
-                        width:  90,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: Colors.grey.shade200
-                        ),
-                        child: Center(child: Icon(Icons.person,size:40,color: Colors.black.withOpacity(0.4),)),
+          Obx(() {
+              return Container(
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      color: Colors.grey.shade100,
+                      padding: EdgeInsets.all(20),
+                      // height: 180,
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 90,
+                            width:  90,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: Colors.grey.shade200
+                            ),
+                            child: Center(child: Icon(Icons.person,size:40,color: Colors.black.withOpacity(0.4),)),
+                          ),
+                          SizedBox(height: 10,),
+                          // Text(userController.firstNameController.text.toString().toUpperCase()+" "+userController.lasstNameController.text .toString().toUpperCase()),
+                          Text(userController.userName!.value.toString().toUpperCase()+" "+userController.lastName.value.toString().toUpperCase()),
+                          SizedBox(height: 10,),
+                          Text(userController.emailText.value.toString()),
+
+                        ],
                       ),
-                      SizedBox(height: 10,),
-                      Text(userController.firstNameController.text.toString().toUpperCase()+" "+userController.lasstNameController.text .toString().toUpperCase()),
-                      // Text(userController.profelModel!.name.toString().toUpperCase()+" "+userController.profelModel!.lastName.toString().toUpperCase()),
-                      SizedBox(height: 10,),
-                      Text(userController.emailController.text.toString()),
+                    ),
 
-                    ],
-                  ),
+                  ],
                 ),
-
-              ],
-            ),
+              );
+            }
           ),
           SizedBox(height: 8,),
 

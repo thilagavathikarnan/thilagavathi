@@ -561,22 +561,47 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
         child: ListView(
           children: [
             Container(
-              height: 130,
+              height: 140,
               color: Colors.grey.shade100,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 90,
-                    height: 90,
-                    child: CircleAvatar(
-                      radius: 48, // Image radius
-                      backgroundImage:
-                          AssetImage("assets/images/personimage1.webp"),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
+            
+                  Obx(() {
+                    return Container(
+                      height: 130,
+                      color: Colors.grey.shade100,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: 60,
+                            height: 60,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 48, // Image radius
+                              child:Icon(Icons.person,color: Colors.black.withOpacity(0.3),size: 40,)
+                            ),
+                          ),
+
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(userController.userName.value.toString().toUpperCase() +" "+userController.lastName.value.toString().toUpperCase()),
+                          SizedBox(
+                            height: 8,
+                          ),
+
+                          Text(userController.emailText.value.toString()),
+
+                          // Text(userController.userModel!.name.toString()+" "+userController.userModel!.lastName.toString(),style: TextStyle(fontSize: 16),)
+                        ],
+                      ),
+                    );
+                  }
                   ),
                   // Text(userController.userModel!.name.toString()+" "+userController.userModel!.lastName.toString(),style: TextStyle(fontSize: 16),)
                 ],
@@ -620,6 +645,8 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                 height: 60,
                 child: Row(
                   children: [
+                    SizedBox(width: 19,),
+
                     InkWell(
                         onTap: () {
                           _scaffoldKey.currentState!.openDrawer();
@@ -630,40 +657,43 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                           color: Colors.pink,
                           size: 30,
                         ))),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10, right: 15),
-                      child: SizedBox(
-                        width: 35,
-                        height: 35,
-                        child: CircleAvatar(
-                          radius: 48, // Image radius
-                          backgroundImage:
-                              AssetImage("assets/images/personimage1.webp"),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Welcome",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          userController.firstNameController.text.toString() +
-                              " " +
-                              userController.lasstNameController.text
-                                  .toString(),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
+                    // const Padding(
+                    //   padding: EdgeInsets.only(left: 10, right: 15),
+                    //   child: SizedBox(
+                    //     width: 35,
+                    //     height: 35,
+                    //     child: CircleAvatar(
+                    //       radius: 48, // Image radius
+                    //       backgroundImage:
+                    //           AssetImage("assets/images/personimage1.webp"),
+                    //     ),
+                    //   ),
+                    SizedBox(width: 19,),
+                    Obx(() {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Welcome",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 5,),
+                            Text(
+                              userController.userName.value.toString() +
+                                  " " +
+                                  userController.lastName.value..toString(),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
                     )
                   ],
                 ),

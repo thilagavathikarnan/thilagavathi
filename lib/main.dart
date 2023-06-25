@@ -42,9 +42,9 @@ async{
       messagingSenderId: "839972643243",
       projectId: "habit-tracker-fbe24"
   ));
-  // final fcm =  await FirebaseMessaging.instance.getToken();
-  // print("SELETVIIOE");
-  // print(fcm);
+  final fcm =  await FirebaseMessaging.instance.getToken();
+  print("SELETVIIOE");
+  print(fcm);
   runApp( MyApp());
 }
 
@@ -93,7 +93,7 @@ class _SplashscreenState extends State<Splashscreen> {
   PushNotifications? _notificationsInfo;
   Future getLoggedInStatus() async {
     final prefs = await SharedPreferences.getInstance();
-     userLoggedIn = prefs.getBool('userLoggedIn')!;
+     userLoggedIn = prefs.getBool('userLoggedIn');
     return userLoggedIn;
   }
 
@@ -127,7 +127,7 @@ class _SplashscreenState extends State<Splashscreen> {
         );
       }
       else{
-        AuthSection().getLoginStatus().then((value){
+       getLoggedInStatus().then((value){
           if(value != null && value){
             print("Login");
             print(value);
@@ -181,8 +181,8 @@ class _SplashscreenState extends State<Splashscreen> {
     );
     if(settings.authorizationStatus == AuthorizationStatus.authorized)
     {
-      // String? deviceToken = await _messaging!.getToken();
-      // print("DEVICETOKEN: ${deviceToken}");
+      String? deviceToken = await _messaging!.getToken();
+      print("DEVICETOKEN: ${deviceToken}");
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         // print(message.data);

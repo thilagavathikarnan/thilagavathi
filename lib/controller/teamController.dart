@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:habittrackergad/controller/auth_controller.dart';
 import 'package:habittrackergad/model/task_model.dart';
 import 'package:http/http.dart' as http;
@@ -26,6 +27,7 @@ class TeamController extends GetxController {
    final assigned_by_you_count = 0.obs;
    final assigned_me_count = 0.obs;
    final notify_me_count = 0.obs;
+  GetStorage _box = GetStorage();
 
   @override
   void onInit() {

@@ -119,13 +119,13 @@ class UserController extends GetxController {
 
   Future<void> loginUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // final fcm =  await FirebaseMessaging.instance.getToken();
+     final fcm =  await FirebaseMessaging.instance.getToken();
     if (email.text.isNotEmpty && password.text.isNotEmpty)
     {
       var body = {
         "email": email.text,
         "password": password.text,
-        "device_token":""
+        "device_token":fcm
       };
       var dataJs = json.encode(body);
 
@@ -144,39 +144,27 @@ class UserController extends GetxController {
         Map<String, dynamic> resp = json.decode(response.body);
         print(resp['data']);
 
-        // await prefs.setString('userDetails', resp['data']);
+         // await prefs.setString('userDetails', resp['data']);
         // String? userJson = prefs.getString('userDetails');
         //
-        // print("USRMODEL");
+        // print("USRMODEL");z
         // print(userJson);
         // Check if the API call was successful
         if (resp['success'] == true)
         {
-              // userModel = UserModel.fromJson(resp['data']);
-             //
-             // await prefs.setString('userId', userModel!.id.toString());
-             // var uid = prefs.getString('userId');
-             // _box.write('current_user', resp['data']);
-             // userModel = UserModel.fromJson(await _box.read('current_user'));
-             // _box.write('userLoggedIn', true);
-             // var userLoggedIn = _box.read('userLoggedIn');
+               userModel = await UserModel.fromJson(resp['data']);
+             await prefs.setString('userId', userModel!.id.toString());
+             var uid = prefs.getString('userId');
+             await prefs.setBool('userLoggedIn', true);
+             Get.snackbar("Success", resp['msg'].toString(),
+                 backgroundColor: Colors.green.withOpacity(0.8),
+                 colorText: Colors.white,
+                 icon: Icon(Icons.check, color: Colors.white,),
+                 snackPosition: SnackPosition.BOTTOM
+             );
+             Get.to(() => Bottombar());
 
-             // var userLoggedIn =   await prefs.setBool('userLoggedIn', true);
 
-          AuthSection().getLogin(resp['data']).then((val)
-          {
-            if(val)
-              {
-                Get.snackbar("Success", resp['msg'].toString(),
-                    backgroundColor: Colors.green.withOpacity(0.8),
-                    colorText: Colors.white,
-                    icon: Icon(Icons.check, color: Colors.white,),
-                    snackPosition: SnackPosition.BOTTOM
-                );
-                Get.to(() => Bottombar());
-              }
-
-          });
 
         }
         else {
@@ -216,6 +204,7 @@ class UserController extends GetxController {
   Future<void> profile()
   async
   {
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
   var usId = await prefs.getString('userId');
     try {
@@ -228,10 +217,12 @@ class UserController extends GetxController {
       print("GETSDDDDDDDDDDDDD");
       Map<String, dynamic> resp = json.decode(response.body);
       print(resp);
-      profelModel = ProfileModel.fromJson(resp['data']);
+      profelModel = await ProfileModel.fromJson(resp['data']);
 
       userName.value = profelModel!.name.toString();
       lastName.value = profelModel!.lastName.toString();
+      emailText.value = profelModel!.email.toString();
+
       if (resp['status'] == "200") {
         userName.value = profelModel!.name.toString();
         lastName.value = profelModel!.lastName.toString();
@@ -299,7 +290,7 @@ class UserController extends GetxController {
 
 
         if (resp['data'] == 1) {
-            profile();
+          await  profile();
            Get.back();
           Get.snackbar("Success", "Profile update sucessfully",
               backgroundColor: Colors.green.withOpacity(0.8),
