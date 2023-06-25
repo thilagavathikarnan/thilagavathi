@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "839972643243",
+    "project_id": "habit-tracker-fbe24",
+    "storage_bucket": "habit-tracker-fbe24.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839972643243:android:b7fa45a8f77263651f32ee",
+        "android_client_info": {
+          "package_name": "com.example.habittrackergad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839972643243-ur21k8ek8sorj9ra641ea02v81kod62m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwCYX3JgNAb_NgtVHtBRz1lWz8zhuJqoA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839972643243-ur21k8ek8sorj9ra641ea02v81kod62m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
