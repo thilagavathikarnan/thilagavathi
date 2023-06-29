@@ -466,23 +466,24 @@ class _projectassignedtoyouState extends State<projectassignedtoyou> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: SizedBox(
                       child: InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: ((context) => Taskpageprogress(
-                                  Taskname: projectteamlist[index].projectname,
-                                  Date: projectteamlist[index]
-                                      .afterNoonTask![index]
-                                      .Date,
-                                  Status: projectteamlist[index]
-                                      .afterNoonTask![index]
-                                      .Status,
-                                  Priority: projectteamlist[index]
-                                      .afterNoonTask![index]
-                                      .Priority,
-                                )),
-                          ),
-                        ),
+                        onTap: () {},
+                        //     Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: ((context) => Taskpageprogress(
+                        //           Taskname: projectteamlist[index].projectname,
+                        //           Date: projectteamlist[index]
+                        //               .afterNoonTask![index]
+                        //               .Date,
+                        //           Status: projectteamlist[index]
+                        //               .afterNoonTask![index]
+                        //               .Status,
+                        //           Priority: projectteamlist[index]
+                        //               .afterNoonTask![index]
+                        //               .Priority,
+                        //         )),
+                        //   ),
+                        // ),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),

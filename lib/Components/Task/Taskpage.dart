@@ -9,6 +9,8 @@ import 'package:day_picker/model/day_in_week.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_calendar/flutter_advanced_calendar.dart';
 import 'package:flutter_colorful_tab/flutter_colorful_tab.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:habittrackergad/Components/Habit/Habit_report.dart';
 
 import 'package:habittrackergad/Components/Task/Add_projects.dart';
@@ -22,6 +24,8 @@ import 'package:habittrackergad/Components/Task/projecttask/projectassignedtoyou
 import 'package:habittrackergad/Components/Task/projecttask/projectnotify.dart';
 
 import 'package:habittrackergad/Utils/Constants.dart';
+import 'package:habittrackergad/controller/teamController.dart';
+import 'package:habittrackergad/model/task_model.dart';
 import 'package:intl/intl.dart';
 import 'package:simple_time_range_picker/simple_time_range_picker.dart';
 
@@ -253,11 +257,14 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
   late DateTime _selectedDate;
   // datepickcalender
   TextEditingController dateInput = TextEditingController();
+  TeamController taskController = Get.put(TeamController());
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabControllernew = TabController(length: 3, vsync: this);
+
     dateInput.text = ""; //datepic calender
     _resetSelectedDate();
   }
@@ -477,492 +484,495 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
              SizedBox(
               height: 20,
             ),
-            Container(
-              height: 300,
-              child:  ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                children: [
-                  InkWell(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const projectassignedtoyou()),
-                    ),
-                    child: Container(
-                      width: width! - 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: getColor(),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 10),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: SizedBox(
-                                    height: 40,
-                                    width: 40,
-                                    child: CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Image.asset(
-                                            ASSIGNTOYOU,
-                                          ),
-                                        )),
-                                  ),
-                                ),
-                                const Text(
-                                  "Assigned to you",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20),
-                                ),
-                              ],
-                            ),
+            Obx(() {
+                return Container(
+                  height: 300,
+                  child:  ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      InkWell(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const projectassignedtoyou()),
+                        ),
+                        child: Container(
+                          width: width! - 120,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: getColor(),
                           ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Assigned",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("10")),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Completed",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("7")),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "In progress",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("3")),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Overdue",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("2")),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  InkWell(
-                    onTap: ()
-                    {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const projectassignedbyyou()),
-                      );
-                    },
-                    child: Container(
-                      width: width! - 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: getColor(),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
+                          child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: SizedBox(
-                                  height: 40,
-                                  width: 40,
-                                  child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Image.asset(
-                                          ASSIGNTOME,
-                                        ),
-                                      )),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 10),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: SizedBox(
+                                        height: 40,
+                                        width: 40,
+                                        child: CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(10),
+                                              child: Image.asset(
+                                                ASSIGNTOYOU,
+                                              ),
+                                            )),
+                                      ),
+                                    ),
+                                    const Text(
+                                      "Assigned to you",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const Text(
-                                "Assigned by you",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 20),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Assigned",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatus.value.assigned.toString())),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Completed",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatus.value.completed.toString())),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "In progress",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatus.value.inProgress.toString())),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Overdue",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatus.value.overDue.toString())),
+                                    )
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Assigned",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("5")),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Completed",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("3")),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "In progress",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("2")),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Overdue",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("1")),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  InkWell(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const projectnotify()),
-                    ),
-                    child: Container(
-                      width: width! - 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: getColor(),
+                      SizedBox(
+                        width: 10,
                       ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 10),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    right: 20,
+                      InkWell(
+                        onTap: ()
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const projectassignedbyyou()),
+                          );
+                        },
+                        child: Container(
+                          width: width! - 120,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: getColor(),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Image.asset(
+                                              ASSIGNTOME,
+                                            ),
+                                          )),
+                                    ),
                                   ),
-                                  child: SizedBox(
-                                    height: 40,
-                                    width: 40,
-                                    child: CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Image.asset(
-                                            NOTIFY,
-                                          ),
-                                        )),
+                                  const Text(
+                                    "Assigned by you",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20),
                                   ),
+                                ],
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Assigned",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatusByU.value.assigned.toString())),
+                                    )
+                                  ],
                                 ),
-                                const Text(
-                                  "Notify",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Completed",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatusByU.value.completed.toString())),
+                                    )
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Assigned",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "In progress",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatusByU.value.inProgress.toString())),
+                                    )
+                                  ],
                                 ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("10")),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Completed",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Overdue",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatusByU.value.overDue.toString())),
+                                    )
+                                  ],
                                 ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("7")),
-                                )
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "In progress",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("3")),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding:
-                            const EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Overdue",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: getColor(),
-                                  ),
-                                  child: const Center(child: Text("2")),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      InkWell(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const projectnotify()),
+                        ),
+                        child: Container(
+                          width: width! - 120,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: getColor(),
+                          ),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 10),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        right: 20,
+                                      ),
+                                      child: SizedBox(
+                                        height: 40,
+                                        width: 40,
+                                        child: CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(10),
+                                              child: Image.asset(
+                                                NOTIFY,
+                                              ),
+                                            )),
+                                      ),
+                                    ),
+                                    const Text(
+                                      "Notify",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Assigned",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatusNotify.value.assigned.toString())),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Completed",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatusNotify.value.completed.toString())),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "In progress",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatusNotify.value.inProgress.toString())),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Overdue",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: getColor(),
+                                      ),
+                                      child:  Center(child: Text(taskController.taskStatusNotify.value.overDue.toString())),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),
+                );
+              }
             ),
             const SizedBox(
               height: 20,
@@ -975,455 +985,905 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
               child: Text("Today task",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
             ),
-            SizedBox(
-              height: 320 * 4.3,
-              child: Column(
-                children: [
-                  Expanded(
-                      child: ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: Morningtasklist.length,
-                          itemBuilder: ((context, index) {
-                            Color colorstatus;
-                            switch (Morningtasklist[index].Status) {
-                              case "In-progress":
-                                colorstatus = Colors.red;
-                                break;
-                              case "To-do":
-                                colorstatus = Colors.blue;
-                                break;
-                              case "Resolved":
-                                colorstatus = Colors.yellow;
-                                break;
+            Obx(
+                    () {
+                      if(taskController.myTaskList.isEmpty)
+                        {
+                          return Container(
+                            height: 300,
+                            child: Center(child: Text("Task is empty")),
+                          );
+                        }
+                      else
+                        {
+                          return SizedBox(
+                            height: taskController.myTaskList.length * 350,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                    child: ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemCount: taskController.myTaskList.length,
+                                        itemBuilder: ((context, index) {
+                                          Color colorstatus;
+                                          switch (Morningtasklist[index].Status) {
+                                            case "In-progress":
+                                              colorstatus = Colors.red;
+                                              break;
+                                            case "To-do":
+                                              colorstatus = Colors.blue;
+                                              break;
+                                            case "Resolved":
+                                              colorstatus = Colors.yellow;
+                                              break;
 
-                              default:
-                                colorstatus = Colors.black;
-                            }
+                                            default:
+                                              colorstatus = Colors.black;
+                                          }
 
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              child: Column(
-                                children: [
-                                  InkWell(
-                                    onTap: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: ((context) =>
-                                                Taskpageprogress(
-                                                  Taskname:
-                                                      Morningtasklist[index]
-                                                          .Taskname,
-                                                  Taskdescription:
-                                                      Morningtasklist[index]
-                                                          .Taskdescription,
-                                                  Date: Morningtasklist[index]
-                                                      .Date,
-                                                  Status: Morningtasklist[index]
-                                                      .Status,
-                                                  Priority:
-                                                      Morningtasklist[index]
-                                                          .Priority,
-                                                  Weekdays:
-                                                      Morningtasklist[index]
-                                                          .Weekdays,
-                                                )))),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.only(
-                                            topRight: Radius.circular(12.0),
-                                            topLeft: Radius.circular(12.0),
-                                          ),
-                                          color:
-                                              Morningtasklist[index].isselected
-                                                  ? const Color(0xFF68B984)
-                                                  : chooseCardColor(
-                                                      Morningtasklist[index]
-                                                          .Priority)),
-                                      width: width! - 30,
-                                      height: 260,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              Text(
-                                                Morningtasklist[index]
-                                                    .Taskname,
-                                                style: const TextStyle(
-                                                    color: BLACKCOLOR,
-                                                    fontSize: 24,
-                                                    fontWeight:
-                                                    FontWeight.w800),
-                                              ),
-                                              InkWell(
-                                                // onTap: (() => Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //         builder: ((context) =>
-                                                //             Taskpageprogress())
-                                                //             )
-                                                //             )
-                                                //             ),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        12),
-                                                    color: Morningtasklist[
-                                                    index]
-                                                        .Status ==
-                                                        "In-progress"
-                                                        ? Colors.blue
-                                                        : Morningtasklist[
-                                                    index]
-                                                        .Status ==
-                                                        "To-do"
-                                                        ? Colors.amber
-                                                        : Morningtasklist[
-                                                    index]
-                                                        .Status ==
-                                                        "Resolved"
-                                                        ? Colors.pink
-                                                        : Colors.lime,
-                                                  ),
-                                                  width: 90,
-                                                  height: 40,
-                                                  child: Center(
-                                                      child: Text(
-                                                        Morningtasklist[index]
-                                                            .isselected
-                                                            ? "Done"
-                                                            : Morningtasklist[
-                                                        index]
-                                                            .Status,
-                                                        style: const TextStyle(
-                                                            color:
-                                                            BUTTONTEXTCOLOR),
-                                                      )),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            Morningtasklist[index]
-                                                .Taskdescription,
-                                            style: const TextStyle(
-                                                color: BLACKCOLOR,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          // Row(
-                                          //   children: [
-                                          //     Icon(
-                                          //       Icons.alarm,
-                                          //       color: BLACKCOLOR,
-                                          //     ),
-                                          //     SizedBox(
-                                          //       width: 10,
-                                          //     ),
-                                          //     Text(
-                                          //       Morningtasklist[index]
-                                          //           .TimeScheduleFromtime,
-                                          //       style: TextStyle(
-                                          //           color: BLACKCOLOR,
-                                          //           fontSize: 16,
-                                          //           fontWeight:
-                                          //               FontWeight.w400),
-                                          //     ),
-                                          //     Text(
-                                          //       Morningtasklist[index]
-                                          //           .TimeScheduleTotime,
-                                          //       style: TextStyle(
-                                          //           color: BLACKCOLOR,
-                                          //           fontSize: 16,
-                                          //           fontWeight:
-                                          //               FontWeight.w400),
-                                          //     ),
-                                          //   ],
-                                          // ),
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 20),
+                                            child: Column(
+                                              children: [
+                                                InkWell(
+                                                  onTap: () async {
+                                                    TaskModel task = await TaskModel(
+                                                      id: taskController.myTaskList[index].id,
+                                                      userId: taskController.myTaskList[index].userId,
+                                                      taskName: taskController.myTaskList[index].taskName,
+                                                      task_owner: taskController.myTaskList[index].task_owner,
+                                                      description:taskController.myTaskList[index].description,
+                                                      status:taskController.myTaskList[index].status,
+                                                      subTask:taskController.myTaskList[index].subTask,
+                                                      priority:taskController.myTaskList[index].priority,
+                                                      startDate:taskController.myTaskList[index].startDate,
+                                                      endDate:taskController.myTaskList[index].endDate,
+                                                      assignId: taskController.myTaskList[index].assignId,
+                                                      notifyId: taskController.myTaskList[index].notifyId,
+                                                      createdAt:  taskController.myTaskList[index].createdAt,
+                                                      updatedAt:  taskController.myTaskList[index].updatedAt,
+                                                      userName: taskController.myTaskList[index].userName,
+                                                      notify_names: taskController.myTaskList[index].notify_names,
+                                                    );
+                                                    taskController.fetchComments(task.id);
 
-                                          // SizedBox(
-                                          //   height: 10,
-                                          // ),
-                                          Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 25,
-                                                height: 25,
-                                                child: Image.asset(
-                                                  ASSIGNTOYOU,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                const EdgeInsets.only(
-                                                    left: 10),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .center,
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .center,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 35,
-                                                      width: 35,
-                                                      child: TextAvatar(
-                                                        textColor:
-                                                        Colors.white,
-                                                        shape: Shape.Circular,
-                                                        text:
-                                                        "Pranav Flutter",
-                                                        fontSize: 14,
-                                                        numberLetters: 2,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 1,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 35,
-                                                      width: 35,
-                                                      child: TextAvatar(
-                                                        textColor:
-                                                        Colors.white,
-                                                        shape: Shape.Circular,
-                                                        text: "Bhive team",
-                                                        fontSize: 14,
-                                                        numberLetters: 2,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 1,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 35,
-                                                      width: 35,
-                                                      child: TextAvatar(
-                                                        textColor:
-                                                        Colors.white,
-                                                        shape: Shape.Circular,
-                                                        text: "Vicky b",
-                                                        fontSize: 14,
-                                                        numberLetters: 2,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                // Text(
-                                                //   Morningtasklist[index]
-                                                //       .AssignedTo,
-                                                //   style: TextStyle(
-                                                //       color: BLACKCOLOR,
-                                                //       fontSize: 16,
-                                                //       fontWeight:
-                                                //           FontWeight.w400),
-                                                // ),
-                                              ),
-                                            ],
-                                          ),
 
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          Row(
-                                            children: [
-                                              const Icon(Icons.notifications,
-                                                  color: BLACKCOLOR),
-                                              Padding(
-                                                padding:
-                                                const EdgeInsets.only(
-                                                    left: 10),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .center,
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .center,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 35,
-                                                      width: 35,
-                                                      child: TextAvatar(
-                                                        textColor:
-                                                        Colors.white,
-                                                        shape: Shape.Circular,
-                                                        text: "Bulut peker",
-                                                        fontSize: 14,
-                                                        numberLetters: 2,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 1,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 35,
-                                                      width: 35,
-                                                      child: TextAvatar(
-                                                        textColor:
-                                                        Colors.white,
-                                                        shape: Shape.Circular,
-                                                        text: "Pranav royal",
-                                                        fontSize: 14,
-                                                        numberLetters: 2,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 1,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 35,
-                                                      width: 35,
-                                                      child: TextAvatar(
-                                                        textColor:
-                                                        Colors.white,
-                                                        shape: Shape.Circular,
-                                                        text: "Vicky b",
-                                                        fontSize: 14,
-                                                        numberLetters: 2,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-
-                                                // Text(
-                                                //   Morningtasklist[index]
-                                                //       .Notifiy,
-                                                //   style: TextStyle(
-                                                //       color: BLACKCOLOR,
-                                                //       fontSize: 16,
-                                                //       fontWeight:
-                                                //           FontWeight.w300),
-                                                // ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          Row(
-                                            children: [
-                                              const Icon(Icons.calendar_today,
-                                                  color: BLACKCOLOR),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                Morningtasklist[index].Date,
-                                                style: const TextStyle(
-                                                    color: BLACKCOLOR,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                    FontWeight.w400),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      )
-                                    ),
-                                  ),
-                                  Container(
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          bottomRight: Radius.circular(12.0),
-                                          bottomLeft: Radius.circular(12.0)),
-                                      color: Color.fromARGB(179, 208, 208, 208),
-                                    ),
-                                    width: width! - 30,
-                                    height: 50,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, right: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                Morningtasklist[index]
-                                                        .isselected
-                                                    ? 'Done'
-                                                    : Morningtasklist[index]
-                                                        .Priority,
-                                                style: const TextStyle(
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 60),
-                                                child: index % 2 == 1
-                                                    ? Container()
-                                                    : Container(
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        30),
-                                                            border: Border.all(
-                                                                color: const Color(
-                                                                    0xffe94c89))),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: Text(
-                                                              Morningtasklist[
-                                                                          index]
-                                                                      .isselected
-                                                                  ? "Done"
-                                                                  : "Overdue"),
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: ((context) =>
+                                                                Taskpageprogress(
+                                                                    task:task
+                                                                ))));
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: const BorderRadius.only(
+                                                          topRight: Radius.circular(12.0),
+                                                          topLeft: Radius.circular(12.0),
                                                         ),
+                                                        color:
+                                                        Morningtasklist[index].isselected
+                                                            ? const Color(0xFF68B984)
+                                                            : chooseCardColor(
+                                                            Morningtasklist[index]
+                                                                .Priority)),
+                                                    width: width! - 30,
+                                                    height: 260,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(
+                                                          left: 20, top: 10, right: 20),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Flexible(
+                                                                child: Text(
+                                                                  taskController.myTaskList[index].taskName,
+                                                                  maxLines: 1,
+                                                                  style: const TextStyle(
+                                                                    overflow: TextOverflow.ellipsis,
+
+                                                                      color: BLACKCOLOR,
+                                                                      fontSize: 24,
+                                                                      fontWeight:
+                                                                      FontWeight.w800),
+                                                                ),
+                                                              ),
+                                                              InkWell(
+                                                                // onTap: (() => Navigator.push(
+                                                                //     context,
+                                                                //     MaterialPageRoute(
+                                                                //         builder: ((context) =>
+                                                                //             Taskpageprogress())
+                                                                //             )
+                                                                //             )
+                                                                //             ),
+                                                                child: Container(
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                    BorderRadius.circular(12),
+                                                                    color: taskController.myTaskList[index].status == "In-progress"
+                                                                        ? Colors.blue
+                                                                        : taskController.myTaskList[index].status  == "To-do"
+                                                                        ? Colors.amber
+                                                                        : taskController.myTaskList[index].status == "Resolved" ? Colors.pink : Colors.lime,
+                                                                  ),
+                                                                  width: 90,
+                                                                  height: 40,
+                                                                  child: Center(
+                                                                      child: Text(
+                                                                        Morningtasklist[index].isselected
+                                                                            ? "Done"
+                                                                            : Morningtasklist[
+                                                                        index]
+                                                                            .Status,
+                                                                        style: const TextStyle(
+                                                                            color:
+                                                                            BUTTONTEXTCOLOR),
+                                                                      )),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            taskController.myTaskList[index].description,
+                                                            style: const TextStyle(
+                                                                color: BLACKCOLOR,
+                                                                fontSize: 18,
+                                                                fontWeight: FontWeight.w400),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          // Row(
+                                                          //   children: [
+                                                          //     Icon(
+                                                          //       Icons.alarm,
+                                                          //       color: BLACKCOLOR,
+                                                          //     ),
+                                                          //     SizedBox(
+                                                          //       width: 10,
+                                                          //     ),
+                                                          //     Text(
+                                                          //       Morningtasklist[index]
+                                                          //           .TimeScheduleFromtime,
+                                                          //       style: TextStyle(
+                                                          //           color: BLACKCOLOR,
+                                                          //           fontSize: 16,
+                                                          //           fontWeight:
+                                                          //               FontWeight.w400),
+                                                          //     ),
+                                                          //     Text(
+                                                          //       Morningtasklist[index]
+                                                          //           .TimeScheduleTotime,
+                                                          //       style: TextStyle(
+                                                          //           color: BLACKCOLOR,
+                                                          //           fontSize: 16,
+                                                          //           fontWeight:
+                                                          //               FontWeight.w400),
+                                                          //     ),
+                                                          //   ],
+                                                          // ),
+
+                                                          // SizedBox(
+                                                          //   height: 10,
+                                                          // ),
+                                                          Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 25,
+                                                                height: 25,
+                                                                child: Image.asset(
+                                                                  ASSIGNTOYOU,
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                const EdgeInsets.only(
+                                                                    left: 10),
+                                                                child: Row(
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                                  children: [
+                                                                    for(int i=0;i<taskController.myTaskList[index].userName.length;i++)
+                                                                    SizedBox(
+                                                                      height: 35,
+                                                                      width: 35,
+                                                                      child: TextAvatar(
+                                                                        textColor:
+                                                                        Colors.white,
+                                                                        shape: Shape.Circular,
+                                                                        text:
+                                                                        "${taskController.myTaskList[index].userName[i].firstName} ${taskController.myTaskList[index].userName[i].lastName}",
+                                                                        fontSize: 14,
+                                                                        numberLetters: 2,
+                                                                      ),
+                                                                    ),
+                                                                    // const SizedBox(
+                                                                    //   width: 1,
+                                                                    // ),
+                                                                    // SizedBox(
+                                                                    //   height: 35,
+                                                                    //   width: 35,
+                                                                    //   child: TextAvatar(
+                                                                    //     textColor:
+                                                                    //     Colors.white,
+                                                                    //     shape: Shape.Circular,
+                                                                    //     text: "Bhive team",
+                                                                    //     fontSize: 14,
+                                                                    //     numberLetters: 2,
+                                                                    //   ),
+                                                                    // ),
+                                                                    // const SizedBox(
+                                                                    //   width: 1,
+                                                                    // ),
+                                                                    // SizedBox(
+                                                                    //   height: 35,
+                                                                    //   width: 35,
+                                                                    //   child: TextAvatar(
+                                                                    //     textColor:
+                                                                    //     Colors.white,
+                                                                    //     shape: Shape.Circular,
+                                                                    //     text: "Vicky b",
+                                                                    //     fontSize: 14,
+                                                                    //     numberLetters: 2,
+                                                                    //   ),
+                                                                    // ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+
+                                                          const SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              const Icon(Icons.notifications,
+                                                                  color: BLACKCOLOR),
+                                                              Padding(
+                                                                padding:
+                                                                const EdgeInsets.only(
+                                                                    left: 10),
+                                                                child: Row(
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                                  children: [
+                                                                    for(int i=0;i<taskController.myTaskList[index].notify_names.length;i++)
+                                                                      SizedBox(
+                                                                        height: 35,
+                                                                        width: 35,
+                                                                        child: TextAvatar(
+                                                                          textColor:
+                                                                          Colors.white,
+                                                                          shape: Shape.Circular,
+                                                                          text:
+                                                                          "${taskController.myTaskList[index].notify_names[i].firstName} ${taskController.myTaskList[index].notify_names[i].lastName}",
+                                                                          fontSize: 14,
+                                                                          numberLetters: 2,
+                                                                        ),
+                                                                      ),
+                                                                    // const SizedBox(
+                                                                    //   width: 1,
+                                                                    // ),
+                                                                    // SizedBox(
+                                                                    //   height: 35,
+                                                                    //   width: 35,
+                                                                    //   child: TextAvatar(
+                                                                    //     textColor:
+                                                                    //     Colors.white,
+                                                                    //     shape: Shape.Circular,
+                                                                    //     text: "Bhive team",
+                                                                    //     fontSize: 14,
+                                                                    //     numberLetters: 2,
+                                                                    //   ),
+                                                                    // ),
+                                                                    // const SizedBox(
+                                                                    //   width: 1,
+                                                                    // ),
+                                                                    // SizedBox(
+                                                                    //   height: 35,
+                                                                    //   width: 35,
+                                                                    //   child: TextAvatar(
+                                                                    //     textColor:
+                                                                    //     Colors.white,
+                                                                    //     shape: Shape.Circular,
+                                                                    //     text: "Vicky b",
+                                                                    //     fontSize: 14,
+                                                                    //     numberLetters: 2,
+                                                                    //   ),
+                                                                    // ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              const Icon(Icons.calendar_today,
+                                                                  color: BLACKCOLOR),
+                                                              const SizedBox(
+                                                                width: 10,
+                                                              ),
+                                                              Text(
+                                                                taskController.myTaskList[index].startDate +"  -  "+taskController.myTaskList[index].endDate,
+                                                                style: const TextStyle(
+                                                                    color: BLACKCOLOR,
+                                                                    fontSize: 16,
+                                                                    fontWeight:
+                                                                    FontWeight.w400),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
-                                              ),
-                                            ],
-                                          ),
-                                          IconButton(
-                                            icon: Morningtasklist[index]
-                                                    .isselected
-                                                ? const Icon(
-                                                    Icons.check_box,
-                                                    color: Colors.green,
-                                                  )
-                                                : const Icon(
-                                                    Icons
-                                                        .check_box_outline_blank,
-                                                    color: Colors.blue,
+                                                    ),
                                                   ),
-                                            onPressed: (() {
-                                              setState(() {
-                                                Morningtasklist[index]
-                                                        .isselected =
-                                                    !Morningtasklist[index]
-                                                        .isselected;
-                                              });
-                                            }),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          })))
-                ],
-              ),
+                                                ),
+                                                Container(
+                                                  decoration: const BoxDecoration(
+                                                    borderRadius: BorderRadius.only(
+                                                        bottomRight: Radius.circular(12.0),
+                                                        bottomLeft: Radius.circular(12.0)),
+                                                    color: Color.fromARGB(179, 208, 208, 208),
+                                                  ),
+                                                  width: width! - 30,
+                                                  height: 50,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(
+                                                        left: 10, right: 10),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              Morningtasklist[index]
+                                                                  .isselected
+                                                                  ? 'Done'
+                                                                  : taskController.myTaskList[index].priority,
+                                                              style: const TextStyle(
+                                                                fontSize: 18,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.only(
+                                                                  left: 60),
+                                                              child: index % 1 == 1
+                                                                  ? Container()
+                                                                  : Container(
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                        30),
+                                                                    border: Border.all(
+                                                                        color: const Color(
+                                                                            0xffe94c89))),
+                                                                child: Padding(
+                                                                  padding:
+                                                                  EdgeInsets.all(
+                                                                      8.0),
+                                                                  child: Text(
+                                                                      Morningtasklist[
+                                                                      index]
+                                                                          .isselected
+                                                                          ? "Done"
+                                                                          : "Overdue"),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        IconButton(
+                                                          icon: Morningtasklist[index]
+                                                              .isselected
+                                                              ? const Icon(
+                                                            Icons.check_box,
+                                                            color: Colors.green,
+                                                          )
+                                                              : const Icon(
+                                                            Icons
+                                                                .check_box_outline_blank,
+                                                            color: Colors.blue,
+                                                          ),
+                                                          onPressed: (() {
+                                                            setState(() {
+                                                              Morningtasklist[index]
+                                                                  .isselected =
+                                                              !Morningtasklist[index]
+                                                                  .isselected;
+                                                            });
+                                                          }),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        })))
+                              ],
+                            ),
+                          );
+                        }
+
+                }
             ),
+            // SizedBox(
+            //   height: 320 * 4.3,
+            //   child: Column(
+            //     children: [
+            //       Expanded(
+            //           child: ListView.builder(
+            //               physics: const NeverScrollableScrollPhysics(),
+            //               itemCount: Morningtasklist.length,
+            //               itemBuilder: ((context, index) {
+            //                 Color colorstatus;
+            //                 switch (Morningtasklist[index].Status) {
+            //                   case "In-progress":
+            //                     colorstatus = Colors.red;
+            //                     break;
+            //                   case "To-do":
+            //                     colorstatus = Colors.blue;
+            //                     break;
+            //                   case "Resolved":
+            //                     colorstatus = Colors.yellow;
+            //                     break;
+            //
+            //                   default:
+            //                     colorstatus = Colors.black;
+            //                 }
+            //
+            //                 return Padding(
+            //                   padding: const EdgeInsets.symmetric(
+            //                       vertical: 10, horizontal: 20),
+            //                   child: Column(
+            //                     children: [
+            //                       InkWell(
+            //                         onTap: () => Navigator.push(
+            //                             context,
+            //                             MaterialPageRoute(
+            //                                 builder: ((context) =>
+            //                                     Taskpageprogress(
+            //                                       Taskname:
+            //                                           Morningtasklist[index]
+            //                                               .Taskname,
+            //                                       Taskdescription:
+            //                                           Morningtasklist[index]
+            //                                               .Taskdescription,
+            //                                       Date: Morningtasklist[index]
+            //                                           .Date,
+            //                                       Status: Morningtasklist[index]
+            //                                           .Status,
+            //                                       Priority:
+            //                                           Morningtasklist[index]
+            //                                               .Priority,
+            //                                       Weekdays:
+            //                                           Morningtasklist[index]
+            //                                               .Weekdays,
+            //                                     )))),
+            //                         child: Container(
+            //                           decoration: BoxDecoration(
+            //                               borderRadius: const BorderRadius.only(
+            //                                 topRight: Radius.circular(12.0),
+            //                                 topLeft: Radius.circular(12.0),
+            //                               ),
+            //                               color:
+            //                                   Morningtasklist[index].isselected
+            //                                       ? const Color(0xFF68B984)
+            //                                       : chooseCardColor(
+            //                                           Morningtasklist[index]
+            //                                               .Priority)),
+            //                           width: width! - 30,
+            //                           height: 260,
+            //                           child: Column(
+            //                             crossAxisAlignment:
+            //                             CrossAxisAlignment.start,
+            //                             children: [
+            //                               Row(
+            //                                 mainAxisAlignment:
+            //                                 MainAxisAlignment
+            //                                     .spaceBetween,
+            //                                 children: [
+            //                                   Text(
+            //                                     Morningtasklist[index]
+            //                                         .Taskname,
+            //                                     style: const TextStyle(
+            //                                         color: BLACKCOLOR,
+            //                                         fontSize: 24,
+            //                                         fontWeight:
+            //                                         FontWeight.w800),
+            //                                   ),
+            //                                   InkWell(
+            //                                     // onTap: (() => Navigator.push(
+            //                                     //     context,
+            //                                     //     MaterialPageRoute(
+            //                                     //         builder: ((context) =>
+            //                                     //             Taskpageprogress())
+            //                                     //             )
+            //                                     //             )
+            //                                     //             ),
+            //                                     child: Container(
+            //                                       decoration: BoxDecoration(
+            //                                         borderRadius:
+            //                                         BorderRadius.circular(
+            //                                             12),
+            //                                         color: Morningtasklist[
+            //                                         index]
+            //                                             .Status ==
+            //                                             "In-progress"
+            //                                             ? Colors.blue
+            //                                             : Morningtasklist[
+            //                                         index]
+            //                                             .Status ==
+            //                                             "To-do"
+            //                                             ? Colors.amber
+            //                                             : Morningtasklist[
+            //                                         index]
+            //                                             .Status ==
+            //                                             "Resolved"
+            //                                             ? Colors.pink
+            //                                             : Colors.lime,
+            //                                       ),
+            //                                       width: 90,
+            //                                       height: 40,
+            //                                       child: Center(
+            //                                           child: Text(
+            //                                             Morningtasklist[index]
+            //                                                 .isselected
+            //                                                 ? "Done"
+            //                                                 : Morningtasklist[
+            //                                             index]
+            //                                                 .Status,
+            //                                             style: const TextStyle(
+            //                                                 color:
+            //                                                 BUTTONTEXTCOLOR),
+            //                                           )),
+            //                                     ),
+            //                                   ),
+            //                                 ],
+            //                               ),
+            //                               const SizedBox(
+            //                                 height: 10,
+            //                               ),
+            //                               Text(
+            //                                 Morningtasklist[index]
+            //                                     .Taskdescription,
+            //                                 style: const TextStyle(
+            //                                     color: BLACKCOLOR,
+            //                                     fontSize: 18,
+            //                                     fontWeight: FontWeight.w400),
+            //                               ),
+            //                               const SizedBox(
+            //                                 height: 15,
+            //                               ),
+            //                               // Row(
+            //                               //   children: [
+            //                               //     Icon(
+            //                               //       Icons.alarm,
+            //                               //       color: BLACKCOLOR,
+            //                               //     ),
+            //                               //     SizedBox(
+            //                               //       width: 10,
+            //                               //     ),
+            //                               //     Text(
+            //                               //       Morningtasklist[index]
+            //                               //           .TimeScheduleFromtime,
+            //                               //       style: TextStyle(
+            //                               //           color: BLACKCOLOR,
+            //                               //           fontSize: 16,
+            //                               //           fontWeight:
+            //                               //               FontWeight.w400),
+            //                               //     ),
+            //                               //     Text(
+            //                               //       Morningtasklist[index]
+            //                               //           .TimeScheduleTotime,
+            //                               //       style: TextStyle(
+            //                               //           color: BLACKCOLOR,
+            //                               //           fontSize: 16,
+            //                               //           fontWeight:
+            //                               //               FontWeight.w400),
+            //                               //     ),
+            //                               //   ],
+            //                               // ),
+            //
+            //                               // SizedBox(
+            //                               //   height: 10,
+            //                               // ),
+            //                               Row(
+            //                                 children: [
+            //                                   SizedBox(
+            //                                     width: 25,
+            //                                     height: 25,
+            //                                     child: Image.asset(
+            //                                       ASSIGNTOYOU,
+            //                                     ),
+            //                                   ),
+            //                                   Padding(
+            //                                     padding:
+            //                                     const EdgeInsets.only(
+            //                                         left: 10),
+            //                                     child: Row(
+            //                                       crossAxisAlignment:
+            //                                       CrossAxisAlignment
+            //                                           .center,
+            //                                       mainAxisAlignment:
+            //                                       MainAxisAlignment
+            //                                           .center,
+            //                                       children: [
+            //                                         SizedBox(
+            //                                           height: 35,
+            //                                           width: 35,
+            //                                           child: TextAvatar(
+            //                                             textColor:
+            //                                             Colors.white,
+            //                                             shape: Shape.Circular,
+            //                                             text:
+            //                                             "Pranav Flutter",
+            //                                             fontSize: 14,
+            //                                             numberLetters: 2,
+            //                                           ),
+            //                                         ),
+            //                                         const SizedBox(
+            //                                           width: 1,
+            //                                         ),
+            //                                         SizedBox(
+            //                                           height: 35,
+            //                                           width: 35,
+            //                                           child: TextAvatar(
+            //                                             textColor:
+            //                                             Colors.white,
+            //                                             shape: Shape.Circular,
+            //                                             text: "Bhive team",
+            //                                             fontSize: 14,
+            //                                             numberLetters: 2,
+            //                                           ),
+            //                                         ),
+            //                                         const SizedBox(
+            //                                           width: 1,
+            //                                         ),
+            //                                         SizedBox(
+            //                                           height: 35,
+            //                                           width: 35,
+            //                                           child: TextAvatar(
+            //                                             textColor:
+            //                                             Colors.white,
+            //                                             shape: Shape.Circular,
+            //                                             text: "Vicky b",
+            //                                             fontSize: 14,
+            //                                             numberLetters: 2,
+            //                                           ),
+            //                                         ),
+            //                                       ],
+            //                                     ),
+            //                                     // Text(
+            //                                     //   Morningtasklist[index]
+            //                                     //       .AssignedTo,
+            //                                     //   style: TextStyle(
+            //                                     //       color: BLACKCOLOR,
+            //                                     //       fontSize: 16,
+            //                                     //       fontWeight:
+            //                                     //           FontWeight.w400),
+            //                                     // ),
+            //                                   ),
+            //                                 ],
+            //                               ),
+            //
+            //                               const SizedBox(
+            //                                 height: 15,
+            //                               ),
+            //                               Row(
+            //                                 children: [
+            //                                   const Icon(Icons.notifications,
+            //                                       color: BLACKCOLOR),
+            //                                   Padding(
+            //                                     padding:
+            //                                     const EdgeInsets.only(
+            //                                         left: 10),
+            //                                     child: Row(
+            //                                       crossAxisAlignment:
+            //                                       CrossAxisAlignment
+            //                                           .center,
+            //                                       mainAxisAlignment:
+            //                                       MainAxisAlignment
+            //                                           .center,
+            //                                       children: [
+            //                                         SizedBox(
+            //                                           height: 35,
+            //                                           width: 35,
+            //                                           child: TextAvatar(
+            //                                             textColor:
+            //                                             Colors.white,
+            //                                             shape: Shape.Circular,
+            //                                             text: "Bulut peker",
+            //                                             fontSize: 14,
+            //                                             numberLetters: 2,
+            //                                           ),
+            //                                         ),
+            //                                         const SizedBox(
+            //                                           width: 1,
+            //                                         ),
+            //                                         SizedBox(
+            //                                           height: 35,
+            //                                           width: 35,
+            //                                           child: TextAvatar(
+            //                                             textColor:
+            //                                             Colors.white,
+            //                                             shape: Shape.Circular,
+            //                                             text: "Pranav royal",
+            //                                             fontSize: 14,
+            //                                             numberLetters: 2,
+            //                                           ),
+            //                                         ),
+            //                                         const SizedBox(
+            //                                           width: 1,
+            //                                         ),
+            //                                         SizedBox(
+            //                                           height: 35,
+            //                                           width: 35,
+            //                                           child: TextAvatar(
+            //                                             textColor:
+            //                                             Colors.white,
+            //                                             shape: Shape.Circular,
+            //                                             text: "Vicky b",
+            //                                             fontSize: 14,
+            //                                             numberLetters: 2,
+            //                                           ),
+            //                                         ),
+            //                                       ],
+            //                                     ),
+            //
+            //                                     // Text(
+            //                                     //   Morningtasklist[index]
+            //                                     //       .Notifiy,
+            //                                     //   style: TextStyle(
+            //                                     //       color: BLACKCOLOR,
+            //                                     //       fontSize: 16,
+            //                                     //       fontWeight:
+            //                                     //           FontWeight.w300),
+            //                                     // ),
+            //                                   ),
+            //                                 ],
+            //                               ),
+            //                               const SizedBox(
+            //                                 height: 15,
+            //                               ),
+            //                               Row(
+            //                                 children: [
+            //                                   const Icon(Icons.calendar_today,
+            //                                       color: BLACKCOLOR),
+            //                                   const SizedBox(
+            //                                     width: 10,
+            //                                   ),
+            //                                   Text(
+            //                                     Morningtasklist[index].Date,
+            //                                     style: const TextStyle(
+            //                                         color: BLACKCOLOR,
+            //                                         fontSize: 16,
+            //                                         fontWeight:
+            //                                         FontWeight.w400),
+            //                                   ),
+            //                                 ],
+            //                               ),
+            //                             ],
+            //                           )
+            //                         ),
+            //                       ),
+            //                       Container(
+            //                         decoration: const BoxDecoration(
+            //                           borderRadius: BorderRadius.only(
+            //                               bottomRight: Radius.circular(12.0),
+            //                               bottomLeft: Radius.circular(12.0)),
+            //                           color: Color.fromARGB(179, 208, 208, 208),
+            //                         ),
+            //                         width: width! - 30,
+            //                         height: 50,
+            //                         child: Padding(
+            //                           padding: const EdgeInsets.only(
+            //                               left: 10, right: 10),
+            //                           child: Row(
+            //                             mainAxisAlignment:
+            //                                 MainAxisAlignment.spaceBetween,
+            //                             children: [
+            //                               Row(
+            //                                 children: [
+            //                                   Text(
+            //                                     Morningtasklist[index]
+            //                                             .isselected
+            //                                         ? 'Done'
+            //                                         : Morningtasklist[index]
+            //                                             .Priority,
+            //                                     style: const TextStyle(
+            //                                       fontSize: 18,
+            //                                     ),
+            //                                   ),
+            //                                   Padding(
+            //                                     padding: const EdgeInsets.only(
+            //                                         left: 60),
+            //                                     child: index % 2 == 1
+            //                                         ? Container()
+            //                                         : Container(
+            //                                             decoration: BoxDecoration(
+            //                                                 borderRadius:
+            //                                                     BorderRadius
+            //                                                         .circular(
+            //                                                             30),
+            //                                                 border: Border.all(
+            //                                                     color: const Color(
+            //                                                         0xffe94c89))),
+            //                                             child: Padding(
+            //                                               padding:
+            //                                                   const EdgeInsets
+            //                                                       .all(8.0),
+            //                                               child: Text(
+            //                                                   Morningtasklist[
+            //                                                               index]
+            //                                                           .isselected
+            //                                                       ? "Done"
+            //                                                       : "Overdue"),
+            //                                             ),
+            //                                           ),
+            //                                   ),
+            //                                 ],
+            //                               ),
+            //                               IconButton(
+            //                                 icon: Morningtasklist[index]
+            //                                         .isselected
+            //                                     ? const Icon(
+            //                                         Icons.check_box,
+            //                                         color: Colors.green,
+            //                                       )
+            //                                     : const Icon(
+            //                                         Icons
+            //                                             .check_box_outline_blank,
+            //                                         color: Colors.blue,
+            //                                       ),
+            //                                 onPressed: (() {
+            //                                   setState(() {
+            //                                     Morningtasklist[index]
+            //                                             .isselected =
+            //                                         !Morningtasklist[index]
+            //                                             .isselected;
+            //                                   });
+            //                                 }),
+            //                               ),
+            //                             ],
+            //                           ),
+            //                         ),
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 );
+            //               })))
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),

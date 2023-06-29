@@ -430,20 +430,21 @@ class _projectnotifyState extends State<projectnotify> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: SizedBox(
                       child: InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: ((context) => Taskpageprogress(
-                                  Taskname: Morningtasklist[index].Taskname,
-                                  Taskdescription:
-                                      Morningtasklist[index].Taskdescription,
-                                  Date: Morningtasklist[index].Date,
-                                  Status: Morningtasklist[index].Status,
-                                  Priority: Morningtasklist[index].Priority,
-                                  Weekdays: Morningtasklist[index].Weekdays,
-                                )),
-                          ),
-                        ),
+                        onTap: () {},
+                        // onTap: () => Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: ((context) => Taskpageprogress(
+                        //           Taskname: Morningtasklist[index].Taskname,
+                        //           Taskdescription:
+                        //               Morningtasklist[index].Taskdescription,
+                        //           Date: Morningtasklist[index].Date,
+                        //           Status: Morningtasklist[index].Status,
+                        //           Priority: Morningtasklist[index].Priority,
+                        //           Weekdays: Morningtasklist[index].Weekdays,
+                        //         )),
+                        //   ),
+                        // ),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),

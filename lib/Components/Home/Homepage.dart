@@ -506,7 +506,7 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
               fontWeight: FontWeight.bold,
             ),
           ),
-          content: Text("Are you Sure you want to Logout?"),
+          content: Text("Are you sure you want to logout?"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             TextButton(
@@ -790,12 +790,10 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
               innerDot: false,
               weekLineHeight: 48.0,
             ),
-
-            const SizedBox(
+            SizedBox(
               height: 20,
             ),
-            // give the tab bar a height [can change hheight to preferred height]
-            const Padding(
+             Padding(
               padding: EdgeInsets.only(top: 20, left: 20, bottom: 20),
               child: Text(
                 'Today Accounts',
@@ -929,12 +927,11 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                 ),
               ],
             ),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 10, bottom: 10),
+              padding:  EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
               child: InkWell(
                 onTap: () {
                   showModalBottomSheet<void>(
@@ -1017,8 +1014,7 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                     )),
               ),
             ),
-
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 20, left: 20, bottom: 20),
               child: Text(
                 'Today Habits',
@@ -1090,8 +1086,6 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                 controller: _tabController,
               ),
             ),
-            ////////
-
             SizedBox(
               height: habitController.studyEvents.length == 0
                   ? 140
@@ -1634,8 +1628,7 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                 ],
               ),
             ),
-
-            const SizedBox(
+            SizedBox(
               height: 20,
             ),
             InkWell(
@@ -1677,12 +1670,10 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-
-            const SizedBox(
+            SizedBox(
               height: 20,
             ),
-
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 20, left: 20, bottom: 20),
               child: Text(
                 'Today Task',
@@ -1692,7 +1683,6 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                     color: BLACKCOLOR),
               ),
             ),
-
             Obx(
             () {
                 return SizedBox(
@@ -1727,22 +1717,23 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                                   child: Column(
                                     children: [
                                       InkWell(
-                                        onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: ((context) =>
-                                                    Taskpageprogress(
-                                                      Taskname:
-                                                          taskController.myTaskList[index].taskName,
-                                                      Taskdescription:
-                                                      taskController.myTaskList[index].description,
-                                                      Date: Morningtasklist[index].Date,
-                                                      Status: taskController.myTaskList[index].status,
-                                                      Priority: taskController.myTaskList[index].priority,
-                                                      Weekdays:
-                                                          Morningtasklist[index]
-                                                              .Weekdays,
-                                                    )))),
+                                        onTap: () {},
+                                        // onTap: () => Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: ((context) =>
+                                        //             Taskpageprogress(
+                                        //               Taskname:
+                                        //                   taskController.myTaskList[index].taskName,
+                                        //               Taskdescription:
+                                        //               taskController.myTaskList[index].description,
+                                        //               Date: Morningtasklist[index].Date,
+                                        //               Status: taskController.myTaskList[index].status,
+                                        //               Priority: taskController.myTaskList[index].priority,
+                                        //               Weekdays:
+                                        //                   Morningtasklist[index]
+                                        //                       .Weekdays,
+                                        //             )))),
                                         child: Container(
                                           decoration: BoxDecoration(
                                               borderRadius: const BorderRadius.only(
@@ -2131,7 +2122,6 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                 );
               }
             ),
-
             InkWell(
               onTap: () => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => Addtasknew())),
@@ -2171,7 +2161,7 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 40,
             ),
           ],

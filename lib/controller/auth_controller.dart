@@ -37,6 +37,7 @@ class UserController extends GetxController {
   TextEditingController confirmPasswordController = TextEditingController();
   void onInit()
   {
+    profile();
     super.onInit();
   }
   Future<void> registerUser() async {

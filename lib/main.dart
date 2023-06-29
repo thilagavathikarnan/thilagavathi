@@ -185,7 +185,7 @@ class _SplashscreenState extends State<Splashscreen> {
       print("DEVICETOKEN: ${deviceToken}");
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        // print(message.data);
+        print(message.data);
         Get.showSnackbar(
             GetSnackBar(
               mainButton: Container(
