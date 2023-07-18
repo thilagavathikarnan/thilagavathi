@@ -6,9 +6,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorful_tab/flutter_colorful_tab.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:habittrackergad/Components/Habit/Habit_report.dart';
+import 'package:habittrackergad/Components/Task/Taskdetails.dart';
 import 'package:habittrackergad/Components/Task/Taskyearreport.dart';
 import 'package:habittrackergad/Utils/Constants.dart';
+import 'package:habittrackergad/controller/teamController.dart';
+
+import '../../../model/task_model.dart';
 
 class Morningtask {
   final String Taskname;
@@ -289,6 +296,7 @@ class _NotifypageState extends State<Notifypage> with TickerProviderStateMixin {
   final controller = PageController(viewportFraction: 0.8, keepPage: true);
   late DateTime _selectedDate;
   late TabController _tabController;
+  TeamController taskController = Get.put(TeamController());
 
   @override
   void initState() {
@@ -398,6 +406,7 @@ class _NotifypageState extends State<Notifypage> with TickerProviderStateMixin {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Container(
+
                     width: width! - 40,
                     height: 180,
                     decoration: BoxDecoration(
@@ -414,7 +423,7 @@ class _NotifypageState extends State<Notifypage> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -433,7 +442,7 @@ class _NotifypageState extends State<Notifypage> with TickerProviderStateMixin {
                                     child: Container(
                                       decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(12),
+                                          BorderRadius.circular(12),
                                           color: const Color(0xff5a00ca)),
                                       width: 120,
                                       height: 45,
@@ -568,2246 +577,1755 @@ class _NotifypageState extends State<Notifypage> with TickerProviderStateMixin {
               ),
               // tab bar view here
               SizedBox(
-                height: height = 330 * 4.2,
+                height: taskController.myNotifyTaskList.length ==0? 400: taskController.myNotifyTaskList.length * 350,
                 child: TabBarView(
                   controller: _tabController,
                   children: [
                     // first tab bar view widget
                     Column(
                       children: [
-                        Expanded(
-                            child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: Morningtasklist.length,
-                                itemBuilder: ((context, index) {
-                                  Color colorstatus;
-                                  switch (Morningtasklist[index].Status) {
-                                    case "In-progress":
-                                      colorstatus = Colors.red;
-                                      break;
-                                    case "To-do":
-                                      colorstatus = Colors.blue;
-                                      break;
-                                    case "Resolved":
-                                      colorstatus = Colors.yellow;
-                                      break;
+                        Obx(() {
+                              if(taskController.myNotifyTaskList.isEmpty)
+                              {
+                                return Container(
+                                  height: 350,
+                                  child: Center(child: Text("Task is empty")),
+                                );
+                              }
+                              else
+                              {
+                                return SizedBox(
+                                  height: taskController.myNotifyTaskList.length * 350,
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                          child: ListView.builder(
+                                              shrinkWrap: true,
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              itemCount:  taskController.myNotifyTaskList.length,
+                                              itemBuilder: ((context, index) {
 
-                                    default:
-                                      colorstatus = Colors.black;
-                                  }
 
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 20),
-                                    child: Column(
-                                      children: [
-                                        InkWell(
-                                          // onTap: () => Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: ((context) =>
-                                          //             Addtasknew(
-                                          //               Taskname:
-                                          //                   Morningtasklist[index]
-                                          //                       .Taskname,
-                                          //               Taskdescription:
-                                          //                   Morningtasklist[index]
-                                          //                       .Taskdescription,
-                                          //               Date:
-                                          //                   Morningtasklist[index]
-                                          //                       .Date,
-                                          //               Status:
-                                          //                   Morningtasklist[index]
-                                          //                       .Status,
-                                          //               Priority:
-                                          //                   Morningtasklist[index]
-                                          //                       .Priority,
-                                          //               Weekdays:
-                                          //                   Morningtasklist[index]
-                                          //                       .Weekdays,
-                                          //             )))),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(12.0),
-                                                  topLeft:
-                                                      Radius.circular(12.0),
-                                                ),
-                                                color: Morningtasklist[index]
-                                                        .isselected
-                                                    ? const Color(0xFF68B984)
-                                                    : chooseCardColor(
-                                                        Morningtasklist[index]
-                                                            .Priority)),
-                                            width: width! - 30,
-                                            height: 270,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20, top: 10, right: 20),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                                return Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                      vertical: 10, horizontal: 20),
+                                                  child: Column(
                                                     children: [
-                                                      Text(
-                                                        Morningtasklist[index]
-                                                            .Taskname,
-                                                        style: const TextStyle(
-                                                            color: BLACKCOLOR,
-                                                            fontSize: 24,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w800),
-                                                      ),
                                                       InkWell(
-                                                        // onTap: (() => Navigator.push(
-                                                        //     context,
-                                                        //     MaterialPageRoute(
-                                                        //         builder: ((context) =>
-                                                        //             Taskpageprogress())))),
+                                                        onTap: () async {
+                                                          TaskModel task = await TaskModel(
+                                                            id: taskController.myNotifyTaskList[index].id,
+                                                            userId: taskController.myNotifyTaskList[index].userId,
+                                                            taskName: taskController.myNotifyTaskList[index].taskName,
+                                                            task_owner: taskController.myNotifyTaskList[index].task_owner,
+                                                            description:taskController.myNotifyTaskList[index].description,
+                                                            status:taskController.myNotifyTaskList[index].status,
+                                                            subTask:taskController.myNotifyTaskList[index].subTask,
+                                                            priority:taskController.myNotifyTaskList[index].priority,
+                                                            startDate:taskController.myNotifyTaskList[index].startDate,
+                                                            endDate:taskController.myNotifyTaskList[index].endDate,
+                                                            assignId: taskController.myNotifyTaskList[index].assignId,
+                                                            notifyId: taskController.myNotifyTaskList[index].notifyId,
+                                                            createdAt:  taskController.myNotifyTaskList[index].createdAt,
+                                                            updatedAt:  taskController.myNotifyTaskList[index].updatedAt,
+                                                            userName: taskController.myNotifyTaskList[index].userName,
+                                                            notify_names: taskController.myNotifyTaskList[index].notify_names,
+                                                          );
+                                                          taskController.fetchComments(task.id);
+
+
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: ((context) =>
+                                                                      Taskpageprogress(
+                                                                          task:task
+                                                                      ))));
+                                                        },
                                                         child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12),
-                                                            color: Morningtasklist[
-                                                                            index]
-                                                                        .Status ==
-                                                                    "In-progress"
-                                                                ? Colors.blue
-                                                                : Morningtasklist[index]
-                                                                            .Status ==
-                                                                        "To-do"
-                                                                    ? Colors
-                                                                        .amber
-                                                                    : Morningtasklist[index]
-                                                                                .Status ==
-                                                                            "Resolved"
-                                                                        ? Colors
-                                                                            .pink
-                                                                        : Colors
-                                                                            .lime,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius: const BorderRadius.only(
+                                                                topRight: Radius.circular(12.0),
+                                                                topLeft: Radius.circular(12.0),
+                                                              ),
+                                                              color:
+                                                              Morningtasklist[index].isselected
+                                                                  ? const Color(0xFF68B984)
+                                                                  : chooseCardColor(
+                                                                  Morningtasklist[index]
+                                                                      .Priority)),
+                                                          width: width! - 30,
+                                                          height: 260,
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.only(
+                                                                left: 20, top: 10, right: 20),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                              CrossAxisAlignment.start,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                                  children: [
+                                                                    Flexible(
+                                                                      child: Text(
+                                                                        taskController.myNotifyTaskList[index].taskName,
+                                                                        maxLines: 1,
+                                                                        style: const TextStyle(
+                                                                            overflow: TextOverflow.ellipsis,
+
+                                                                            color: BLACKCOLOR,
+                                                                            fontSize: 24,
+                                                                            fontWeight:
+                                                                            FontWeight.w800),
+                                                                      ),
+                                                                    ),
+                                                                    InkWell(
+                                                                      // onTap: (() => Navigator.push(
+                                                                      //     context,
+                                                                      //     MaterialPageRoute(
+                                                                      //         builder: ((context) =>
+                                                                      //             Taskpageprogress())
+                                                                      //             )
+                                                                      //             )
+                                                                      //             ),
+                                                                      child: Container(
+                                                                        decoration: BoxDecoration(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(12),
+                                                                          color: taskController.myNotifyTaskList[index].status == "In-progress"
+                                                                              ? Colors.blue
+                                                                              : taskController.myNotifyTaskList[index].status  == "To-do"
+                                                                              ? Colors.amber
+                                                                              : taskController.myNotifyTaskList[index].status == "Resolved" ? Colors.pink : Colors.lime,
+                                                                        ),
+                                                                        width: 90,
+                                                                        height: 40,
+                                                                        child: Center(
+                                                                            child: Text(
+                                                                              taskController.myNotifyTaskList[index].status,
+                                                                              style: const TextStyle(
+                                                                                  color:
+                                                                                  BUTTONTEXTCOLOR),
+                                                                            )),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                Text(
+                                                                  taskController.myNotifyTaskList[index].description,
+                                                                  style: const TextStyle(
+                                                                      color: BLACKCOLOR,
+                                                                      fontSize: 18,
+                                                                      fontWeight: FontWeight.w400),
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 15,
+                                                                ),
+                                                                // Row(
+                                                                //   children: [
+                                                                //     Icon(
+                                                                //       Icons.alarm,
+                                                                //       color: BLACKCOLOR,
+                                                                //     ),
+                                                                //     SizedBox(
+                                                                //       width: 10,
+                                                                //     ),
+                                                                //     Text(
+                                                                //       Morningtasklist[index]
+                                                                //           .TimeScheduleFromtime,
+                                                                //       style: TextStyle(
+                                                                //           color: BLACKCOLOR,
+                                                                //           fontSize: 16,
+                                                                //           fontWeight:
+                                                                //               FontWeight.w400),
+                                                                //     ),
+                                                                //     Text(
+                                                                //       Morningtasklist[index]
+                                                                //           .TimeScheduleTotime,
+                                                                //       style: TextStyle(
+                                                                //           color: BLACKCOLOR,
+                                                                //           fontSize: 16,
+                                                                //           fontWeight:
+                                                                //               FontWeight.w400),
+                                                                //     ),
+                                                                //   ],
+                                                                // ),
+
+                                                                // SizedBox(
+                                                                //   height: 10,
+                                                                // ),
+                                                                Row(
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width: 25,
+                                                                      height: 25,
+                                                                      child: Image.asset(
+                                                                        ASSIGNTOYOU,
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding:
+                                                                      const EdgeInsets.only(
+                                                                          left: 10),
+                                                                      child: Row(
+                                                                        crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
+                                                                        mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                        children: [
+                                                                          for(int i=0;i<taskController.myNotifyTaskList[index].userName.length;i++)
+                                                                            SizedBox(
+                                                                              height: 35,
+                                                                              width: 35,
+                                                                              child: TextAvatar(
+                                                                                textColor:
+                                                                                Colors.white,
+                                                                                shape: Shape.Circular,
+                                                                                text:
+                                                                                "${taskController.myNotifyTaskList[index].userName[i].firstName} ${taskController.myNotifyTaskList[index].userName[i].lastName}",
+                                                                                fontSize: 14,
+                                                                                numberLetters: 2,
+                                                                              ),
+                                                                            ),
+                                                                          // const SizedBox(
+                                                                          //   width: 1,
+                                                                          // ),
+                                                                          // SizedBox(
+                                                                          //   height: 35,
+                                                                          //   width: 35,
+                                                                          //   child: TextAvatar(
+                                                                          //     textColor:
+                                                                          //     Colors.white,
+                                                                          //     shape: Shape.Circular,
+                                                                          //     text: "Bhive team",
+                                                                          //     fontSize: 14,
+                                                                          //     numberLetters: 2,
+                                                                          //   ),
+                                                                          // ),
+                                                                          // const SizedBox(
+                                                                          //   width: 1,
+                                                                          // ),
+                                                                          // SizedBox(
+                                                                          //   height: 35,
+                                                                          //   width: 35,
+                                                                          //   child: TextAvatar(
+                                                                          //     textColor:
+                                                                          //     Colors.white,
+                                                                          //     shape: Shape.Circular,
+                                                                          //     text: "Vicky b",
+                                                                          //     fontSize: 14,
+                                                                          //     numberLetters: 2,
+                                                                          //   ),
+                                                                          // ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+
+                                                                const SizedBox(
+                                                                  height: 15,
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    const Icon(Icons.notifications,
+                                                                        color: BLACKCOLOR),
+                                                                    Padding(
+                                                                      padding:
+                                                                      const EdgeInsets.only(
+                                                                          left: 10),
+                                                                      child: Row(
+                                                                        crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
+                                                                        mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                        children: [
+                                                                          for(int i=0;i<taskController.myNotifyTaskList[index].notify_names.length;i++)
+                                                                            SizedBox(
+                                                                              height: 35,
+                                                                              width: 35,
+                                                                              child: TextAvatar(
+                                                                                textColor:
+                                                                                Colors.white,
+                                                                                shape: Shape.Circular,
+                                                                                text:
+                                                                                "${taskController.myNotifyTaskList[index].notify_names[i].firstName} ${taskController.myNotifyTaskList[index].notify_names[i].lastName}",
+                                                                                fontSize: 14,
+                                                                                numberLetters: 2,
+                                                                              ),
+                                                                            ),
+                                                                          // const SizedBox(
+                                                                          //   width: 1,
+                                                                          // ),
+                                                                          // SizedBox(
+                                                                          //   height: 35,
+                                                                          //   width: 35,
+                                                                          //   child: TextAvatar(
+                                                                          //     textColor:
+                                                                          //     Colors.white,
+                                                                          //     shape: Shape.Circular,
+                                                                          //     text: "Bhive team",
+                                                                          //     fontSize: 14,
+                                                                          //     numberLetters: 2,
+                                                                          //   ),
+                                                                          // ),
+                                                                          // const SizedBox(
+                                                                          //   width: 1,
+                                                                          // ),
+                                                                          // SizedBox(
+                                                                          //   height: 35,
+                                                                          //   width: 35,
+                                                                          //   child: TextAvatar(
+                                                                          //     textColor:
+                                                                          //     Colors.white,
+                                                                          //     shape: Shape.Circular,
+                                                                          //     text: "Vicky b",
+                                                                          //     fontSize: 14,
+                                                                          //     numberLetters: 2,
+                                                                          //   ),
+                                                                          // ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 15,
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    const Icon(Icons.calendar_today,
+                                                                        color: BLACKCOLOR),
+                                                                    const SizedBox(
+                                                                      width: 10,
+                                                                    ),
+                                                                    Text(
+                                                                      taskController.myNotifyTaskList[index].startDate +"  -  "+taskController.myNotifyTaskList[index].endDate,
+                                                                      style: const TextStyle(
+                                                                          color: BLACKCOLOR,
+                                                                          fontSize: 16,
+                                                                          fontWeight:
+                                                                          FontWeight.w400),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
-                                                          width: 90,
-                                                          height: 40,
-                                                          child: Center(
-                                                              child: Text(
-                                                            Morningtasklist[
-                                                                        index]
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        decoration: const BoxDecoration(
+                                                          borderRadius: BorderRadius.only(
+                                                              bottomRight: Radius.circular(12.0),
+                                                              bottomLeft: Radius.circular(12.0)),
+                                                          color: Color.fromARGB(179, 208, 208, 208),
+                                                        ),
+                                                        width: width! - 30,
+                                                        height: 50,
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.only(
+                                                              left: 10, right: 10),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Text(
+                                                                    Morningtasklist[index]
+                                                                        .isselected
+                                                                        ? 'Done'
+                                                                        : taskController.myNotifyTaskList[index].priority,
+                                                                    style: const TextStyle(
+                                                                      fontSize: 18,
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.only(
+                                                                        left: 60),
+                                                                    child: index % 1 == 1
+                                                                        ? Container()
+                                                                        : Container(
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius:
+                                                                          BorderRadius
+                                                                              .circular(
+                                                                              30),
+                                                                          border: Border.all(
+                                                                              color: const Color(
+                                                                                  0xffe94c89))),
+                                                                      child: Padding(
+                                                                        padding:
+                                                                        EdgeInsets.all(
+                                                                            8.0),
+                                                                        child: Text(
+                                                                            Morningtasklist[
+                                                                            index]
+                                                                                .isselected
+                                                                                ? "Done"
+                                                                                : "Overdue"),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              IconButton(
+                                                                icon: Morningtasklist[index]
                                                                     .isselected
-                                                                ? "Done"
-                                                                : Morningtasklist[
-                                                                        index]
-                                                                    .Status,
-                                                            style: const TextStyle(
-                                                                color:
-                                                                    BUTTONTEXTCOLOR),
-                                                          )),
+                                                                    ? const Icon(
+                                                                  Icons.check_box,
+                                                                  color: Colors.green,
+                                                                )
+                                                                    : const Icon(
+                                                                  Icons
+                                                                      .check_box_outline_blank,
+                                                                  color: Colors.blue,
+                                                                ),
+                                                                onPressed: (() {
+                                                                  setState(() {
+                                                                    Morningtasklist[index]
+                                                                        .isselected =
+                                                                    !Morningtasklist[index]
+                                                                        .isselected;
+                                                                  });
+                                                                }),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
                                                   ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(
-                                                    Morningtasklist[index]
-                                                        .Taskdescription,
-                                                    style: const TextStyle(
-                                                        color: BLACKCOLOR,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Icon(
-                                                  //       Icons.alarm,
-                                                  //       color: BLACKCOLOR,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 10,
-                                                  //     ),
-                                                  //     Text(
-                                                  //       Morningtasklist[index]
-                                                  //           .TimeScheduleFromtime,
-                                                  //       style: TextStyle(
-                                                  //           color: BLACKCOLOR,
-                                                  //           fontSize: 16,
-                                                  //           fontWeight:
-                                                  //               FontWeight.w400),
-                                                  //     ),
-                                                  //     Text(
-                                                  //       Morningtasklist[index]
-                                                  //           .TimeScheduleTotime,
-                                                  //       style: TextStyle(
-                                                  //           color: BLACKCOLOR,
-                                                  //           fontSize: 16,
-                                                  //           fontWeight:
-                                                  //               FontWeight.w400),
-                                                  //     ),
-                                                  //   ],
-                                                  // ),
+                                                );
+                                              })))
+                                    ],
+                                  ),
+                                );
+                              }
 
-                                                  // SizedBox(
-                                                  //   height: 10,
-                                                  // ),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 25,
-                                                        height: 25,
-                                                        child: Image.asset(
-                                                          ASSIGNTOYOU,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 10),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Pranav Flutter",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Bhive team",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text: "Vicky b",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        // Text(
-                                                        //   Morningtasklist[index]
-                                                        //       .AssignedTo,
-                                                        //   style: TextStyle(
-                                                        //       color: BLACKCOLOR,
-                                                        //       fontSize: 16,
-                                                        //       fontWeight:
-                                                        //           FontWeight.w400),
-                                                        // ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.notifications,
-                                                          color: BLACKCOLOR),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 10),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Bulut peker",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Pranav royal",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text: "Vicky b",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-
-                                                        // Text(
-                                                        //   Morningtasklist[index]
-                                                        //       .Notifiy,
-                                                        //   style: TextStyle(
-                                                        //       color: BLACKCOLOR,
-                                                        //       fontSize: 16,
-                                                        //       fontWeight:
-                                                        //           FontWeight.w300),
-                                                        // ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.calendar_today,
-                                                          color: BLACKCOLOR),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        Morningtasklist[index]
-                                                            .Date,
-                                                        style: const TextStyle(
-                                                            color: BLACKCOLOR,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  // Row(
-                                                  //   children: const [
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Mon",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Thu",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Wed",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Thu",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Fri",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     )
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                bottomRight:
-                                                    Radius.circular(12.0),
-                                                bottomLeft:
-                                                    Radius.circular(12.0)),
-                                            color: Color.fromARGB(
-                                                179, 208, 208, 208),
-                                          ),
-                                          width: width! - 30,
-                                          height: 50,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10, right: 10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  Morningtasklist[index]
-                                                          .isselected
-                                                      ? 'Done'
-                                                      : Morningtasklist[index]
-                                                          .Priority,
-                                                  style: const TextStyle(
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  icon: Morningtasklist[index]
-                                                          .isselected
-                                                      ? const Icon(
-                                                          Icons.check_box,
-                                                          color: Colors.green,
-                                                        )
-                                                      : const Icon(
-                                                          Icons
-                                                              .check_box_outline_blank,
-                                                          color: Colors.blue,
-                                                        ),
-                                                  onPressed: (() {
-                                                    setState(() {
-                                                      Morningtasklist[index]
-                                                              .isselected =
-                                                          !Morningtasklist[
-                                                                  index]
-                                                              .isselected;
-                                                    });
-                                                  }),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                })))
+                            }
+                        ),
                       ],
                     ),
+                    Column(
+                      children: [
+                        Obx(() {
+                          if(taskController.notifyCompleted.isEmpty)
+                          {
+                            return Container(
+                              height: 350,
+                              child: Center(child: Text("Task is empty")),
+                            );
+                          }
+                          else
+                          {
+                            return SizedBox(
+                              height: taskController.notifyCompleted.length * 350,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          itemCount:  taskController.notifyCompleted.length,
+                                          itemBuilder: ((context, index) {
 
+
+                                            return Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  vertical: 10, horizontal: 20),
+                                              child: Column(
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () async {
+                                                      TaskModel task = await TaskModel(
+                                                        id: taskController.notifyCompleted[index].id,
+                                                        userId: taskController.notifyCompleted[index].userId,
+                                                        taskName: taskController.notifyCompleted[index].taskName,
+                                                        task_owner: taskController.notifyCompleted[index].task_owner,
+                                                        description:taskController.notifyCompleted[index].description,
+                                                        status:taskController.notifyCompleted[index].status,
+                                                        subTask:taskController.notifyCompleted[index].subTask,
+                                                        priority:taskController.notifyCompleted[index].priority,
+                                                        startDate:taskController.notifyCompleted[index].startDate,
+                                                        endDate:taskController.notifyCompleted[index].endDate,
+                                                        assignId: taskController.notifyCompleted[index].assignId,
+                                                        notifyId: taskController.notifyCompleted[index].notifyId,
+                                                        createdAt:  taskController.notifyCompleted[index].createdAt,
+                                                        updatedAt:  taskController.notifyCompleted[index].updatedAt,
+                                                        userName: taskController.notifyCompleted[index].userName,
+                                                        notify_names: taskController.notifyCompleted[index].notify_names,
+                                                      );
+                                                      taskController.fetchComments(task.id);
+
+
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: ((context) =>
+                                                                  Taskpageprogress(
+                                                                      task:task
+                                                                  ))));
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: const BorderRadius.only(
+                                                            topRight: Radius.circular(12.0),
+                                                            topLeft: Radius.circular(12.0),
+                                                          ),
+                                                          color:
+                                                          Morningtasklist[index].isselected
+                                                              ? const Color(0xFF68B984)
+                                                              : chooseCardColor(
+                                                              Morningtasklist[index]
+                                                                  .Priority)),
+                                                      width: width! - 30,
+                                                      height: 260,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(
+                                                            left: 20, top: 10, right: 20),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment.start,
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                              children: [
+                                                                Flexible(
+                                                                  child: Text(
+                                                                    taskController.notifyCompleted[index].taskName,
+                                                                    maxLines: 1,
+                                                                    style: const TextStyle(
+                                                                        overflow: TextOverflow.ellipsis,
+
+                                                                        color: BLACKCOLOR,
+                                                                        fontSize: 24,
+                                                                        fontWeight:
+                                                                        FontWeight.w800),
+                                                                  ),
+                                                                ),
+                                                                InkWell(
+                                                                  // onTap: (() => Navigator.push(
+                                                                  //     context,
+                                                                  //     MaterialPageRoute(
+                                                                  //         builder: ((context) =>
+                                                                  //             Taskpageprogress())
+                                                                  //             )
+                                                                  //             )
+                                                                  //             ),
+                                                                  child: Container(
+                                                                    decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                      BorderRadius.circular(12),
+                                                                      color: taskController.notifyCompleted[index].status == "In-progress"
+                                                                          ? Colors.blue
+                                                                          : taskController.notifyCompleted[index].status  == "To-do"
+                                                                          ? Colors.amber
+                                                                          : taskController.notifyCompleted[index].status == "Resolved" ? Colors.pink : Colors.lime,
+                                                                    ),
+                                                                    width: 90,
+                                                                    height: 40,
+                                                                    child: Center(
+                                                                        child: Text(
+                                                                          taskController.notifyCompleted[index].status,
+                                                                          style: const TextStyle(
+                                                                              color:
+                                                                              BUTTONTEXTCOLOR),
+                                                                        )),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              taskController.notifyCompleted[index].description,
+                                                              style: const TextStyle(
+                                                                  color: BLACKCOLOR,
+                                                                  fontSize: 18,
+                                                                  fontWeight: FontWeight.w400),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                            // Row(
+                                                            //   children: [
+                                                            //     Icon(
+                                                            //       Icons.alarm,
+                                                            //       color: BLACKCOLOR,
+                                                            //     ),
+                                                            //     SizedBox(
+                                                            //       width: 10,
+                                                            //     ),
+                                                            //     Text(
+                                                            //       Morningtasklist[index]
+                                                            //           .TimeScheduleFromtime,
+                                                            //       style: TextStyle(
+                                                            //           color: BLACKCOLOR,
+                                                            //           fontSize: 16,
+                                                            //           fontWeight:
+                                                            //               FontWeight.w400),
+                                                            //     ),
+                                                            //     Text(
+                                                            //       Morningtasklist[index]
+                                                            //           .TimeScheduleTotime,
+                                                            //       style: TextStyle(
+                                                            //           color: BLACKCOLOR,
+                                                            //           fontSize: 16,
+                                                            //           fontWeight:
+                                                            //               FontWeight.w400),
+                                                            //     ),
+                                                            //   ],
+                                                            // ),
+
+                                                            // SizedBox(
+                                                            //   height: 10,
+                                                            // ),
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: 25,
+                                                                  height: 25,
+                                                                  child: Image.asset(
+                                                                    ASSIGNTOYOU,
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding:
+                                                                  const EdgeInsets.only(
+                                                                      left: 10),
+                                                                  child: Row(
+                                                                    crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                    mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                    children: [
+                                                                      for(int i=0;i<taskController.notifyCompleted[index].userName.length;i++)
+                                                                        SizedBox(
+                                                                          height: 35,
+                                                                          width: 35,
+                                                                          child: TextAvatar(
+                                                                            textColor:
+                                                                            Colors.white,
+                                                                            shape: Shape.Circular,
+                                                                            text:
+                                                                            "${taskController.notifyCompleted[index].userName[i].firstName} ${taskController.myNotifyTaskList[index].userName[i].lastName}",
+                                                                            fontSize: 14,
+                                                                            numberLetters: 2,
+                                                                          ),
+                                                                        ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Bhive team",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Vicky b",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+
+                                                            const SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                const Icon(Icons.notifications,
+                                                                    color: BLACKCOLOR),
+                                                                Padding(
+                                                                  padding:
+                                                                  const EdgeInsets.only(
+                                                                      left: 10),
+                                                                  child: Row(
+                                                                    crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                    mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                    children: [
+                                                                      for(int i=0;i<taskController.notifyCompleted[index].notify_names.length;i++)
+                                                                        SizedBox(
+                                                                          height: 35,
+                                                                          width: 35,
+                                                                          child: TextAvatar(
+                                                                            textColor:
+                                                                            Colors.white,
+                                                                            shape: Shape.Circular,
+                                                                            text:
+                                                                            "${taskController.notifyCompleted[index].notify_names[i].firstName} ${taskController.notifyCompleted[index].notify_names[i].lastName}",
+                                                                            fontSize: 14,
+                                                                            numberLetters: 2,
+                                                                          ),
+                                                                        ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Bhive team",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Vicky b",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                const Icon(Icons.calendar_today,
+                                                                    color: BLACKCOLOR),
+                                                                const SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Text(
+                                                                  taskController.notifyCompleted[index].startDate +"  -  "+taskController.notifyCompleted[index].endDate,
+                                                                  style: const TextStyle(
+                                                                      color: BLACKCOLOR,
+                                                                      fontSize: 16,
+                                                                      fontWeight:
+                                                                      FontWeight.w400),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    decoration: const BoxDecoration(
+                                                      borderRadius: BorderRadius.only(
+                                                          bottomRight: Radius.circular(12.0),
+                                                          bottomLeft: Radius.circular(12.0)),
+                                                      color: Color.fromARGB(179, 208, 208, 208),
+                                                    ),
+                                                    width: width! - 30,
+                                                    height: 50,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(
+                                                          left: 10, right: 10),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                Morningtasklist[index]
+                                                                    .isselected
+                                                                    ? 'Done'
+                                                                    : taskController.notifyCompleted[index].priority,
+                                                                style: const TextStyle(
+                                                                  fontSize: 18,
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(
+                                                                    left: 60),
+                                                                child: index % 1 == 1
+                                                                    ? Container()
+                                                                    : Container(
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                          30),
+                                                                      border: Border.all(
+                                                                          color: const Color(
+                                                                              0xffe94c89))),
+                                                                  child: Padding(
+                                                                    padding:
+                                                                    EdgeInsets.all(
+                                                                        8.0),
+                                                                    child: Text(
+                                                                        Morningtasklist[
+                                                                        index]
+                                                                            .isselected
+                                                                            ? "Done"
+                                                                            : "Overdue"),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          IconButton(
+                                                            icon: Morningtasklist[index]
+                                                                .isselected
+                                                                ? const Icon(
+                                                              Icons.check_box,
+                                                              color: Colors.green,
+                                                            )
+                                                                : const Icon(
+                                                              Icons
+                                                                  .check_box_outline_blank,
+                                                              color: Colors.blue,
+                                                            ),
+                                                            onPressed: (() {
+                                                              setState(() {
+                                                                Morningtasklist[index]
+                                                                    .isselected =
+                                                                !Morningtasklist[index]
+                                                                    .isselected;
+                                                              });
+                                                            }),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          })))
+                                ],
+                              ),
+                            );
+                          }
+
+                        }
+                        ),
+                      ],
+                    ),
                     // Completed
 
                     Column(
                       children: [
-                        Expanded(
-                            child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: Afternoontasklist.length,
-                                itemBuilder: ((context, index) {
-                                  Color colorstatus;
-                                  switch (Afternoontasklist[index].Status) {
-                                    case "In-progress":
-                                      colorstatus = Colors.red;
-                                      break;
-                                    case "To-do":
-                                      colorstatus = Colors.blue;
-                                      break;
-                                    case "Resolved":
-                                      colorstatus = Colors.yellow;
-                                      break;
+                        Obx(() {
+                          if(taskController.notifyInprogress.isEmpty)
+                          {
+                            return Container(
+                              height: 350,
+                              child: Center(child: Text("Task is empty")),
+                            );
+                          }
+                          else
+                          {
+                            return SizedBox(
+                              height: taskController.notifyInprogress.length * 350,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          itemCount:  taskController.notifyInprogress.length,
+                                          itemBuilder: ((context, index) {
 
-                                    default:
-                                      colorstatus = Colors.black;
-                                  }
 
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 20),
-                                    child: Column(
-                                      children: [
-                                        InkWell(
-                                          // onTap: () => Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: ((context) =>
-                                          //             Addtasknew(
-                                          //               Taskname:
-                                          //                   Afternoontasklist[
-                                          //                           index]
-                                          //                       .Taskname,
-                                          //               Taskdescription:
-                                          //                   Afternoontasklist[
-                                          //                           index]
-                                          //                       .Taskdescription,
-                                          //               Date: Afternoontasklist[
-                                          //                       index]
-                                          //                   .Date,
-                                          //               Status: Afternoontasklist[
-                                          //                       index]
-                                          //                   .Status,
-                                          //               Priority:
-                                          //                   Afternoontasklist[
-                                          //                           index]
-                                          //                       .Priority,
-                                          //               Weekdays:
-                                          //                   Afternoontasklist[
-                                          //                           index]
-                                          //                       .Weekdays,
-                                          //             )))),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(12.0),
-                                                  topLeft:
-                                                      Radius.circular(12.0),
-                                                ),
-                                                color: Afternoontasklist[index]
-                                                        .isselected
-                                                    ? const Color(0xFF68B984)
-                                                    : chooseCardColor(
-                                                        Afternoontasklist[index]
-                                                            .Priority)),
-                                            width: width! - 30,
-                                            height: 270,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20, top: 10, right: 20),
+                                            return Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  vertical: 10, horizontal: 20),
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        Afternoontasklist[index]
-                                                            .Taskname,
-                                                        style: const TextStyle(
-                                                            color: BLACKCOLOR,
-                                                            fontSize: 24,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w800),
-                                                      ),
-                                                      InkWell(
-                                                        // onTap: (() => Navigator.push(
-                                                        //     context,
-                                                        //     MaterialPageRoute(
-                                                        //         builder: ((context) =>
-                                                        //             Taskpageprogress())))),
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12),
-                                                            color: Afternoontasklist[
-                                                                            index]
-                                                                        .Status ==
-                                                                    "In-progress"
-                                                                ? Colors.blue
-                                                                : Afternoontasklist[index]
-                                                                            .Status ==
-                                                                        "To-do"
-                                                                    ? Colors
-                                                                        .amber
-                                                                    : Afternoontasklist[index]
-                                                                                .Status ==
-                                                                            "Resolved"
-                                                                        ? Colors
-                                                                            .pink
-                                                                        : Colors
-                                                                            .lime,
+                                                  InkWell(
+                                                    onTap: () async {
+                                                      TaskModel task = await TaskModel(
+                                                        id: taskController.notifyInprogress[index].id,
+                                                        userId: taskController.notifyInprogress[index].userId,
+                                                        taskName: taskController.notifyInprogress[index].taskName,
+                                                        task_owner: taskController.notifyInprogress[index].task_owner,
+                                                        description:taskController.notifyInprogress[index].description,
+                                                        status:taskController.notifyInprogress[index].status,
+                                                        subTask:taskController.notifyInprogress[index].subTask,
+                                                        priority:taskController.notifyInprogress[index].priority,
+                                                        startDate:taskController.notifyInprogress[index].startDate,
+                                                        endDate:taskController.notifyInprogress[index].endDate,
+                                                        assignId: taskController.notifyInprogress[index].assignId,
+                                                        notifyId: taskController.notifyInprogress[index].notifyId,
+                                                        createdAt:  taskController.notifyInprogress[index].createdAt,
+                                                        updatedAt:  taskController.notifyInprogress[index].updatedAt,
+                                                        userName: taskController.notifyInprogress[index].userName,
+                                                        notify_names: taskController.notifyInprogress[index].notify_names,
+                                                      );
+                                                      taskController.fetchComments(task.id);
+
+
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: ((context) =>
+                                                                  Taskpageprogress(
+                                                                      task:task
+                                                                  ))));
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: const BorderRadius.only(
+                                                            topRight: Radius.circular(12.0),
+                                                            topLeft: Radius.circular(12.0),
                                                           ),
-                                                          width: 90,
-                                                          height: 40,
-                                                          child: Center(
-                                                              child: Text(
-                                                            Afternoontasklist[
-                                                                    index]
-                                                                .Status,
-                                                            style: const TextStyle(
-                                                                color:
-                                                                    BUTTONTEXTCOLOR),
-                                                          )),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(
-                                                    Afternoontasklist[index]
-                                                        .Taskdescription,
-                                                    style: const TextStyle(
-                                                        color: BLACKCOLOR,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Icon(
-                                                  //       Icons.alarm,
-                                                  //       color: BLACKCOLOR,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 10,
-                                                  //     ),
-                                                  //     Text(
-                                                  //       Morningtasklist[index]
-                                                  //           .TimeScheduleFromtime,
-                                                  //       style: TextStyle(
-                                                  //           color: BLACKCOLOR,
-                                                  //           fontSize: 16,
-                                                  //           fontWeight:
-                                                  //               FontWeight.w400),
-                                                  //     ),
-                                                  //     Text(
-                                                  //       Morningtasklist[index]
-                                                  //           .TimeScheduleTotime,
-                                                  //       style: TextStyle(
-                                                  //           color: BLACKCOLOR,
-                                                  //           fontSize: 16,
-                                                  //           fontWeight:
-                                                  //               FontWeight.w400),
-                                                  //     ),
-                                                  //   ],
-                                                  // ),
-
-                                                  // SizedBox(
-                                                  //   height: 10,
-                                                  // ),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 25,
-                                                        height: 25,
-                                                        child: Image.asset(
-                                                          ASSIGNTOYOU,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 10),
-                                                        child: Row(
+                                                          color:
+                                                          Morningtasklist[index].isselected
+                                                              ? const Color(0xFF68B984)
+                                                              : chooseCardColor(
+                                                              Morningtasklist[index]
+                                                                  .Priority)),
+                                                      width: width! - 30,
+                                                      height: 260,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(
+                                                            left: 20, top: 10, right: 20),
+                                                        child: Column(
                                                           crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
+                                                          CrossAxisAlignment.start,
                                                           children: [
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Pranav Flutter",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                              children: [
+                                                                Flexible(
+                                                                  child: Text(
+                                                                    taskController.notifyInprogress[index].taskName,
+                                                                    maxLines: 1,
+                                                                    style: const TextStyle(
+                                                                        overflow: TextOverflow.ellipsis,
+
+                                                                        color: BLACKCOLOR,
+                                                                        fontSize: 24,
+                                                                        fontWeight:
+                                                                        FontWeight.w800),
+                                                                  ),
+                                                                ),
+                                                                InkWell(
+                                                                  // onTap: (() => Navigator.push(
+                                                                  //     context,
+                                                                  //     MaterialPageRoute(
+                                                                  //         builder: ((context) =>
+                                                                  //             Taskpageprogress())
+                                                                  //             )
+                                                                  //             )
+                                                                  //             ),
+                                                                  child: Container(
+                                                                    decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                      BorderRadius.circular(12),
+                                                                      color: taskController.notifyInprogress[index].status == "In-progress"
+                                                                          ? Colors.blue
+                                                                          : taskController.notifyInprogress[index].status  == "To-do"
+                                                                          ? Colors.amber
+                                                                          : taskController.notifyInprogress[index].status == "Resolved" ? Colors.pink : Colors.lime,
+                                                                    ),
+                                                                    width: 90,
+                                                                    height: 40,
+                                                                    child: Center(
+                                                                        child: Text(
+                                                                          taskController.notifyInprogress[index].status,
+                                                                          style: const TextStyle(
+                                                                              color:
+                                                                              BUTTONTEXTCOLOR),
+                                                                        )),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                             const SizedBox(
-                                                              width: 1,
+                                                              height: 10,
                                                             ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Bhive team",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
+                                                            Text(
+                                                              taskController.notifyInprogress[index].description,
+                                                              style: const TextStyle(
+                                                                  color: BLACKCOLOR,
+                                                                  fontSize: 18,
+                                                                  fontWeight: FontWeight.w400),
                                                             ),
                                                             const SizedBox(
-                                                              width: 1,
+                                                              height: 15,
                                                             ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text: "Vicky b",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
+                                                            // Row(
+                                                            //   children: [
+                                                            //     Icon(
+                                                            //       Icons.alarm,
+                                                            //       color: BLACKCOLOR,
+                                                            //     ),
+                                                            //     SizedBox(
+                                                            //       width: 10,
+                                                            //     ),
+                                                            //     Text(
+                                                            //       Morningtasklist[index]
+                                                            //           .TimeScheduleFromtime,
+                                                            //       style: TextStyle(
+                                                            //           color: BLACKCOLOR,
+                                                            //           fontSize: 16,
+                                                            //           fontWeight:
+                                                            //               FontWeight.w400),
+                                                            //     ),
+                                                            //     Text(
+                                                            //       Morningtasklist[index]
+                                                            //           .TimeScheduleTotime,
+                                                            //       style: TextStyle(
+                                                            //           color: BLACKCOLOR,
+                                                            //           fontSize: 16,
+                                                            //           fontWeight:
+                                                            //               FontWeight.w400),
+                                                            //     ),
+                                                            //   ],
+                                                            // ),
+
+                                                            // SizedBox(
+                                                            //   height: 10,
+                                                            // ),
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: 25,
+                                                                  height: 25,
+                                                                  child: Image.asset(
+                                                                    ASSIGNTOYOU,
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding:
+                                                                  const EdgeInsets.only(
+                                                                      left: 10),
+                                                                  child: Row(
+                                                                    crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                    mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                    children: [
+                                                                      for(int i=0;i<taskController.notifyInprogress[index].userName.length;i++)
+                                                                        SizedBox(
+                                                                          height: 35,
+                                                                          width: 35,
+                                                                          child: TextAvatar(
+                                                                            textColor:
+                                                                            Colors.white,
+                                                                            shape: Shape.Circular,
+                                                                            text:
+                                                                            "${taskController.notifyInprogress[index].userName[i].firstName} ${taskController.myNotifyTaskList[index].userName[i].lastName}",
+                                                                            fontSize: 14,
+                                                                            numberLetters: 2,
+                                                                          ),
+                                                                        ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Bhive team",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Vicky b",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+
+                                                            const SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                const Icon(Icons.notifications,
+                                                                    color: BLACKCOLOR),
+                                                                Padding(
+                                                                  padding:
+                                                                  const EdgeInsets.only(
+                                                                      left: 10),
+                                                                  child: Row(
+                                                                    crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                    mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                    children: [
+                                                                      for(int i=0;i<taskController.notifyInprogress[index].notify_names.length;i++)
+                                                                        SizedBox(
+                                                                          height: 35,
+                                                                          width: 35,
+                                                                          child: TextAvatar(
+                                                                            textColor:
+                                                                            Colors.white,
+                                                                            shape: Shape.Circular,
+                                                                            text:
+                                                                            "${taskController.notifyInprogress[index].notify_names[i].firstName} ${taskController.notifyInprogress[index].notify_names[i].lastName}",
+                                                                            fontSize: 14,
+                                                                            numberLetters: 2,
+                                                                          ),
+                                                                        ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Bhive team",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Vicky b",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                const Icon(Icons.calendar_today,
+                                                                    color: BLACKCOLOR),
+                                                                const SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Text(
+                                                                  taskController.notifyInprogress[index].startDate +"  -  "+taskController.notifyInprogress[index].endDate,
+                                                                  style: const TextStyle(
+                                                                      color: BLACKCOLOR,
+                                                                      fontSize: 16,
+                                                                      fontWeight:
+                                                                      FontWeight.w400),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ],
                                                         ),
-                                                        // Text(
-                                                        //   Morningtasklist[index]
-                                                        //       .AssignedTo,
-                                                        //   style: TextStyle(
-                                                        //       color: BLACKCOLOR,
-                                                        //       fontSize: 16,
-                                                        //       fontWeight:
-                                                        //           FontWeight.w400),
-                                                        // ),
                                                       ),
-                                                    ],
+                                                    ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.notifications,
-                                                          color: BLACKCOLOR),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 10),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Bulut peker",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
+                                                  Container(
+                                                    decoration: const BoxDecoration(
+                                                      borderRadius: BorderRadius.only(
+                                                          bottomRight: Radius.circular(12.0),
+                                                          bottomLeft: Radius.circular(12.0)),
+                                                      color: Color.fromARGB(179, 208, 208, 208),
+                                                    ),
+                                                    width: width! - 30,
+                                                    height: 50,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(
+                                                          left: 10, right: 10),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                Morningtasklist[index]
+                                                                    .isselected
+                                                                    ? 'Done'
+                                                                    : taskController.notifyInprogress[index].priority,
+                                                                style: const TextStyle(
+                                                                  fontSize: 18,
+                                                                ),
                                                               ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Pranav royal",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(
+                                                                    left: 60),
+                                                                child: index % 1 == 1
+                                                                    ? Container()
+                                                                    : Container(
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                          30),
+                                                                      border: Border.all(
+                                                                          color: const Color(
+                                                                              0xffe94c89))),
+                                                                  child: Padding(
+                                                                    padding:
+                                                                    EdgeInsets.all(
+                                                                        8.0),
+                                                                    child: Text(
+                                                                        Morningtasklist[
+                                                                        index]
+                                                                            .isselected
+                                                                            ? "Done"
+                                                                            : "Overdue"),
+                                                                  ),
+                                                                ),
                                                               ),
+                                                            ],
+                                                          ),
+                                                          IconButton(
+                                                            icon: Morningtasklist[index]
+                                                                .isselected
+                                                                ? const Icon(
+                                                              Icons.check_box,
+                                                              color: Colors.green,
+                                                            )
+                                                                : const Icon(
+                                                              Icons
+                                                                  .check_box_outline_blank,
+                                                              color: Colors.blue,
                                                             ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text: "Vicky b",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-
-                                                        // Text(
-                                                        //   Morningtasklist[index]
-                                                        //       .Notifiy,
-                                                        //   style: TextStyle(
-                                                        //       color: BLACKCOLOR,
-                                                        //       fontSize: 16,
-                                                        //       fontWeight:
-                                                        //           FontWeight.w300),
-                                                        // ),
+                                                            onPressed: (() {
+                                                              setState(() {
+                                                                Morningtasklist[index]
+                                                                    .isselected =
+                                                                !Morningtasklist[index]
+                                                                    .isselected;
+                                                              });
+                                                            }),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
+                                                    ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.calendar_today,
-                                                          color: BLACKCOLOR),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        Afternoontasklist[index]
-                                                            .Date,
-                                                        style: const TextStyle(
-                                                            color: BLACKCOLOR,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  // Row(
-                                                  //   children: const [
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Mon",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Thu",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Wed",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Thu",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Fri",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     )
-                                                  //   ],
-                                                  // ),
                                                 ],
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                bottomRight:
-                                                    Radius.circular(12.0),
-                                                bottomLeft:
-                                                    Radius.circular(12.0)),
-                                            color: Color.fromARGB(
-                                                179, 208, 208, 208),
-                                          ),
-                                          width: width! - 30,
-                                          height: 50,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10, right: 10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  Afternoontasklist[index]
-                                                          .isselected
-                                                      ? 'Done'
-                                                      : Afternoontasklist[index]
-                                                          .Priority,
-                                                  style: const TextStyle(
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  icon: Afternoontasklist[index]
-                                                          .isselected
-                                                      ? const Icon(
-                                                          Icons.check_box,
-                                                          color: Colors.green,
-                                                        )
-                                                      : const Icon(
-                                                          Icons
-                                                              .check_box_outline_blank,
-                                                          color: Colors.blue,
-                                                        ),
-                                                  onPressed: (() {
-                                                    setState(() {
-                                                      Afternoontasklist[index]
-                                                              .isselected =
-                                                          !Afternoontasklist[
-                                                                  index]
-                                                              .isselected;
-                                                    });
-                                                  }),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                })))
+                                            );
+                                          })))
+                                ],
+                              ),
+                            );
+                          }
+
+                        }
+                        ),
                       ],
                     ),
 
                     //pending
-                    Column(
-                      children: [
-                        Expanded(
-                            child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: Eveningtasklist.length,
-                                itemBuilder: ((context, index) {
-                                  Color colorstatus;
-                                  switch (Eveningtasklist[index].Status) {
-                                    case "In-progress":
-                                      colorstatus = Colors.red;
-                                      break;
-                                    case "To-do":
-                                      colorstatus = Colors.blue;
-                                      break;
-                                    case "Resolved":
-                                      colorstatus = Colors.yellow;
-                                      break;
 
-                                    default:
-                                      colorstatus = Colors.black;
-                                  }
-
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 20),
-                                    child: Column(
-                                      children: [
-                                        InkWell(
-                                          // onTap: () => Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: ((context) =>
-                                          //             Addtasknew(
-                                          //               Taskname:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Taskname,
-                                          //               Taskdescription:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Taskdescription,
-                                          //               Date:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Date,
-                                          //               Status:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Status,
-                                          //               Priority:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Priority,
-                                          //               Weekdays:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Weekdays,
-                                          //             )))),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(12.0),
-                                                  topLeft:
-                                                      Radius.circular(12.0),
-                                                ),
-                                                color: Eveningtasklist[index]
-                                                        .isselected
-                                                    ? const Color(0xFF68B984)
-                                                    : chooseCardColor(
-                                                        Eveningtasklist[index]
-                                                            .Priority)),
-                                            width: width! - 30,
-                                            height: 270,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20, top: 10, right: 20),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        Eveningtasklist[index]
-                                                            .Taskname,
-                                                        style: const TextStyle(
-                                                            color: BLACKCOLOR,
-                                                            fontSize: 24,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w800),
-                                                      ),
-                                                      InkWell(
-                                                        // onTap: (() => Navigator.push(
-                                                        //     context,
-                                                        //     MaterialPageRoute(
-                                                        //         builder:
-                                                        //             ((context) =>
-                                                        //                 Taskpageprogress())))),
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12),
-                                                            color: Eveningtasklist[
-                                                                            index]
-                                                                        .Status ==
-                                                                    "In-progress"
-                                                                ? Colors.blue
-                                                                : Eveningtasklist[index]
-                                                                            .Status ==
-                                                                        "To-do"
-                                                                    ? Colors
-                                                                        .amber
-                                                                    : Eveningtasklist[index]
-                                                                                .Status ==
-                                                                            "Resolved"
-                                                                        ? Colors
-                                                                            .pink
-                                                                        : Colors
-                                                                            .lime,
-                                                          ),
-                                                          width: 90,
-                                                          height: 40,
-                                                          child: Center(
-                                                              child: Text(
-                                                            Eveningtasklist[
-                                                                    index]
-                                                                .Status,
-                                                            style: const TextStyle(
-                                                                color:
-                                                                    BUTTONTEXTCOLOR),
-                                                          )),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(
-                                                    Eveningtasklist[index]
-                                                        .Taskdescription,
-                                                    style: const TextStyle(
-                                                        color: BLACKCOLOR,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Icon(
-                                                  //       Icons.alarm,
-                                                  //       color: BLACKCOLOR,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 10,
-                                                  //     ),
-                                                  //     Text(
-                                                  //       Morningtasklist[index]
-                                                  //           .TimeScheduleFromtime,
-                                                  //       style: TextStyle(
-                                                  //           color: BLACKCOLOR,
-                                                  //           fontSize: 16,
-                                                  //           fontWeight:
-                                                  //               FontWeight.w400),
-                                                  //     ),
-                                                  //     Text(
-                                                  //       Morningtasklist[index]
-                                                  //           .TimeScheduleTotime,
-                                                  //       style: TextStyle(
-                                                  //           color: BLACKCOLOR,
-                                                  //           fontSize: 16,
-                                                  //           fontWeight:
-                                                  //               FontWeight.w400),
-                                                  //     ),
-                                                  //   ],
-                                                  // ),
-
-                                                  // SizedBox(
-                                                  //   height: 10,
-                                                  // ),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 25,
-                                                        height: 25,
-                                                        child: Image.asset(
-                                                          ASSIGNTOYOU,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 10),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Pranav Flutter",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Bhive team",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text: "Vicky b",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        // Text(
-                                                        //   Morningtasklist[index]
-                                                        //       .AssignedTo,
-                                                        //   style: TextStyle(
-                                                        //       color: BLACKCOLOR,
-                                                        //       fontSize: 16,
-                                                        //       fontWeight:
-                                                        //           FontWeight.w400),
-                                                        // ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.notifications,
-                                                          color: BLACKCOLOR),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 10),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Bulut peker",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Pranav royal",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text: "Vicky b",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-
-                                                        // Text(
-                                                        //   Morningtasklist[index]
-                                                        //       .Notifiy,
-                                                        //   style: TextStyle(
-                                                        //       color: BLACKCOLOR,
-                                                        //       fontSize: 16,
-                                                        //       fontWeight:
-                                                        //           FontWeight.w300),
-                                                        // ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.calendar_today,
-                                                          color: BLACKCOLOR),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        Eveningtasklist[index]
-                                                            .Date,
-                                                        style: const TextStyle(
-                                                            color: BLACKCOLOR,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  // Row(
-                                                  //   children: const [
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Mon",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Thu",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Wed",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Thu",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Fri",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     )
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                bottomRight:
-                                                    Radius.circular(12.0),
-                                                bottomLeft:
-                                                    Radius.circular(12.0)),
-                                            color: Color.fromARGB(
-                                                179, 208, 208, 208),
-                                          ),
-                                          width: width! - 30,
-                                          height: 50,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10, right: 10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  Eveningtasklist[index]
-                                                          .isselected
-                                                      ? 'Done'
-                                                      : Eveningtasklist[index]
-                                                          .Priority,
-                                                  style: const TextStyle(
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  icon: Eveningtasklist[index]
-                                                          .isselected
-                                                      ? const Icon(
-                                                          Icons.check_box,
-                                                          color: Colors.green,
-                                                        )
-                                                      : const Icon(
-                                                          Icons
-                                                              .check_box_outline_blank,
-                                                          color: Colors.blue,
-                                                        ),
-                                                  onPressed: (() {
-                                                    setState(() {
-                                                      Eveningtasklist[index]
-                                                              .isselected =
-                                                          !Eveningtasklist[
-                                                                  index]
-                                                              .isselected;
-                                                    });
-                                                  }),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                })))
-                      ],
-                    ),
 
                     Column(
                       children: [
-                        Expanded(
-                            child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: Overduetasklist.length,
-                                itemBuilder: ((context, index) {
-                                  Color colorstatus;
-                                  switch (Overduetasklist[index].Status) {
-                                    case "In-progress":
-                                      colorstatus = Colors.red;
-                                      break;
-                                    case "To-do":
-                                      colorstatus = Colors.blue;
-                                      break;
-                                    case "Resolved":
-                                      colorstatus = Colors.yellow;
-                                      break;
+                        Obx(() {
+                          if(taskController.notifyOverdue.isEmpty)
+                          {
+                            return Container(
+                              height: 350,
+                              child: Center(child: Text("Task is empty")),
+                            );
+                          }
+                          else
+                          {
+                            return SizedBox(
+                              height: taskController.notifyOverdue.length * 350,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          itemCount:  taskController.notifyOverdue.length,
+                                          itemBuilder: ((context, index) {
 
-                                    default:
-                                      colorstatus = Colors.black;
-                                  }
 
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 20),
-                                    child: Column(
-                                      children: [
-                                        InkWell(
-                                          // onTap: () => Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: ((context) =>
-                                          //             Addtasknew(
-                                          //               Taskname:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Taskname,
-                                          //               Taskdescription:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Taskdescription,
-                                          //               Date:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Date,
-                                          //               Status:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Status,
-                                          //               Priority:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Priority,
-                                          //               Weekdays:
-                                          //                   Eveningtasklist[index]
-                                          //                       .Weekdays,
-                                          //             )))),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(12.0),
-                                                  topLeft:
-                                                      Radius.circular(12.0),
-                                                ),
-                                                color: Overduetasklist[index]
-                                                        .isselected
-                                                    ? const Color(0xFF68B984)
-                                                    : chooseCardColor(
-                                                        Overduetasklist[index]
-                                                            .Priority)),
-                                            width: width! - 30,
-                                            height: 270,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 20, top: 10, right: 20),
+                                            return Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  vertical: 10, horizontal: 20),
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        Overduetasklist[index]
-                                                            .Taskname,
-                                                        style: const TextStyle(
-                                                            color: BLACKCOLOR,
-                                                            fontSize: 24,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w800),
-                                                      ),
-                                                      InkWell(
-                                                        // onTap: (() => Navigator.push(
-                                                        //     context,
-                                                        //     MaterialPageRoute(
-                                                        //         builder:
-                                                        //             ((context) =>
-                                                        //                 Taskpageprogress())))),
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12),
-                                                            color: Overduetasklist[
-                                                                            index]
-                                                                        .Status ==
-                                                                    "In-progress"
-                                                                ? Colors.blue
-                                                                : Overduetasklist[index]
-                                                                            .Status ==
-                                                                        "To-do"
-                                                                    ? Colors
-                                                                        .amber
-                                                                    : Eveningtasklist[index]
-                                                                                .Status ==
-                                                                            "Resolved"
-                                                                        ? Colors
-                                                                            .pink
-                                                                        : Colors
-                                                                            .lime,
+                                                  InkWell(
+                                                    onTap: () async {
+                                                      TaskModel task = await TaskModel(
+                                                        id: taskController.notifyOverdue[index].id,
+                                                        userId: taskController.notifyOverdue[index].userId,
+                                                        taskName: taskController.notifyOverdue[index].taskName,
+                                                        task_owner: taskController.notifyOverdue[index].task_owner,
+                                                        description:taskController.notifyOverdue[index].description,
+                                                        status:taskController.notifyOverdue[index].status,
+                                                        subTask:taskController.notifyOverdue[index].subTask,
+                                                        priority:taskController.notifyOverdue[index].priority,
+                                                        startDate:taskController.notifyOverdue[index].startDate,
+                                                        endDate:taskController.notifyOverdue[index].endDate,
+                                                        assignId: taskController.notifyOverdue[index].assignId,
+                                                        notifyId: taskController.notifyOverdue[index].notifyId,
+                                                        createdAt:  taskController.notifyOverdue[index].createdAt,
+                                                        updatedAt:  taskController.notifyOverdue[index].updatedAt,
+                                                        userName: taskController.notifyOverdue[index].userName,
+                                                        notify_names: taskController.notifyOverdue[index].notify_names,
+                                                      );
+                                                      taskController.fetchComments(task.id);
+
+
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: ((context) =>
+                                                                  Taskpageprogress(
+                                                                      task:task
+                                                                  ))));
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: const BorderRadius.only(
+                                                            topRight: Radius.circular(12.0),
+                                                            topLeft: Radius.circular(12.0),
                                                           ),
-                                                          width: 90,
-                                                          height: 40,
-                                                          child: Center(
-                                                              child: Text(
-                                                            Overduetasklist[
-                                                                        index]
-                                                                    .isselected
-                                                                ? "Done"
-                                                                : Overduetasklist[
-                                                                        index]
-                                                                    .Status,
-                                                            style: const TextStyle(
-                                                                color:
-                                                                    BUTTONTEXTCOLOR),
-                                                          )),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(
-                                                    Overduetasklist[index]
-                                                        .Taskdescription,
-                                                    style: const TextStyle(
-                                                        color: BLACKCOLOR,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Icon(
-                                                  //       Icons.alarm,
-                                                  //       color: BLACKCOLOR,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 10,
-                                                  //     ),
-                                                  //     Text(
-                                                  //       Morningtasklist[index]
-                                                  //           .TimeScheduleFromtime,
-                                                  //       style: TextStyle(
-                                                  //           color: BLACKCOLOR,
-                                                  //           fontSize: 16,
-                                                  //           fontWeight:
-                                                  //               FontWeight.w400),
-                                                  //     ),
-                                                  //     Text(
-                                                  //       Morningtasklist[index]
-                                                  //           .TimeScheduleTotime,
-                                                  //       style: TextStyle(
-                                                  //           color: BLACKCOLOR,
-                                                  //           fontSize: 16,
-                                                  //           fontWeight:
-                                                  //               FontWeight.w400),
-                                                  //     ),
-                                                  //   ],
-                                                  // ),
-
-                                                  // SizedBox(
-                                                  //   height: 10,
-                                                  // ),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 25,
-                                                        height: 25,
-                                                        child: Image.asset(
-                                                          ASSIGNTOYOU,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 10),
-                                                        child: Row(
+                                                          color:
+                                                          Morningtasklist[index].isselected
+                                                              ? const Color(0xFF68B984)
+                                                              : chooseCardColor(
+                                                              Morningtasklist[index]
+                                                                  .Priority)),
+                                                      width: width! - 30,
+                                                      height: 260,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(
+                                                            left: 20, top: 10, right: 20),
+                                                        child: Column(
                                                           crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
+                                                          CrossAxisAlignment.start,
                                                           children: [
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Pranav Flutter",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                              children: [
+                                                                Flexible(
+                                                                  child: Text(
+                                                                    taskController.notifyOverdue[index].taskName,
+                                                                    maxLines: 1,
+                                                                    style: const TextStyle(
+                                                                        overflow: TextOverflow.ellipsis,
+
+                                                                        color: BLACKCOLOR,
+                                                                        fontSize: 24,
+                                                                        fontWeight:
+                                                                        FontWeight.w800),
+                                                                  ),
+                                                                ),
+                                                                InkWell(
+                                                                  // onTap: (() => Navigator.push(
+                                                                  //     context,
+                                                                  //     MaterialPageRoute(
+                                                                  //         builder: ((context) =>
+                                                                  //             Taskpageprogress())
+                                                                  //             )
+                                                                  //             )
+                                                                  //             ),
+                                                                  child: Container(
+                                                                    decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                      BorderRadius.circular(12),
+                                                                      color: taskController.notifyOverdue[index].status == "In-progress"
+                                                                          ? Colors.blue
+                                                                          : taskController.notifyOverdue[index].status  == "To-do"
+                                                                          ? Colors.amber
+                                                                          : taskController.notifyOverdue[index].status == "Resolved" ? Colors.pink : Colors.lime,
+                                                                    ),
+                                                                    width: 90,
+                                                                    height: 40,
+                                                                    child: Center(
+                                                                        child: Text(
+                                                                          taskController.notifyOverdue[index].status,
+                                                                          style: const TextStyle(
+                                                                              color:
+                                                                              BUTTONTEXTCOLOR),
+                                                                        )),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                             const SizedBox(
-                                                              width: 1,
+                                                              height: 10,
                                                             ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Bhive team",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
+                                                            Text(
+                                                              taskController.notifyOverdue[index].description,
+                                                              style: const TextStyle(
+                                                                  color: BLACKCOLOR,
+                                                                  fontSize: 18,
+                                                                  fontWeight: FontWeight.w400),
                                                             ),
                                                             const SizedBox(
-                                                              width: 1,
+                                                              height: 15,
                                                             ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text: "Vicky b",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
+                                                            // Row(
+                                                            //   children: [
+                                                            //     Icon(
+                                                            //       Icons.alarm,
+                                                            //       color: BLACKCOLOR,
+                                                            //     ),
+                                                            //     SizedBox(
+                                                            //       width: 10,
+                                                            //     ),
+                                                            //     Text(
+                                                            //       Morningtasklist[index]
+                                                            //           .TimeScheduleFromtime,
+                                                            //       style: TextStyle(
+                                                            //           color: BLACKCOLOR,
+                                                            //           fontSize: 16,
+                                                            //           fontWeight:
+                                                            //               FontWeight.w400),
+                                                            //     ),
+                                                            //     Text(
+                                                            //       Morningtasklist[index]
+                                                            //           .TimeScheduleTotime,
+                                                            //       style: TextStyle(
+                                                            //           color: BLACKCOLOR,
+                                                            //           fontSize: 16,
+                                                            //           fontWeight:
+                                                            //               FontWeight.w400),
+                                                            //     ),
+                                                            //   ],
+                                                            // ),
+
+                                                            // SizedBox(
+                                                            //   height: 10,
+                                                            // ),
+                                                            Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: 25,
+                                                                  height: 25,
+                                                                  child: Image.asset(
+                                                                    ASSIGNTOYOU,
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding:
+                                                                  const EdgeInsets.only(
+                                                                      left: 10),
+                                                                  child: Row(
+                                                                    crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                    mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                    children: [
+                                                                      for(int i=0;i<taskController.notifyOverdue[index].userName.length;i++)
+                                                                        SizedBox(
+                                                                          height: 35,
+                                                                          width: 35,
+                                                                          child: TextAvatar(
+                                                                            textColor:
+                                                                            Colors.white,
+                                                                            shape: Shape.Circular,
+                                                                            text:
+                                                                            "${taskController.notifyOverdue[index].userName[i].firstName} ${taskController.notifyOverdue[index].userName[i].lastName}",
+                                                                            fontSize: 14,
+                                                                            numberLetters: 2,
+                                                                          ),
+                                                                        ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Bhive team",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Vicky b",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+
+                                                            const SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                const Icon(Icons.notifications,
+                                                                    color: BLACKCOLOR),
+                                                                Padding(
+                                                                  padding:
+                                                                  const EdgeInsets.only(
+                                                                      left: 10),
+                                                                  child: Row(
+                                                                    crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                    mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                    children: [
+                                                                      for(int i=0;i<taskController.notifyOverdue[index].notify_names.length;i++)
+                                                                        SizedBox(
+                                                                          height: 35,
+                                                                          width: 35,
+                                                                          child: TextAvatar(
+                                                                            textColor:
+                                                                            Colors.white,
+                                                                            shape: Shape.Circular,
+                                                                            text:
+                                                                            "${taskController.notifyOverdue[index].notify_names[i].firstName} ${taskController.notifyOverdue[index].notify_names[i].lastName}",
+                                                                            fontSize: 14,
+                                                                            numberLetters: 2,
+                                                                          ),
+                                                                        ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Bhive team",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                      // const SizedBox(
+                                                                      //   width: 1,
+                                                                      // ),
+                                                                      // SizedBox(
+                                                                      //   height: 35,
+                                                                      //   width: 35,
+                                                                      //   child: TextAvatar(
+                                                                      //     textColor:
+                                                                      //     Colors.white,
+                                                                      //     shape: Shape.Circular,
+                                                                      //     text: "Vicky b",
+                                                                      //     fontSize: 14,
+                                                                      //     numberLetters: 2,
+                                                                      //   ),
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                const Icon(Icons.calendar_today,
+                                                                    color: BLACKCOLOR),
+                                                                const SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Text(
+                                                                  taskController.notifyOverdue[index].startDate +"  -  "+taskController.notifyOverdue[index].endDate,
+                                                                  style: const TextStyle(
+                                                                      color: BLACKCOLOR,
+                                                                      fontSize: 16,
+                                                                      fontWeight:
+                                                                      FontWeight.w400),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ],
                                                         ),
-                                                        // Text(
-                                                        //   Morningtasklist[index]
-                                                        //       .AssignedTo,
-                                                        //   style: TextStyle(
-                                                        //       color: BLACKCOLOR,
-                                                        //       fontSize: 16,
-                                                        //       fontWeight:
-                                                        //           FontWeight.w400),
-                                                        // ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.notifications,
-                                                          color: BLACKCOLOR),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 10),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Bulut peker",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text:
-                                                                    "Pranav royal",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 1,
-                                                            ),
-                                                            SizedBox(
-                                                              height: 35,
-                                                              width: 35,
-                                                              child: TextAvatar(
-                                                                textColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: Shape
-                                                                    .Circular,
-                                                                text: "Vicky b",
-                                                                fontSize: 14,
-                                                                numberLetters:
-                                                                    2,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-
-                                                        // Text(
-                                                        //   Morningtasklist[index]
-                                                        //       .Notifiy,
-                                                        //   style: TextStyle(
-                                                        //       color: BLACKCOLOR,
-                                                        //       fontSize: 16,
-                                                        //       fontWeight:
-                                                        //           FontWeight.w300),
-                                                        // ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.calendar_today,
-                                                          color: BLACKCOLOR),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        Overduetasklist[index]
-                                                            .Date,
-                                                        style: const TextStyle(
-                                                            color: BLACKCOLOR,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  // Row(
-                                                  //   children: const [
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Mon",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Thu",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Wed",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Thu",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 3,
-                                                  //     ),
-                                                  //     SizedBox(
-                                                  //       width: 40,
-                                                  //       height: 40,
-                                                  //       child: CircleAvatar(
-                                                  //         backgroundColor:
-                                                  //             Colors.white,
-                                                  //         child: Text(
-                                                  //           "Fri",
-                                                  //           style: TextStyle(
-                                                  //               fontSize: 14,
-                                                  //               color:
-                                                  //                   BLACKCOLOR),
-                                                  //         ),
-                                                  //       ),
-                                                  //     )
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                bottomRight:
-                                                    Radius.circular(12.0),
-                                                bottomLeft:
-                                                    Radius.circular(12.0)),
-                                            color: Color.fromARGB(
-                                                179, 208, 208, 208),
-                                          ),
-                                          width: width! - 30,
-                                          height: 50,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10, right: 10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      Overduetasklist[index]
-                                                              .isselected
-                                                          ? 'Done'
-                                                          : Overduetasklist[
-                                                                  index]
-                                                              .Priority,
-                                                      style: const TextStyle(
-                                                        fontSize: 18,
                                                       ),
                                                     ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 60),
-                                                      child: index % 1 == 1
-                                                          ? Container()
-                                                          : Container(
-                                                              decoration: BoxDecoration(
-                                                                  borderRadius:
+                                                  ),
+                                                  Container(
+                                                    decoration: const BoxDecoration(
+                                                      borderRadius: BorderRadius.only(
+                                                          bottomRight: Radius.circular(12.0),
+                                                          bottomLeft: Radius.circular(12.0)),
+                                                      color: Color.fromARGB(179, 208, 208, 208),
+                                                    ),
+                                                    width: width! - 30,
+                                                    height: 50,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(
+                                                          left: 10, right: 10),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                Morningtasklist[index]
+                                                                    .isselected
+                                                                    ? 'Done'
+                                                                    : taskController.notifyOverdue[index].priority,
+                                                                style: const TextStyle(
+                                                                  fontSize: 18,
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets.only(
+                                                                    left: 60),
+                                                                child: index % 1 == 1
+                                                                    ? Container()
+                                                                    : Container(
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius:
                                                                       BorderRadius
                                                                           .circular(
-                                                                              30),
-                                                                  border: Border.all(
-                                                                      color: const Color(
-                                                                          0xffe94c89))),
-                                                              child: Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(
-                                                                            8.0),
-                                                                child: Text(Overduetasklist[
-                                                                            index]
-                                                                        .isselected
-                                                                    ? "Done"
-                                                                    : "Overdue"),
+                                                                          30),
+                                                                      border: Border.all(
+                                                                          color: const Color(
+                                                                              0xffe94c89))),
+                                                                  child: Padding(
+                                                                    padding:
+                                                                    EdgeInsets.all(
+                                                                        8.0),
+                                                                    child: Text(
+                                                                        Morningtasklist[
+                                                                        index]
+                                                                            .isselected
+                                                                            ? "Done"
+                                                                            : "Overdue"),
+                                                                  ),
+                                                                ),
                                                               ),
+                                                            ],
+                                                          ),
+                                                          IconButton(
+                                                            icon: Morningtasklist[index]
+                                                                .isselected
+                                                                ? const Icon(
+                                                              Icons.check_box,
+                                                              color: Colors.green,
+                                                            )
+                                                                : const Icon(
+                                                              Icons
+                                                                  .check_box_outline_blank,
+                                                              color: Colors.blue,
                                                             ),
+                                                            onPressed: (() {
+                                                              setState(() {
+                                                                Morningtasklist[index]
+                                                                    .isselected =
+                                                                !Morningtasklist[index]
+                                                                    .isselected;
+                                                              });
+                                                            }),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ],
-                                                ),
-                                                IconButton(
-                                                  icon: Overduetasklist[index]
-                                                          .isselected
-                                                      ? const Icon(
-                                                          Icons.check_box,
-                                                          color: Colors.green,
-                                                        )
-                                                      : const Icon(
-                                                          Icons
-                                                              .check_box_outline_blank,
-                                                          color: Colors.blue,
-                                                        ),
-                                                  onPressed: (() {
-                                                    setState(() {
-                                                      Overduetasklist[index]
-                                                              .isselected =
-                                                          !Overduetasklist[
-                                                                  index]
-                                                              .isselected;
-                                                    });
-                                                  }),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                })))
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          })))
+                                ],
+                              ),
+                            );
+                          }
+
+                        }
+                        ),
                       ],
                     ),
                   ],

@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:habittrackergad/controller/teamController.dart';
 import 'package:habittrackergad/model/profile_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -126,7 +127,7 @@ class UserController extends GetxController {
       var body = {
         "email": email.text,
         "password": password.text,
-        "device_token":fcm
+         "device_token":fcm
       };
       var dataJs = json.encode(body);
 
@@ -157,6 +158,8 @@ class UserController extends GetxController {
              await prefs.setString('userId', userModel!.id.toString());
              var uid = prefs.getString('userId');
              await prefs.setBool('userLoggedIn', true);
+             await Get.put(TeamController);
+             await profile();
              Get.snackbar("Success", resp['msg'].toString(),
                  backgroundColor: Colors.green.withOpacity(0.8),
                  colorText: Colors.white,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:habittrackergad/Components/Bottombar/Bottombarpage.dart';
+import 'package:habittrackergad/Components/Registerpage.dart/Register.dart';
 
 import '../../Utils/Constants.dart';
 import '../../controller/auth_controller.dart';
@@ -164,7 +165,33 @@ class _LoginState extends State<Login> {
                 ),
               );
 
-            })
+            }),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Text(
+                    "Don't have any account?",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Register()),
+                  ),
+                  child: const Text(
+                    "Sign up",
+                    style: TextStyle(fontSize: 18, color: Colors.green),
+                  ),
+                ),
+              ],
+            ),
+
           ],
         ),
       ),

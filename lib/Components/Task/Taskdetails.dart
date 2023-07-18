@@ -575,9 +575,13 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
-                    child: Text(widget.task.status.toString(),
+                    child: _selectedItemstatus == null?
+                    Text(widget.task.status.toString(),
                         style: const TextStyle(
-                            fontSize: 16, color: BUTTONTEXTCOLOR))),
+                            fontSize: 16, color: BUTTONTEXTCOLOR)):Text(_selectedItemstatus.toString(),
+                        style: const TextStyle(
+                            fontSize: 16, color: BUTTONTEXTCOLOR))
+                ),
               ),
             ),
              SizedBox(
@@ -965,7 +969,7 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
                   height: 10,
                 ),
                 InkWell(
-                  onTap: () => _selectItemstatus("To-do"),
+                  onTap: () => _selectItemstatus("Completed"),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -989,7 +993,7 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
                             ),
                           ),
                           const Text(
-                            "To-do",
+                            "Completed",
                             style: TextStyle(
                                 color: Color(0xffE98EAD),
                                 fontWeight: FontWeight.w700,
@@ -1004,7 +1008,7 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
                   height: 10,
                 ),
                 InkWell(
-                  onTap: () => _selectItemstatus("Resolved"),
+                  onTap: () => _selectItemstatus("Over due"),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -1028,7 +1032,7 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
                             ),
                           ),
                           const Text(
-                            "Resolved",
+                            "Over due",
                             style: TextStyle(
                                 color: Color(0xff4FA095),
                                 fontWeight: FontWeight.w700,
@@ -1049,7 +1053,13 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
     Navigator.pop(context);
     {
       setState(() {
-        _selectedItemstatus = name;
+        _selectedItemstatus = name == "Completed"? "completed":  name == "In-progress"?"in_progress":"over_due";
+        print("TASKSTAUS");
+        print(_selectedItemstatus);
+
+        taskController.taskUpdate(widget.task.id, _selectedItemstatus);
+        taskController.fetchTasks();
+
       });
     }
   }

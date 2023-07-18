@@ -3,7 +3,11 @@ import 'dart:math';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_calendar/flutter_advanced_calendar.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:habittrackergad/Components/Accounts/Automatic/chart_Automatic_account.dart';
+import 'package:habittrackergad/controller/accountController.dart';
 
 
 import '../../../Utils/Constants.dart';
@@ -164,19 +168,20 @@ class _AutomaticAccountpageState extends State<AutomaticAccountpage> {
     "at 6:29 PM",
     "at 5:51 AM"
   ];
-  late DateTime _selectedDate;
+  late DateTime _selectedDate = DateTime.now();
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
 
-    _resetSelectedDate();
+    // _resetSelectedDate();
   }
 
   void _resetSelectedDate() {
     _selectedDate = DateTime.now().add(const Duration(days: 2));
   }
+  AccountController accountController = Get.put(AccountController());
 
   final _calendarControllerToday = AdvancedCalendarController.today();
   final _calendarControllerCustom =
@@ -291,10 +296,13 @@ class _AutomaticAccountpageState extends State<AutomaticAccountpage> {
                 height: 20,
               ),
               InkWell(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: ((context) => ChartAutomaticaccount()))),
+                onTap: ()
+                {
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: ((context) => ChartAutomaticaccount())));
+                },
                 child: Container(
                   width: width! - 40,
                   height: 180,
@@ -391,16 +399,16 @@ class _AutomaticAccountpageState extends State<AutomaticAccountpage> {
               //     )
               //   ],
               // ),
-              const SizedBox(
-                height: 15,
-              ),
-              AdvancedCalendar(
-                controller: _calendarControllerToday,
-                events: events,
-                startWeekDay: 1,
-                innerDot: false,
-                weekLineHeight: 48.0,
-              ),
+              // const SizedBox(
+              //   height: 15,
+              // ),
+              // AdvancedCalendar(
+              //   controller: _calendarControllerToday,
+              //   events: events,
+              //   startWeekDay: 1,
+              //   innerDot: false,
+              //   weekLineHeight: 48.0,
+              // ),
               // CalendarTimeline(
               //   showYears: false,
               //   initialDate: _selectedDate,
@@ -417,268 +425,452 @@ class _AutomaticAccountpageState extends State<AutomaticAccountpage> {
               //   selectableDayPredicate: (date) => date.day != 23,
               //   locale: 'en',
               // ),
-              const SizedBox(
-                height: 20,
+
+
+              SizedBox(height: 10,),
+
+              CalendarTimeline(
+
+                showYears: false,
+                initialDate: _selectedDate,
+                firstDate: DateTime.now(),
+                lastDate: DateTime.now().add(const Duration(days: 365 * 4)),
+                onDateSelected: (date)
+                async {
+                  setState(()
+                  {
+                    _selectedDate = date;
+                  });
+                  print("Select Date");
+                  print(_selectedDate);
+                  accountController.incomeExpenseDate.value = await _selectedDate;
+                  accountController.getIncomeAndExpenses();
+                },
+                leftMargin: 20,
+                monthColor: Colors.black,
+                dayColor: Color(0xFF704a9f),
+                dayNameColor: Colors.white,
+                activeDayColor: Colors.white,
+                activeBackgroundDayColor: Color(0xFF704a9f),
+                dotsColor: const Color(0xFF333A47),
+                // selectableDayPredicate: (date) => date.day != 23,
+                locale: 'en',
+
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2.3,
-                    height: 100,
-                    decoration: const BoxDecoration(
-                      // image: DecorationImage(
-                      //   image: AssetImage("images/"),
-                      //   fit: BoxFit.fitWidth,
-                      //   alignment: Alignment.topCenter,
-                      // ),
-                      color: INCOMECARDCOLOR,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12.0),
+              SizedBox(
+                height: 10,
+              ),
+
+
+              // AdvancedCalendar(
+              //   controller: _calendarControllerToday,
+              //   events: events,
+              //   startWeekDay: 1,
+              //   innerDot: false,
+              //   weekLineHeight: 48.0,
+              //
+              // ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 20, left: 20, bottom: 20),
+                child: Text(
+                  'Today Accounts',
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      color: BLACKCOLOR),
+                ),
+              ),
+              Obx(() {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AutomaticAccountpage()),
                       ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2.4,
+                        height: 100,
+                        decoration: const BoxDecoration(
+                          // image: DecorationImage(
+                          //   image: AssetImage("images/"),
+                          //   fit: BoxFit.fitWidth,
+                          //   alignment: Alignment.topCenter,
+                          // ),
+                          color: INCOMECARDCOLOR,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.0),
+                          ),
+                        ),
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  'Income ',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400,
+                                      color: INCOMEEXPENSESCARDTEXTCOLOR),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                  width: 15,
+                                  child: Image(
+                                    image: AssetImage(
+                                      "assets/icons/Incomearrow.icon.png",
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Text(
-                              'Income ',
+                              '₹ ${accountController.incomeValue}',
                               style: TextStyle(
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                  color: INCOMEEXPENSESCARDTEXTCOLOR),
+                                  fontWeight: FontWeight.w900,
+                                  color: INCOMECARDTEXTCOLOR),
                             ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            SizedBox(
-                              height: 15,
-                              width: 15,
-                              child: Image(
-                                image: AssetImage(
-                                  "assets/icons/Incomearrow.icon.png",
-                                ),
-                                color: Colors.white,
-                              ),
-                            )
                           ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Text(
-                          '₹ 2,50,000',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              color: INCOMECARDTEXTCOLOR),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2.3,
-                    height: 100,
-                    decoration: const BoxDecoration(
-                      color: EXPENSESCARDCOLOR,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12.0),
                       ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
+                    InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AutomaticAccountpage()),
+                      ),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2.4,
+                        height: 100,
+                        decoration: const BoxDecoration(
+                          color: EXPENSESCARDCOLOR,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.0),
+                          ),
+                        ),
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  'Expenses ',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400,
+                                      color: INCOMEEXPENSESCARDTEXTCOLOR),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                  width: 15,
+                                  child: Image(
+                                    image: AssetImage(
+                                      "assets/icons/Expansesarrow.logo.png",
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Text(
-                              'Expenses ',
+                              '₹ ${accountController.expensesValue}',
                               style: TextStyle(
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                  color: INCOMEEXPENSESCARDTEXTCOLOR),
+                                  fontWeight: FontWeight.w900,
+                                  color: EXPENSECARDTEXTCOLOR),
                             ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            SizedBox(
-                              height: 15,
-                              width: 15,
-                              child: Image(
-                                image: AssetImage(
-                                  "assets/icons/Expansesarrow.logo.png",
-                                ),
-                                color: Colors.white,
-                              ),
-                            )
                           ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Text(
-                          '₹ 6,700',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              color: EXPENSECARDTEXTCOLOR),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                );
+              }
               ),
+              SizedBox(
+                height: 10,
+              ),
+
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Container(
+              //       width: MediaQuery.of(context).size.width / 2.3,
+              //       height: 100,
+              //       decoration: const BoxDecoration(
+              //         // image: DecorationImage(
+              //         //   image: AssetImage("images/"),
+              //         //   fit: BoxFit.fitWidth,
+              //         //   alignment: Alignment.topCenter,
+              //         // ),
+              //         color: INCOMECARDCOLOR,
+              //         borderRadius: BorderRadius.all(
+              //           Radius.circular(12.0),
+              //         ),
+              //       ),
+              //       child: Column(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Row(
+              //             mainAxisAlignment: MainAxisAlignment.center,
+              //             children: const [
+              //               Text(
+              //                 'Income ',
+              //                 style: TextStyle(
+              //                     fontSize: 20,
+              //                     fontWeight: FontWeight.w400,
+              //                     color: INCOMEEXPENSESCARDTEXTCOLOR),
+              //               ),
+              //               SizedBox(
+              //                 width: 5,
+              //               ),
+              //               SizedBox(
+              //                 height: 15,
+              //                 width: 15,
+              //                 child: Image(
+              //                   image: AssetImage(
+              //                     "assets/icons/Incomearrow.icon.png",
+              //                   ),
+              //                   color: Colors.white,
+              //                 ),
+              //               )
+              //             ],
+              //           ),
+              //           const SizedBox(
+              //             height: 10,
+              //           ),
+              //           const Text(
+              //             '₹ 2,50,000',
+              //             style: TextStyle(
+              //                 fontSize: 20,
+              //                 fontWeight: FontWeight.w900,
+              //                 color: INCOMECARDTEXTCOLOR),
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //     Container(
+              //       width: MediaQuery.of(context).size.width / 2.3,
+              //       height: 100,
+              //       decoration: const BoxDecoration(
+              //         color: EXPENSESCARDCOLOR,
+              //         borderRadius: BorderRadius.all(
+              //           Radius.circular(12.0),
+              //         ),
+              //       ),
+              //       child: Column(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Row(
+              //             mainAxisAlignment: MainAxisAlignment.center,
+              //             children: const [
+              //               Text(
+              //                 'Expenses ',
+              //                 style: TextStyle(
+              //                     fontSize: 20,
+              //                     fontWeight: FontWeight.w400,
+              //                     color: INCOMEEXPENSESCARDTEXTCOLOR),
+              //               ),
+              //               SizedBox(
+              //                 width: 5,
+              //               ),
+              //               SizedBox(
+              //                 height: 15,
+              //                 width: 15,
+              //                 child: Image(
+              //                   image: AssetImage(
+              //                     "assets/icons/Expansesarrow.logo.png",
+              //                   ),
+              //                   color: Colors.white,
+              //                 ),
+              //               )
+              //             ],
+              //           ),
+              //           const SizedBox(
+              //             height: 10,
+              //           ),
+              //           const Text(
+              //             '₹ 6,700',
+              //             style: TextStyle(
+              //                 fontSize: 20,
+              //                 fontWeight: FontWeight.w900,
+              //                 color: EXPENSECARDTEXTCOLOR),
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ],
+              // ),
               const SizedBox(
                 height: 15,
               ),
-              SizedBox(
-                  height: 200,
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: ListView.builder(
-                              itemCount: PaymentMethodList.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                    right: 5,
-                                    top: 10,
-                                  ),
-                                  child: InkWell(
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const Account_All_History()),
-                                    ),
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          side: const BorderSide(
-                                              color: Colors.black)),
-                                      elevation: 2,
-                                      child: Container(
-                                        width: width! - 250,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 10, top: 15, right: 5),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 15),
-                                                    child: Image.asset(
-                                                      PaymentMethodList[index]
-                                                          .Paymentlogo,
-                                                      width: 30,
-                                                      height: 30,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    PaymentMethodList[index]
-                                                        .Paymentname,
-                                                    style: const TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 20,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      right: 20,
-                                                    ),
-                                                    child: Text(
-                                                        PaymentMethodList[index]
-                                                            .Paymentamount,
-                                                        style: const TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700)),
-                                                  ),
-
-                                                  // Icon(
-                                                  //   PaymentMethodList[index]
-                                                  //           .isselected
-                                                  //       ? Icons.arrow_upward
-                                                  //       : Icons.arrow_downward,
-                                                  // ),
-
-                                                  SizedBox(
-                                                    height: 20,
-                                                    width: 20,
-                                                    child: Image.asset(
-                                                        PaymentMethodList[index]
-                                                            .Paymenticon,
-                                                        color:
-                                                            PaymentMethodList[
-                                                                        index]
-                                                                    .isselected
-                                                                ? Colors
-                                                                    .deepOrange
-                                                                : Colors.green),
-                                                  ),
-
-                                                  //                      leading: IconButton(
-                                                  //   icon: Habitintrendlist[index].isselected
-                                                  //       ? Icon(Icons.check)
-                                                  //       : Icon(Icons.check_box_outline_blank),
-                                                  //   onPressed: (() {
-                                                  //     setState(() {
-                                                  //       if (Habitintrendlist[index].isselected) {
-                                                  //         Habitintrendlist[index].isselected =
-                                                  //             false;
-                                                  //       } else {
-                                                  //         Habitintrendlist[index].isselected = true;
-                                                  //       }
-                                                  //     });
-                                                  //   }),
-                                                  // ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              const Divider(
-                                                thickness: 1,
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 5),
-                                                child: Text(
-                                                    PaymentMethodList[index]
-                                                        .Paymentdate),
-                                              ),
-                                              Text(PaymentMethodList[index]
-                                                  .Paymenttime),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              })),
-                    ],
-                  )),
+              // SizedBox(
+              //     height: 200,
+              //     child: Row(
+              //       children: [
+              //         Expanded(
+              //             child: ListView.builder(
+              //                 itemCount: PaymentMethodList.length,
+              //                 scrollDirection: Axis.horizontal,
+              //                 itemBuilder: (context, index) {
+              //                   return Padding(
+              //                     padding: const EdgeInsets.only(
+              //                       right: 5,
+              //                       top: 10,
+              //                     ),
+              //                     child: InkWell(
+              //                       onTap: () => Navigator.push(
+              //                         context,
+              //                         MaterialPageRoute(
+              //                             builder: (context) =>
+              //                                 const Account_All_History()),
+              //                       ),
+              //                       child: Card(
+              //                         shape: RoundedRectangleBorder(
+              //                             borderRadius:
+              //                                 BorderRadius.circular(12),
+              //                             side: const BorderSide(
+              //                                 color: Colors.black)),
+              //                         elevation: 2,
+              //                         child: Container(
+              //                           width: width! - 250,
+              //                           child: Padding(
+              //                             padding: const EdgeInsets.only(
+              //                                 left: 10, top: 15, right: 5),
+              //                             child: Column(
+              //                               crossAxisAlignment:
+              //                                   CrossAxisAlignment.start,
+              //                               children: [
+              //                                 Row(
+              //                                   children: [
+              //                                     Padding(
+              //                                       padding:
+              //                                           const EdgeInsets.only(
+              //                                               right: 15),
+              //                                       child: Image.asset(
+              //                                         PaymentMethodList[index]
+              //                                             .Paymentlogo,
+              //                                         width: 30,
+              //                                         height: 30,
+              //                                       ),
+              //                                     ),
+              //                                     Text(
+              //                                       PaymentMethodList[index]
+              //                                           .Paymentname,
+              //                                       style: const TextStyle(
+              //                                           fontSize: 18,
+              //                                           fontWeight:
+              //                                               FontWeight.w500),
+              //                                     ),
+              //                                   ],
+              //                                 ),
+              //                                 const SizedBox(
+              //                                   height: 20,
+              //                                 ),
+              //                                 Row(
+              //                                   mainAxisAlignment:
+              //                                       MainAxisAlignment.center,
+              //                                   children: [
+              //                                     Padding(
+              //                                       padding:
+              //                                           const EdgeInsets.only(
+              //                                         right: 20,
+              //                                       ),
+              //                                       child: Text(
+              //                                           PaymentMethodList[index]
+              //                                               .Paymentamount,
+              //                                           style: const TextStyle(
+              //                                               fontSize: 18,
+              //                                               fontWeight:
+              //                                                   FontWeight
+              //                                                       .w700)),
+              //                                     ),
+              //
+              //                                     // Icon(
+              //                                     //   PaymentMethodList[index]
+              //                                     //           .isselected
+              //                                     //       ? Icons.arrow_upward
+              //                                     //       : Icons.arrow_downward,
+              //                                     // ),
+              //
+              //                                     SizedBox(
+              //                                       height: 20,
+              //                                       width: 20,
+              //                                       child: Image.asset(
+              //                                           PaymentMethodList[index]
+              //                                               .Paymenticon,
+              //                                           color:
+              //                                               PaymentMethodList[
+              //                                                           index]
+              //                                                       .isselected
+              //                                                   ? Colors
+              //                                                       .deepOrange
+              //                                                   : Colors.green),
+              //                                     ),
+              //
+              //                                     //                      leading: IconButton(
+              //                                     //   icon: Habitintrendlist[index].isselected
+              //                                     //       ? Icon(Icons.check)
+              //                                     //       : Icon(Icons.check_box_outline_blank),
+              //                                     //   onPressed: (() {
+              //                                     //     setState(() {
+              //                                     //       if (Habitintrendlist[index].isselected) {
+              //                                     //         Habitintrendlist[index].isselected =
+              //                                     //             false;
+              //                                     //       } else {
+              //                                     //         Habitintrendlist[index].isselected = true;
+              //                                     //       }
+              //                                     //     });
+              //                                     //   }),
+              //                                     // ),
+              //                                   ],
+              //                                 ),
+              //                                 const SizedBox(
+              //                                   height: 10,
+              //                                 ),
+              //                                 const Divider(
+              //                                   thickness: 1,
+              //                                 ),
+              //                                 Padding(
+              //                                   padding: const EdgeInsets.only(
+              //                                       bottom: 5),
+              //                                   child: Text(
+              //                                       PaymentMethodList[index]
+              //                                           .Paymentdate),
+              //                                 ),
+              //                                 Text(PaymentMethodList[index]
+              //                                     .Paymenttime),
+              //                               ],
+              //                             ),
+              //                           ),
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   );
+              //                 })),
+              //       ],
+              //     )),
               const SizedBox(
                 height: 15,
               ),
@@ -695,11 +887,14 @@ class _AutomaticAccountpageState extends State<AutomaticAccountpage> {
                       style: TextStyle(fontSize: 22, color: BLACKCOLOR),
                     ),
                     InkWell(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Account_All_History()),
-                      ),
+                      onTap: ()
+                      {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Account_All_History()),
+                        );
+                      },
                       child: Row(
                         children: const [
                           Text("View all"),
@@ -713,119 +908,110 @@ class _AutomaticAccountpageState extends State<AutomaticAccountpage> {
               const SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                height: 450,
-                child: Column(
-                  children: [
-                    Expanded(
-                        child: ListView.builder(
-                            itemCount: AccountHolderName.length,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: ((context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                ),
-                                child: Container(
-                                    width: width! - 10,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(color: getColor()),
-                                        color: BUTTONTEXTCOLOR),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 50,
-                                                height: 50,
-                                                child: CircleAvatar(
-                                                  radius: 48, // Image radius
-                                                  backgroundImage: AssetImage(
-                                                      AccountHolderImages[
-                                                          index]),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 5),
-                                                      child: Text(
-                                                        AccountHolderName[
-                                                            index],
-                                                        style: const TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 5),
-                                                      child: Text(
-                                                        AccountPaymentName[
-                                                            index],
-                                                        style: const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          AccountTransationMonth[
-                                                              index],
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 5,
-                                                                  right: 5),
-                                                          child: Text(
-                                                              AccountTransationDate[
-                                                                  index]),
-                                                        ),
-                                                        Text(
-                                                            AccountTransationTime[
-                                                                index]),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          Text(AccountTransationAmount[index],
-                                              style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500))
-                                        ],
-                                      ),
-                                    )),
-                              );
-                            }))),
-                  ],
-                ),
-              ),
+              Container(
+                height: 400,
+                child: Center(child: Text("List is empty")),
+              )
+
+              // Expanded(
+              //     child: ListView.builder(
+              //         shrinkWrap: true,
+              //         itemCount: AccountHolderName.length,
+              //         physics: const NeverScrollableScrollPhysics(),
+              //         itemBuilder: ((context, index) {
+              //           return Padding(
+              //             padding: const EdgeInsets.all(8.0),
+              //             child: Container(
+              //                 padding: EdgeInsets.all(8),
+              //                 width: width!,
+              //                 // height: 80,
+              //                 decoration: BoxDecoration(
+              //                     borderRadius: BorderRadius.circular(12),
+              //                     border: Border.all(color: getColor()),
+              //                     color: BUTTONTEXTCOLOR),
+              //                 child: Row(
+              //                   mainAxisAlignment:
+              //                   MainAxisAlignment.spaceBetween,
+              //                   children: [
+              //                     Row(
+              //                       children: [
+              //                         // SizedBox(
+              //                         //   width: 50,
+              //                         //   height: 50,
+              //                         //   child: CircleAvatar(
+              //                         //     radius: 48, // Image radius
+              //                         //     backgroundImage: AssetImage(
+              //                         //         AccountHolderImages[
+              //                         //         index]),
+              //                         //   ),
+              //                         // ),
+              //                         // SizedBox(width: 5,),
+              //                         Column(
+              //                           crossAxisAlignment:
+              //                           CrossAxisAlignment.start,
+              //                           mainAxisAlignment:
+              //                           MainAxisAlignment.center,
+              //                           children: [
+              //                             Padding(
+              //                               padding:
+              //                               const EdgeInsets.only(
+              //                                   bottom: 5),
+              //                               child: Text(
+              //                                 AccountHolderName[
+              //                                 index],
+              //                                 style: const TextStyle(
+              //                                     fontSize: 18,
+              //                                     fontWeight:
+              //                                     FontWeight
+              //                                         .w700),
+              //                               ),
+              //                             ),
+              //                             Padding(
+              //                               padding:
+              //                               const EdgeInsets.only(
+              //                                   bottom: 5),
+              //                               child: Text(
+              //                                 AccountPaymentName[
+              //                                 index],
+              //                                 style: const TextStyle(
+              //                                     fontWeight:
+              //                                     FontWeight
+              //                                         .w600),
+              //                               ),
+              //                             ),
+              //                             Row(
+              //                               children: [
+              //                                 Text(
+              //                                   AccountTransationMonth[
+              //                                   index],
+              //                                 ),
+              //                                 Padding(
+              //                                   padding:
+              //                                   const EdgeInsets
+              //                                       .only(
+              //                                       left: 5,
+              //                                       right: 5),
+              //                                   child: Text(
+              //                                       AccountTransationDate[
+              //                                       index]),
+              //                                 ),
+              //                                 Text(
+              //                                     AccountTransationTime[
+              //                                     index]),
+              //                               ],
+              //                             ),
+              //                           ],
+              //                         )
+              //                       ],
+              //                     ),
+              //                     Text(AccountTransationAmount[index],
+              //                         style: const TextStyle(
+              //                             fontSize: 18,
+              //                             fontWeight: FontWeight.w500))
+              //                   ],
+              //                 )),
+              //           );
+              //         }))),
             ],
           ),
         ),

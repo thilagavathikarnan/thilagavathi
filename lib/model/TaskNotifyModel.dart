@@ -1,5 +1,7 @@
-class TaskModel {
-  String id;
+import 'package:habittrackergad/model/task_model.dart';
+
+class TaskNotify {
+  int id;
   String userId;
   String taskName;
   String task_owner;
@@ -16,7 +18,7 @@ class TaskModel {
   List<UserNameModel> userName;
   List<NotifyNameModel> notify_names;
 
-  TaskModel({
+  TaskNotify({
     required this.id,
     required this.userId,
     required this.taskName,
@@ -35,8 +37,8 @@ class TaskModel {
     required this.notify_names,
   });
 
-  factory TaskModel.fromJson(Map<String, dynamic> json) {
-    return TaskModel(
+  factory TaskNotify.fromJson(Map<String, dynamic> json) {
+    return TaskNotify(
       id: json['id'],
       userId: json['user_id']??"",
       taskName: json['task_name']??"",
@@ -60,29 +62,29 @@ class TaskModel {
     );
   }
 }
-class UserNameModel {
-  String firstName;
-  String lastName;
-
-  UserNameModel({required this.firstName, required this.lastName});
-
-  factory UserNameModel.fromJson(Map<String, dynamic> json) {
-    return UserNameModel(
-      firstName: json['first_name']??"",
-      lastName: json['last_name']??"",
-    );
-  }
-}
-class NotifyNameModel {
-  String firstName;
-  String lastName;
-
-  NotifyNameModel({required this.firstName, required this.lastName});
-
-  factory NotifyNameModel.fromJson(Map<String, dynamic> json) {
-    return NotifyNameModel(
-      firstName: json['first_name']??"",
-      lastName: json['last_name']??"",
-    );
-  }
-}
+// class UserNameModel {
+//   String firstName;
+//   String lastName;
+//
+//   UserNameModel({required this.firstName, required this.lastName});
+//
+//   factory UserNameModel.fromJson(Map<String, dynamic> json) {
+//     return UserNameModel(
+//       firstName: json['first_name']??"",
+//       lastName: json['last_name']??"",
+//     );
+//   }
+// }
+// class NotifyNameModel {
+//   String firstName;
+//   String lastName;
+//
+//   NotifyNameModel({required this.firstName, required this.lastName});
+//
+//   factory NotifyNameModel.fromJson(Map<String, dynamic> json) {
+//     return NotifyNameModel(
+//       firstName: json['first_name']??"",
+//       lastName: json['last_name']??"",
+//     );
+//   }
+// }

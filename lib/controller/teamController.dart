@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:habittrackergad/controller/auth_controller.dart';
+import 'package:habittrackergad/model/TaskNotifyModel.dart';
 import 'package:habittrackergad/model/comment_model.dart';
 import 'package:habittrackergad/model/task_model.dart';
 import 'package:http/http.dart' as http;
@@ -26,7 +27,7 @@ class TeamController extends GetxController {
   // TaskStatusModel? taskStatus;
   final isTeamLoaders = false.obs;
   final myTaskList = <TaskModel>[].obs;
-
+  final myNotifyTaskList = <TaskModel>[].obs;
   // RxList<TaskModel> myTaskList = <TaskModel>[].obs;
   final isTeamSaveLoaders = false.obs;
   var taskStatus = TaskStatusModel(assigned: 0, completed: 0, inProgress: 0, overDue: 0).obs;
@@ -34,6 +35,19 @@ class TeamController extends GetxController {
   var taskStatusNotify = TaskStatusModel(assigned: 0, completed: 0, inProgress: 0, overDue: 0).obs;
   final commentList = <CommentModel>[].obs;
 
+  final notifyInprogress = <TaskModel>[].obs;
+  final notifyCompleted = <TaskModel>[].obs;
+  final notifyOverdue = <TaskModel>[].obs;
+  final assignMyTaskAll = <TaskNotify>[].obs;
+
+  final assignTaskInprogress = <TaskNotify>[].obs;
+  final assignTaskCompleted = <TaskNotify>[].obs;
+  final assignTaskOverDue = <TaskNotify>[].obs;
+
+  final assignByTaskAll = <TaskModel>[].obs;
+  final assignByTaskInprogress = <TaskModel>[].obs;
+  final assignByTaskCompleted = <TaskModel>[].obs;
+  final assignByTaskOverDue = <TaskModel>[].obs;
   // GetStorage _box = GetStorage();
 
   @override
@@ -41,9 +55,12 @@ class TeamController extends GetxController {
     super.onInit();
     getTaskStatusToMe();
     getTaskStatusByU();
+    fetchMyTasks();
     getTaskStatusNotify();
     getTeamList();
     fetchTasks();
+    fetchNotifyTasks();
+    fetchByTasks();
   }
   //  fetchTasks() async {
   // SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -110,6 +127,142 @@ class TeamController extends GetxController {
       throw Exception('$e');
     }
   }
+ void fetchNotifyTasks() async {
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+        var usId = await prefs.getString('userId');
+ var url = Uri.parse(mainUrl+taskUserNotifyUrl+"/${usId}");
+    try {
+      http.Response response = await http.get(url);
+      print("GETTASKKNOTIFY");
+      print(url);
+      final parsedResponse = jsonDecode(response.body);
+      print(parsedResponse['data']);
+
+      if (response.statusCode == 200) {
+        final parsedResponse = jsonDecode(response.body);
+
+        List<dynamic> taskData = parsedResponse['data'];
+        List<TaskModel> tasks = taskData.map((json) => TaskModel.fromJson(json)).toList();
+        myNotifyTaskList.assignAll(tasks);
+        notifyInprogress.clear();
+        notifyCompleted.clear();
+        notifyOverdue.clear();
+        for(int i = 0; i<myNotifyTaskList.length; i++)
+          {
+            if(myNotifyTaskList[i].status == "in_progress")
+              {
+                notifyInprogress.add(myNotifyTaskList[i]);
+              }
+            else if(myNotifyTaskList[i].status  == "completed")
+              {
+                notifyCompleted.add(myNotifyTaskList[i]);
+
+              }
+            else if(myNotifyTaskList[i].status  == "over_due")
+              {
+                notifyOverdue.add(myNotifyTaskList[i]);
+              }
+          }
+        print("GETXDESSIER");
+        print(myNotifyTaskList);
+      }
+      else {
+        throw Exception('Failed to fetch tasks');
+      }
+    } catch (e) {
+      throw Exception('$e');
+    }
+  }
+ void fetchMyTasks() async {
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+        var usId = await prefs.getString('userId');
+ var url = Uri.parse(mainUrl+taskByUrl+"/${usId}");
+    try {
+      http.Response response = await http.get(url);
+      print("GETTASKKALL");
+      print(url);
+      final parsedResponse = jsonDecode(response.body);
+      print(parsedResponse['data']);
+
+      if (response.statusCode == 200) {
+        final parsedResponse = jsonDecode(response.body);
+
+        List<dynamic> taskData = parsedResponse['data'];
+        List<TaskModel> tasks = taskData.map((json) => TaskModel.fromJson(json)).toList();
+        assignByTaskAll.assignAll(tasks);
+        assignByTaskInprogress.clear();
+        assignByTaskCompleted.clear();
+        assignByTaskOverDue.clear();
+        for(int i = 0; i<assignByTaskAll.length; i++)
+          {
+            if(assignByTaskAll[i].status == "in_progress")
+              {
+                assignByTaskInprogress.add(assignByTaskAll[i]);
+              }
+            else if(assignByTaskAll[i].status  == "completed")
+              {
+                assignByTaskCompleted.add(assignByTaskAll[i]);
+
+              }
+            else if(assignByTaskAll[i].status  == "over_due")
+              {
+                assignByTaskOverDue.add(assignByTaskAll[i]);
+              }
+          }
+        print("GETXDESSIERffff");
+        print(assignByTaskAll);
+      }
+      else {
+        throw Exception('Failed to fetch tasks');
+      }
+    } catch (e) {
+      throw Exception('$e');
+    }
+  }
+ void fetchByTasks() async {
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+        var usId = await prefs.getString('userId');
+ var url = Uri.parse(mainUrl+taskMyUrl+"?user_id=${usId}");
+    try {
+      http.Response response = await http.get(url);
+      print("GETTASKKALLBy");
+      print(url);
+
+      if (response.statusCode == 200) {
+        final parsedResponse = jsonDecode(response.body);
+        List<dynamic> taskData = parsedResponse['data'];
+        List<TaskNotify> tasks = taskData.map((json) => TaskNotify.fromJson(json)).toList();
+        assignMyTaskAll.clear();
+        assignMyTaskAll.assignAll(tasks);
+        assignTaskInprogress.clear();
+        assignTaskCompleted.clear();
+        assignTaskOverDue.clear();
+        for(int i = 0; i<assignMyTaskAll.length; i++)
+          {
+            if(assignMyTaskAll[i].status == "in_progress")
+              {
+                assignTaskInprogress.add(assignMyTaskAll[i]);
+              }
+            else if(assignMyTaskAll[i].status  == "completed")
+              {
+                assignTaskCompleted.add(assignMyTaskAll[i]);
+
+              }
+            else if(assignMyTaskAll[i].status  == "over_due")
+              {
+                assignTaskOverDue.add(assignMyTaskAll[i]);
+              }
+          }
+        print("GETXDESSIER");
+        print(assignMyTaskAll);
+      }
+      else {
+        throw Exception('Failed to fetch tasks');
+      }
+    } catch (e) {
+      throw Exception('$e');
+    }
+  }
  void fetchTasks() async {
    SharedPreferences prefs = await SharedPreferences.getInstance();
         var usId = await prefs.getString('userId');
@@ -125,6 +278,7 @@ class TeamController extends GetxController {
         List<dynamic> taskData = parsedResponse['data'];
         List<TaskModel> tasks = taskData.map((json) => TaskModel.fromJson(json)).toList();
         myTaskList.assignAll(tasks);
+
         print("GETXDESSIER");
         print(myTaskList);
       }
@@ -135,64 +289,48 @@ class TeamController extends GetxController {
       throw Exception('$e');
     }
   }
-
-  taskUpdate(name,designation, email,phone) async {
+  void taskUpdate(taskId,taskSatus) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var usId = await prefs.getString('userId');
 
     var body = {
-    "name":name,
-    "designation":designation,
-    "email":email,
-    "phone":phone,
-      "user_id": usId
+    "task_id":taskId,
+    "user_id":usId,
+    "status":taskSatus
     };
     var dataJs = json.encode(body);
+    print("STATUSUPDATE");
+    print(dataJs);
     try {
-      isTeamSaveLoaders.value = true;
-      print("POSTAPI");
-      var url = Uri.parse('https://habitseveryday.com/public/api/teams-create');
-      print(url);
-      print(body);
+      final response = await http.post(
+        Uri.parse(mainUrl+taskUpdateUrl),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: dataJs,
+      );
 
-      http.Response response = await http.post(url,
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: dataJs);
-      print(response.statusCode);
-      var resp = json.decode(response.body);
-      if (resp['success'] == true) {
-        getTeamList();
-        Get.back();
-        Get.snackbar("Success", "Habit request send successfully",
+      if (response.statusCode == 200) {
+        print(response.body);
+        var res = json.decode(response.body);
+        print("GETUPDATE");
+        print(res);
+        Get.snackbar("Success", "Comment successfully",
             backgroundColor: Colors.green.withOpacity(0.8),
             colorText: Colors.white,
             icon: Icon(
               Icons.check,
               color: Colors.white,
             ),
-            snackPosition: SnackPosition.BOTTOM);
+            snackPosition: SnackPosition.BOTTOM);      } else {
+        // Handle error response
+        print('PUT request failed with status: ${response.statusCode}');
       }
-      else
-        {
-          Get.snackbar("Alert", "${resp['message']}",
-              backgroundColor: Colors.black.withOpacity(0.7),
-              colorText: Colors.white,
-              icon: Icon(
-                Icons.warning,
-                color: Colors.white,
-              ),
-              snackPosition: SnackPosition.BOTTOM);
-        }
-      print(resp);
-
-      return resp;
     } catch (e) {
-      print("errror");
-      print("----------${e}");
-    } finally {
+      // Handle network or other exceptions
+      print('Error occurred: $e');
+    }finally {
       isTeamSaveLoaders.value = false;
     }
   }
@@ -312,8 +450,6 @@ class TeamController extends GetxController {
       isTeamSaveLoaders.value = false;
     }
   }
-
-
   taskAdd(taskName, description,subTaskName,selectTeams,selectTeamsNotify,startDate,endDate,_selectedItempriority,_selectedItemstatus) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usId = await prefs.getString('userId');
@@ -348,7 +484,7 @@ class TeamController extends GetxController {
       if (resp['success'] == true) {
         // getTeamList();
         // Get.back();
-        Get.snackbar("Success", "Habit request send successfully",
+        Get.snackbar("Success", "Task assigned successfully",
             backgroundColor: Colors.green.withOpacity(0.8),
             colorText: Colors.white,
             icon: Icon(
@@ -378,8 +514,6 @@ class TeamController extends GetxController {
       isTeamSaveLoaders.value = false;
     }
   }
-
-
   getTaskStatusByU() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usId = await prefs.getString('userId');
@@ -476,7 +610,6 @@ class TeamController extends GetxController {
       isTeamLoaders.value = false;
     }
   }
-
   getTeamList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usId = await prefs.getString('userId');
@@ -514,8 +647,4 @@ class TeamController extends GetxController {
       isTeamLoaders.value = false;
     }
   }
-
-
-
-
 }

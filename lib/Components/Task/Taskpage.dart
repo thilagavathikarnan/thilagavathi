@@ -495,7 +495,7 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const projectassignedtoyou()),
+                              builder: (context) =>  Assigned_to_you()),
                         ),
                         child: Container(
                           width: width! - 120,
@@ -656,8 +656,13 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const projectassignedbyyou()),
+                                builder: (context) =>  Assigned_by_you()),
                           );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => const projectassignedbyyou()),
+                          // );
                         },
                         child: Container(
                           width: width! - 120,
@@ -809,10 +814,14 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                         width: 10,
                       ),
                       InkWell(
-                        onTap: () => Navigator.push(
+                        // onTap: () => Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => const projectnotify()),
+                        // ),
+                        onTap:()=>Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => const projectnotify()),
+                          MaterialPageRoute(builder: (context) => Notifypage()),
                         ),
                         child: Container(
                           width: width! - 120,
@@ -1006,21 +1015,6 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                         physics: const NeverScrollableScrollPhysics(),
                                         itemCount: taskController.myTaskList.length,
                                         itemBuilder: ((context, index) {
-                                          Color colorstatus;
-                                          switch (Morningtasklist[index].Status) {
-                                            case "In-progress":
-                                              colorstatus = Colors.red;
-                                              break;
-                                            case "To-do":
-                                              colorstatus = Colors.blue;
-                                              break;
-                                            case "Resolved":
-                                              colorstatus = Colors.yellow;
-                                              break;
-
-                                            default:
-                                              colorstatus = Colors.black;
-                                          }
 
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(
@@ -1120,11 +1114,7 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                                                   height: 40,
                                                                   child: Center(
                                                                       child: Text(
-                                                                        Morningtasklist[index].isselected
-                                                                            ? "Done"
-                                                                            : Morningtasklist[
-                                                                        index]
-                                                                            .Status,
+                                                                        taskController.myTaskList[index].status,
                                                                         style: const TextStyle(
                                                                             color:
                                                                             BUTTONTEXTCOLOR),
@@ -1388,12 +1378,10 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                                                   padding:
                                                                   EdgeInsets.all(
                                                                       8.0),
-                                                                  child: Text(
-                                                                      Morningtasklist[
-                                                                      index]
-                                                                          .isselected
+                                                                  child: Text(taskController.myTaskList[index].status == "completed"||
+                                                                      Morningtasklist[index].isselected
                                                                           ? "Done"
-                                                                          : "Overdue"),
+                                                                          : "${taskController.myTaskList[index].status}"),
                                                                 ),
                                                               ),
                                                             ),
@@ -1401,7 +1389,7 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                                         ),
                                                         IconButton(
                                                           icon: Morningtasklist[index]
-                                                              .isselected
+                                                              .isselected || taskController.myTaskList[index].status == "completed"
                                                               ? const Icon(
                                                             Icons.check_box,
                                                             color: Colors.green,
@@ -1413,10 +1401,8 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                                           ),
                                                           onPressed: (() {
                                                             setState(() {
-                                                              Morningtasklist[index]
-                                                                  .isselected =
-                                                              !Morningtasklist[index]
-                                                                  .isselected;
+                                                              Morningtasklist[index].isselected = !Morningtasklist[index].isselected;
+                                                              taskController.fetchTasks();
                                                             });
                                                           }),
                                                         ),

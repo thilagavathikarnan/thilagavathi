@@ -1,9 +1,13 @@
 import 'dart:math';
 
+import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_calendar/flutter_advanced_calendar.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:habittrackergad/Components/Accounts/Automatic/AutomaticAccountspage.dart';
 import 'package:habittrackergad/Components/Accounts/Cash/Cashin.dart';
 import 'package:habittrackergad/Components/Accounts/Cash/Cashout.dart';
 import 'package:habittrackergad/Components/Accounts/Manual/Chart_Manual_account.dart';
@@ -12,6 +16,8 @@ import 'package:habittrackergad/Components/Accounts/Manual/Manual_cashbook_repor
 import 'package:habittrackergad/Components/Habit/Habit_report.dart';
 
 import 'package:habittrackergad/Utils/Constants.dart';
+import 'package:habittrackergad/controller/accountController.dart';
+import 'package:intl/intl.dart';
 
 class Cashin {
   String name = "";
@@ -117,21 +123,23 @@ class ManualAccountpage extends StatefulWidget {
 
 class _ManualAccountpageState extends State<ManualAccountpage>
     with SingleTickerProviderStateMixin {
+
   final controller = PageController(viewportFraction: 0.8, keepPage: true);
-  late DateTime _selectedDate;
+  late DateTime _selectedDate = DateTime.now();
   late TabController _tabController;
 
   @override
-  void initState() {
+  void initState()
+  {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-
-    _resetSelectedDate();
+    // _resetSelectedDate();
   }
 
   void _resetSelectedDate() {
     _selectedDate = DateTime.now().add(const Duration(days: 2));
   }
+  AccountController accountController = Get.put(AccountController());
 
   final random = Random();
   static List<Color> listColors = const [
@@ -180,9 +188,9 @@ class _ManualAccountpageState extends State<ManualAccountpage>
     _tabController.dispose();
   }
 
-  final _calendarControllerToday = AdvancedCalendarController.today();
-  final _calendarControllerCustom =
-      AdvancedCalendarController.custom(DateTime(2022, 10, 23));
+
+  // final _calendarControllerToday = AdvancedCalendarController.today();
+  final _calendarControllerCustom = AdvancedCalendarController.custom(DateTime(2022, 10, 23));
   final List<DateTime> events = [
     DateTime.now(),
     DateTime(2022, 10, 10),
@@ -258,9 +266,10 @@ class _ManualAccountpageState extends State<ManualAccountpage>
                 context,
                 MaterialPageRoute(
                     builder: ((context) => const ChartManualaccount()))),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
+            child:Padding(
+              padding: const EdgeInsets.all(12.0),
               child: Container(
+                padding: EdgeInsets.all(12),
                 width: width! - 40,
                 height: 180,
                 decoration: BoxDecoration(
@@ -276,47 +285,44 @@ class _ManualAccountpageState extends State<ManualAccountpage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Unlock the\npower of credit",
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w800,
-                                    color: BLACKCOLOR),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: const Color(0xff5a00ca)),
-                                  width: 120,
-                                  height: 45,
-                                  child: const Center(
-                                    child: Text("Activate",
-                                        style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w800,
-                                            color: BUTTONTEXTCOLOR)),
-                                  ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Unlock the\npower of credit",
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w800,
+                                  color: BLACKCOLOR),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: const Color(0xff5a00ca)),
+                                width: 120,
+                                height: 45,
+                                child: const Center(
+                                  child: Text("Activate",
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w800,
+                                          color: BUTTONTEXTCOLOR)),
                                 ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                              width: 150,
-                              height: 150,
-                              child: Image.asset(UNLOCKCREDITICON)),
-                        ],
-                      ),
-                    )
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                            width: 150,
+                            height: 150,
+                            child: Image.asset(UNLOCKCREDITICON)),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -326,16 +332,17 @@ class _ManualAccountpageState extends State<ManualAccountpage>
             height: 10,
           ),
 
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: AdvancedCalendar(
-              controller: _calendarControllerToday,
-              events: events,
-              startWeekDay: 1,
-              innerDot: false,
-              weekLineHeight: 48.0,
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 10, right: 10),
+          //   child: AdvancedCalendar(
+          //     controller: accountController.calendarControllerToday,
+          //     events: events,
+          //     startWeekDay: 1,
+          //     innerDot: false,
+          //     weekLineHeight: 48.0,
+          //
+          //   ),
+          // ),
           // CalendarTimeline(
           //   showYears: false,
           //   initialDate: _selectedDate,
@@ -352,126 +359,310 @@ class _ManualAccountpageState extends State<ManualAccountpage>
           //   selectableDayPredicate: (date) => date.day != 23,
           //   locale: 'en',
           // ),
-          const SizedBox(
-            height: 20,
-          ),
+          // const SizedBox(
+          //   height: 20,
+          // ),
 
           // give the tab bar a height [can change hheight to preferred height]
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width / 2.4,
-                height: 100,
-                decoration: const BoxDecoration(
-                  // image: DecorationImage(
-                  //   image: AssetImage("images/"),
-                  //   fit: BoxFit.fitWidth,
-                  //   alignment: Alignment.topCenter,
-                  // ),
-                  color: INCOMECARDCOLOR,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12.0),
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          'Income ',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              color: INCOMEEXPENSESCARDTEXTCOLOR),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        SizedBox(
-                          height: 15,
-                          width: 15,
-                          child: Image(
-                            image: AssetImage(
-                              "assets/icons/Incomearrow.icon.png",
-                            ),
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      '₹ 1,95,000',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          color: INCOMECARDTEXTCOLOR),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width / 2.4,
-                height: 100,
-                decoration: const BoxDecoration(
-                  color: EXPENSESCARDCOLOR,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(12.0),
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          'Expenses ',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              color: INCOMEEXPENSESCARDTEXTCOLOR),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        SizedBox(
-                          height: 15,
-                          width: 15,
-                          child: Image(
-                            image: AssetImage(
-                              "assets/icons/Expansesarrow.logo.png",
-                            ),
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      '₹ 2,04000',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          color: EXPENSECARDTEXTCOLOR),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: [
+          //     Container(
+          //       width: MediaQuery.of(context).size.width / 2.4,
+          //       height: 100,
+          //       decoration: const BoxDecoration(
+          //         // image: DecorationImage(
+          //         //   image: AssetImage("images/"),
+          //         //   fit: BoxFit.fitWidth,
+          //         //   alignment: Alignment.topCenter,
+          //         // ),
+          //         color: INCOMECARDCOLOR,
+          //         borderRadius: BorderRadius.all(
+          //           Radius.circular(12.0),
+          //         ),
+          //       ),
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: const [
+          //               Text(
+          //                 'Income ',
+          //                 style: TextStyle(
+          //                     fontSize: 20,
+          //                     fontWeight: FontWeight.w400,
+          //                     color: INCOMEEXPENSESCARDTEXTCOLOR),
+          //               ),
+          //               SizedBox(
+          //                 width: 5,
+          //               ),
+          //               SizedBox(
+          //                 height: 15,
+          //                 width: 15,
+          //                 child: Image(
+          //                   image: AssetImage(
+          //                     "assets/icons/Incomearrow.icon.png",
+          //                   ),
+          //                   color: Colors.white,
+          //                 ),
+          //               )
+          //             ],
+          //           ),
+          //           const SizedBox(
+          //             height: 10,
+          //           ),
+          //           const Text(
+          //             '₹ 1,95,000',
+          //             style: TextStyle(
+          //                 fontSize: 20,
+          //                 fontWeight: FontWeight.w900,
+          //                 color: INCOMECARDTEXTCOLOR),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //     Container(
+          //       width: MediaQuery.of(context).size.width / 2.4,
+          //       height: 100,
+          //       decoration: const BoxDecoration(
+          //         color: EXPENSESCARDCOLOR,
+          //         borderRadius: BorderRadius.all(
+          //           Radius.circular(12.0),
+          //         ),
+          //       ),
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: const [
+          //               Text(
+          //                 'Expenses ',
+          //                 style: TextStyle(
+          //                     fontSize: 20,
+          //                     fontWeight: FontWeight.w400,
+          //                     color: INCOMEEXPENSESCARDTEXTCOLOR),
+          //               ),
+          //               SizedBox(
+          //                 width: 5,
+          //               ),
+          //               SizedBox(
+          //                 height: 15,
+          //                 width: 15,
+          //                 child: Image(
+          //                   image: AssetImage(
+          //                     "assets/icons/Expansesarrow.logo.png",
+          //                   ),
+          //                   color: Colors.white,
+          //                 ),
+          //               )
+          //             ],
+          //           ),
+          //           const SizedBox(
+          //             height: 10,
+          //           ),
+          //           const Text(
+          //             '₹ 2,04000',
+          //             style: TextStyle(
+          //                 fontSize: 20,
+          //                 fontWeight: FontWeight.w900,
+          //                 color: EXPENSECARDTEXTCOLOR),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          CalendarTimeline(
+
+            showYears: false,
+            initialDate: _selectedDate,
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(const Duration(days: 365 * 4)),
+            onDateSelected: (date)
+            async {
+              setState(()
+              {
+                _selectedDate = date;
+              });
+              print("Select Date");
+              print(_selectedDate);
+              accountController.incomeExpenseDate.value = await _selectedDate;
+              accountController.getIncomeAndExpenses();
+              accountController.getCashOut();
+              accountController.getCashIn();
+
+            },
+            leftMargin: 20,
+            monthColor: Colors.black,
+            dayColor: Color(0xFF704a9f),
+            dayNameColor: Colors.white,
+            activeDayColor: Colors.white,
+            activeBackgroundDayColor: Color(0xFF704a9f),
+            dotsColor: const Color(0xFF333A47),
+            // selectableDayPredicate: (date) => date.day != 23,
+            locale: 'en',
+
           ),
-          const SizedBox(
+
+          SizedBox(
             height: 10,
           ),
 
+
+          // AdvancedCalendar(
+          //   controller: _calendarControllerToday,
+          //   events: events,
+          //   startWeekDay: 1,
+          //   innerDot: false,
+          //   weekLineHeight: 48.0,
+          //
+          // ),
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 20),
+            child: Text(
+              'Today Accounts',
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                  color: BLACKCOLOR),
+            ),
+          ),
+          Obx(() {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AutomaticAccountpage()),
+                  ),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2.4,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      // image: DecorationImage(
+                      //   image: AssetImage("images/"),
+                      //   fit: BoxFit.fitWidth,
+                      //   alignment: Alignment.topCenter,
+                      // ),
+                      color: INCOMECARDCOLOR,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12.0),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text(
+                              'Income ',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                  color: INCOMEEXPENSESCARDTEXTCOLOR),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            SizedBox(
+                              height: 15,
+                              width: 15,
+                              child: Image(
+                                image: AssetImage(
+                                  "assets/icons/Incomearrow.icon.png",
+                                ),
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          '₹ ${accountController.incomeValue}',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: INCOMECARDTEXTCOLOR),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AutomaticAccountpage()),
+                  ),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2.4,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      color: EXPENSESCARDCOLOR,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12.0),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text(
+                              'Expenses ',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                  color: INCOMEEXPENSESCARDTEXTCOLOR),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            SizedBox(
+                              height: 15,
+                              width: 15,
+                              child: Image(
+                                image: AssetImage(
+                                  "assets/icons/Expansesarrow.logo.png",
+                                ),
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          '₹ ${accountController.expensesValue}',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: EXPENSECARDTEXTCOLOR),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+          ),
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 20),
             child: Text(
@@ -531,166 +722,283 @@ class _ManualAccountpageState extends State<ManualAccountpage>
             child: TabBarView(
               controller: _tabController,
               children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: CashinList.length,
-                          itemBuilder: ((context, index) {
-                            return Column(
-                              children: [
-                                Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 25),
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            color: Colors.white,
-                                            border:
-                                                Border.all(color: Colors.grey)),
-                                        width: width! - 30,
-                                        height: 95,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(10),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    CashinList[index].name,
-                                                    style: const TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                  Text(CashinList[index].cashin,
-                                                      style: const TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color: Colors.green)),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, bottom: 10),
-                                              child: Text(CashinList[index]
-                                                  .Paymenttype),
-                                            ),
-                                            Row(
-                                              children: [
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(CashinList[index].date),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(CashinList[index].time),
-                                              ],
-                                            )
-                                            // Text(numberList[index].cashType == "cash in" ?Text("cash in ",style: TextStyle(color: numberList[0].cashType =="cash type"? Colors.green:Colors.red),))
-                                          ],
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            );
-                          })),
-                    ),
-                  ],
-                ),
+                Obx(() {
+                  if(accountController.cashInList.isEmpty)
+                    {
+                      return Container(
+                        child: Center(child: Text("No List")),
+                      );
 
-                // second tab bar view widget
-                Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: CashoutList.length,
-                          itemBuilder: ((context, index) {
-                            return Column(
-                              children: [
-                                Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 25),
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
+                    }
+                  else
+                    {
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                                physics:  NeverScrollableScrollPhysics(),
+                                itemCount: accountController.cashInList.length,
+                                itemBuilder: ((context, index) {
+                                  return Column(
+                                    children: [
+                                      Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 25),
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(10),
+                                                  color: Colors.white,
+                                                  border:
+                                                  Border.all(color: Colors.grey)),
+                                              width: width! - 30,
+                                              height: 95,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(10),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          accountController.cashInList[index].category.toString(),
+                                                          style: const TextStyle(
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                              FontWeight.w600),
+                                                        ),
+                                                        Text("+ "+accountController.cashInList[index].amount,
+                                                            style: const TextStyle(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                FontWeight.w600,
+                                                                color: Colors.green)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  accountController.cashInList[index].paymentMode.toString() == "1"?
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(
+                                                        left: 10, bottom: 10),
+                                                    child: Text("Online"),
+                                                  ):
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(
+                                                        left: 10, bottom: 10),
+                                                    child: Text("Offline"),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(accountController.cashInList[index].date),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                          DateFormat.j().format(DateTime.parse(accountController.cashInList[index].date))),
+                                                    ],
+                                                  )
+                                                  // Text(numberList[index].cashType == "cash in" ?Text("cash in ",style: TextStyle(color: numberList[0].cashType =="cash type"? Colors.green:Colors.red),))
+                                                ],
+                                              )),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                })),
+                          ),
+                        ],
+                      );
+                    }
+
+                  }
+                ),
+                Obx(() {
+                  if(accountController.cashOutList.isEmpty)
+                  {
+                    return Container(
+                      child: Center(child: Text("No List")),
+                    );
+
+                  }
+                  else
+                  {
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                              physics:  NeverScrollableScrollPhysics(),
+                              itemCount: accountController.cashOutList.length,
+                              itemBuilder: ((context, index) {
+                                return Column(
+                                  children: [
+                                    Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10, horizontal: 25),
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
                                                 BorderRadius.circular(10),
-                                            color: Colors.white,
-                                            border:
+                                                color: Colors.white,
+                                                border:
                                                 Border.all(color: Colors.grey)),
-                                        width: width! - 30,
-                                        height: 95,
-                                        child: Column(
-                                          crossAxisAlignment:
+                                            width: width! - 30,
+                                            height: 95,
+                                            child: Column(
+                                              crossAxisAlignment:
                                               CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(10),
-                                              child: Row(
-                                                mainAxisAlignment:
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(10),
+                                                  child: Row(
+                                                    mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    CashoutList[index].name,
-                                                    style: const TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
+                                                    children: [
+                                                      Text(
+                                                        accountController.cashOutList[index].category.toString(),
+                                                        style: const TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
                                                             FontWeight.w600),
-                                                  ),
-                                                  Text(
-                                                      CashoutList[index]
-                                                          .cashout,
-                                                      style: const TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
+                                                      ),
+                                                      Text("- "+accountController.cashOutList[index].amount,
+                                                          style: const TextStyle(
+                                                              fontSize: 18,
+                                                              fontWeight:
                                                               FontWeight.w600,
-                                                          color: Colors.red)),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, bottom: 10),
-                                              child: Text(CashinList[index]
-                                                  .Paymenttype),
-                                            ),
-                                            Row(
-                                              children: [
-                                                const SizedBox(
-                                                  width: 10,
+                                                              color: Colors.green)),
+                                                    ],
+                                                  ),
                                                 ),
-                                                Text(CashoutList[index].date),
-                                                const SizedBox(
-                                                  width: 10,
+                                                accountController.cashOutList[index].paymentMode.toString() == "1"?
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      left: 10, bottom: 10),
+                                                  child: Text("Online"),
+                                                ):
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      left: 10, bottom: 10),
+                                                  child: Text("Offline"),
                                                 ),
-                                                Text(CashoutList[index].time),
+                                                Row(
+                                                  children: [
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(accountController.cashOutList[index].date),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                        DateFormat.j().format(DateTime.parse(accountController.cashOutList[index].date))),
+                                                  ],
+                                                )
+                                                // Text(numberList[index].cashType == "cash in" ?Text("cash in ",style: TextStyle(color: numberList[0].cashType =="cash type"? Colors.green:Colors.red),))
                                               ],
-                                            )
-                                            // Text(numberList[index].cashType == "cash in" ?Text("cash in ",style: TextStyle(color: numberList[0].cashType =="cash type"? Colors.green:Colors.red),))
-                                          ],
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            );
-                          })),
-                    ),
-                  ],
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              })),
+                        ),
+                      ],
+                    );
+                  }
+
+                }
                 ),
+                // second tab bar view widget
+                // Column(
+                //   children: [
+                //     Expanded(
+                //       child: ListView.builder(
+                //           physics: const NeverScrollableScrollPhysics(),
+                //           itemCount: CashoutList.length,
+                //           itemBuilder: ((context, index) {
+                //             return Column(
+                //               children: [
+                //                 Center(
+                //                   child: Padding(
+                //                     padding: const EdgeInsets.symmetric(
+                //                         vertical: 10, horizontal: 25),
+                //                     child: Container(
+                //                         decoration: BoxDecoration(
+                //                             borderRadius:
+                //                                 BorderRadius.circular(10),
+                //                             color: Colors.white,
+                //                             border:
+                //                                 Border.all(color: Colors.grey)),
+                //                         width: width! - 30,
+                //                         height: 95,
+                //                         child: Column(
+                //                           crossAxisAlignment:
+                //                               CrossAxisAlignment.start,
+                //                           children: [
+                //                             Padding(
+                //                               padding: const EdgeInsets.all(10),
+                //                               child: Row(
+                //                                 mainAxisAlignment:
+                //                                     MainAxisAlignment
+                //                                         .spaceBetween,
+                //                                 children: [
+                //                                   Text(
+                //                                     CashoutList[index].name,
+                //                                     style: const TextStyle(
+                //                                         fontSize: 18,
+                //                                         fontWeight:
+                //                                             FontWeight.w600),
+                //                                   ),
+                //                                   Text(
+                //                                       CashoutList[index]
+                //                                           .cashout,
+                //                                       style: const TextStyle(
+                //                                           fontSize: 18,
+                //                                           fontWeight:
+                //                                               FontWeight.w600,
+                //                                           color: Colors.red)),
+                //                                 ],
+                //                               ),
+                //                             ),
+                //                             Padding(
+                //                               padding: const EdgeInsets.only(
+                //                                   left: 10, bottom: 10),
+                //                               child: Text(CashinList[index]
+                //                                   .Paymenttype),
+                //                             ),
+                //                             Row(
+                //                               children: [
+                //                                 const SizedBox(
+                //                                   width: 10,
+                //                                 ),
+                //                                 Text(CashoutList[index].date),
+                //                                 const SizedBox(
+                //                                   width: 10,
+                //                                 ),
+                //                                 Text(CashoutList[index].time),
+                //                               ],
+                //                             )
+                //                             // Text(numberList[index].cashType == "cash in" ?Text("cash in ",style: TextStyle(color: numberList[0].cashType =="cash type"? Colors.green:Colors.red),))
+                //                           ],
+                //                         )),
+                //                   ),
+                //                 ),
+                //               ],
+                //             );
+                //           })),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),
@@ -709,7 +1017,7 @@ class _ManualAccountpageState extends State<ManualAccountpage>
                 InkWell(
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Cashinadd()),
+                    MaterialPageRoute(builder: (context) => Cashinadd(type:"Cash in")),
                   ),
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2.3,
@@ -745,10 +1053,16 @@ class _ManualAccountpageState extends State<ManualAccountpage>
                   ),
                 ),
                 InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CashoutAdd()),
-                  ),
+                  onTap: ()
+                  {
+                    print("ADVNASDAD");
+
+                    Navigator.push(
+                      context,
+                      // MaterialPageRoute(builder: (context) => CashoutAdd()),
+                      MaterialPageRoute(builder: (context) => Cashinadd(type:"Cash out")),
+                    );
+                  },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2.3,
                     height: 60,

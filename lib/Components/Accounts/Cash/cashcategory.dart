@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:habittrackergad/Utils/Constants.dart';
+
+import '../../../controller/accountController.dart';
 
 class Cashcategory extends StatefulWidget {
   const Cashcategory({super.key});
@@ -10,6 +14,7 @@ class Cashcategory extends StatefulWidget {
 
 class _CashcategoryState extends State<Cashcategory> {
   String? Category;
+  AccountController accountCController = Get.put(AccountController());
 
   int _currentTimeValue = 1;
 
@@ -66,13 +71,14 @@ class _CashcategoryState extends State<Cashcategory> {
                       width: 100,
                       height: 40,
                       child: ElevatedButton(
+
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ))),
-                          onPressed: addItemToList,
+                          onPressed: accountCController.addCategory,
                           child: const Text('Add'))),
                 ],
               ),
@@ -83,7 +89,7 @@ class _CashcategoryState extends State<Cashcategory> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: TextField(
-                controller: radiocontroller,
+                controller: accountCController.newtCatController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -97,36 +103,48 @@ class _CashcategoryState extends State<Cashcategory> {
             const SizedBox(
               height: 10,
             ),
+            accountCController.accCategory.isEmpty?
+                Container():
+            Obx(() {
+                return SizedBox(
+                  height: accountCController.accCategory.length*40,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView.separated(
+                            itemCount: accountCController.accCategory.length,
+                            controller: ScrollController(),
+                            separatorBuilder: (_, __) => const SizedBox(height: 1),
+                            itemBuilder: (context, index) {
+                              return RadioListTile(
+                                title: Text(accountCController.accCategory[index].name),
+                                value: accountCController.accCategory[index].id,
+                                groupValue: _radioValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _radioValue = value.toString();
+                                    print("SELECTCATEGORY");
+                                    accountCController.selectCatController.text =  accountCController.accCategory[index].name.toString();
+                                    print(accountCController.accCategory[index].id);
+                                    accountCController.selectCate.value = accountCController.accCategory[index].id.toString();
+                                    accountCController.selectCateName.value = accountCController.accCategory[index].name.toString();
+
+
+                                  });
+                                },
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            ),
             const Padding(
               padding: EdgeInsets.only(left: 20, bottom: 15, top: 10),
               child: Text(
                 "Choose one category",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-              ),
-            ),
-            SizedBox(
-              height: 500,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.separated(
-                        itemCount: radio.length,
-                        controller: ScrollController(),
-                        separatorBuilder: (_, __) => const SizedBox(height: 1),
-                        itemBuilder: (context, index) {
-                          return RadioListTile(
-                            title: Text(radio[index]),
-                            value: radio[index],
-                            groupValue: _radioValue,
-                            onChanged: (value) {
-                              setState(() {
-                                _radioValue = value.toString();
-                              });
-                            },
-                          );
-                        }),
-                  ),
-                ],
               ),
             ),
             Align(

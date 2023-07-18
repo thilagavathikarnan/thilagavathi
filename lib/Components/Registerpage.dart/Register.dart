@@ -235,7 +235,7 @@ class _RegisterState extends State<Register> {
                 const Padding(
                   padding: EdgeInsets.only(right: 10),
                   child: Text(
-                    "Don't have any account?",
+                    "You have any account?",
                     style: TextStyle(fontSize: 18),
                   ),
                 ),

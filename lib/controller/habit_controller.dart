@@ -23,6 +23,7 @@ class HabitController extends GetxController {
   final isHabituserList = false.obs;
   RxList<Habit> habits = <Habit>[].obs;
   RxList<Habits> habit = <Habits>[].obs;
+
   final bannerData = [].obs;
   RxList<BannerModel> banners = <BannerModel>[].obs;
 

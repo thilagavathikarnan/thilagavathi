@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:comment_box/comment/test.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
 import 'package:habittrackergad/Components/Accounts/Cash/cashcategory.dart';
 import 'package:habittrackergad/Components/Bottombar/Bottombarpage.dart';
 import 'package:habittrackergad/Components/Habit/Customhabityearreport.dart';
@@ -16,18 +14,16 @@ import 'package:habittrackergad/Components/Task/Taskyearreport.dart';
 import 'package:habittrackergad/Components/Registerpage.dart/Register.dart';
 import 'package:habittrackergad/Components/Task/Customtaskyearreport.dart';
 import 'package:habittrackergad/Components/Task/Taskpage.dart';
-
 import 'package:habittrackergad/contact/contact.dart';
 import 'package:habittrackergad/controller/auth_service.dart';
 import 'package:habittrackergad/model/push_notifi.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:shared_preferences/shared_preferences.dart';
-
-
 Future _firebaseBackgroundMessagingHandler(RemoteMessage message)
 async{
-  print("GETLOGINPAGE  ${message.data.toString()}");
+  print("GETLOGINPAGE");
+  print("GETLOGINPAGE  ${message.data!}");
 
 }
 void main()
@@ -42,10 +38,11 @@ async{
       messagingSenderId: "839972643243",
       projectId: "habit-tracker-fbe24"
   ));
-  final fcm =  await FirebaseMessaging.instance.getToken();
+   // final fcm =  await FirebaseMessaging.instance.getToken();
   print("SELETVIIOE");
-  print(fcm);
   runApp( MyApp());
+
+
 }
 
 class MyApp extends StatelessWidget {
@@ -53,7 +50,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return OverlaySupport.global(
+    return OverlaySupport.global
+      (
       child: GetMaterialApp (
         title: 'Flutter Demo',
 
@@ -90,7 +88,7 @@ class _SplashscreenState extends State<Splashscreen> {
   FirebaseMessaging? _messaging;
   FlutterLocalNotificationsPlugin? fltNotification;
 
-  PushNotifications? _notificationsInfo;
+  NotificationModel? _notificationsInfo;
   Future getLoggedInStatus() async {
     final prefs = await SharedPreferences.getInstance();
      userLoggedIn = prefs.getBool('userLoggedIn');
@@ -181,11 +179,27 @@ class _SplashscreenState extends State<Splashscreen> {
     );
     if(settings.authorizationStatus == AuthorizationStatus.authorized)
     {
-      String? deviceToken = await _messaging!.getToken();
-      print("DEVICETOKEN: ${deviceToken}");
+      // String? deviceToken = await _messaging!.getToken();
+      // print("DEVICETOKEN: ${deviceToken}");
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print(message.data);
+        print(message.data[0]);
+        // var msg = jsonDecode(message.data.toString());
+        print("sdhfihdsioghhhhh");
+
+        // NotificationModel? notification = NotificationModel(
+        //     isRead: "0",
+        //     image: '',
+        //     title: message.data['notification']['title'],
+        //     sound: '',
+        //     androidChannelId: '',
+        //     body: message.data['notification']['body'],
+        //     icon: '',
+        //     type: ''
+        //
+        //
+        // );
+
         Get.showSnackbar(
             GetSnackBar(
               mainButton: Container(
@@ -197,11 +211,11 @@ class _SplashscreenState extends State<Splashscreen> {
                   child: Icon(Icons.access_alarm)
                 ),
               ),
-              titleText: Text("Notify"),
-              messageText: Text("getfff"),
+              titleText: Text("Today task"),
+              messageText: Text("Your task assingned"),
               snackPosition: SnackPosition.TOP,
               margin: EdgeInsets.all(20),
-              backgroundColor: Get.theme.primaryColor,
+              backgroundColor: Colors.white,
               borderColor: Get.theme.focusColor.withOpacity(0.1),
               icon: Icon(Icons.notifications_none, size: 32, color: Get.theme.hintColor),
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -210,31 +224,26 @@ class _SplashscreenState extends State<Splashscreen> {
             )
         );
         print("SETEDVALUES");
-        // PushNotifications? notification = PushNotifications(
-        //   title:message.notification!.title,
-        //   body:message.notification!.body,
-        //
-        // );
         // setState(() {
-        //   _notificationsInfo = notification;
+        //   // _notificationsInfo = notification;
         //   totlaNotifications ++;
         //
         // });
         // showSimpleNotification(
-        //   Text("notification"),
-        //   // Text(_notificationsInfo!.title.toString()),
+        //   // Text("notification"),
+        //   Text(_notificationsInfo!.title.toString()),
         //   leading: badges.Badge(
-        //     badgeContent: Text("test"),
-        //     // badgeContent: Text(totlaNotifications.toString()),
+        //     // badgeContent: Text("test"),
+        //     badgeContent: Text(totlaNotifications.toString()),
         //     child: Icon(Icons.notifications),
         //   ),
-        //   subtitle: Text(""),
-        //   // subtitle: Text(_notificationsInfo!.body.toString()),
+        //   // subtitle: Text(""),
+        //   subtitle: Text(_notificationsInfo!.body.toString()),
         //   background: Colors.orange,
         //   duration: Duration(seconds: 3),
         //
         // );
-
+        //
         // if(_notificationsInfo !=null)
         // {
         //   showSimpleNotification(
@@ -255,20 +264,7 @@ class _SplashscreenState extends State<Splashscreen> {
       });
       // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       //   fltNotification!.show(
-      //       notification.hashCode, notification.title, notification.
-      //   body, generalNotificationDetails);
-      //   Get.showSnackbar(
-      //       GetSnackBar(
-      //         mainButton: Container(
-      //           margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      //           width: 42,
-      //           height: 42,
-      //           child: ClipRRect(
-      //               borderRadius: BorderRadius.all(Radius.circular(42)),
-      //               child: Icon(Icons.access_alarm)
-      //           ),
-      //         ),
-      //         titleText: Text("Notify"),
+      //       notification.hashCo   Text("Notify"),
       //         messageText: Text("getfff"),
       //         snackPosition: SnackPosition.TOP,
       //         margin: EdgeInsets.all(20),

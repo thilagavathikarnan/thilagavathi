@@ -367,7 +367,7 @@ class Habitpage extends StatefulWidget {
 
 class _HabitpageState extends State<Habitpage> with TickerProviderStateMixin {
   final controller = PageController(viewportFraction: 0.8, keepPage: true);
-  late DateTime _selectedDate;
+  late DateTime _selectedDate = DateTime.now();
   late TabController _tabController;
   late TabController _tabControllernew;
   final HabitController habitController = Get.put(HabitController());
@@ -379,7 +379,7 @@ class _HabitpageState extends State<Habitpage> with TickerProviderStateMixin {
     _tabControllernew = TabController(length: 3, vsync: this);
     // habitController.getHabit();
     // habitController.getUserHabitList();
-    _resetSelectedDate();
+    // _resetSelectedDate();
   }
 
   void _resetSelectedDate() {
@@ -498,13 +498,42 @@ class _HabitpageState extends State<Habitpage> with TickerProviderStateMixin {
                 ],
               ),
             ),
-            AdvancedCalendar(
-              controller: _calendarControllerToday,
-              events: events,
-              startWeekDay: 1,
-              innerDot: false,
-              weekLineHeight: 48.0,
+            CalendarTimeline(
+
+              showYears: false,
+              initialDate: _selectedDate,
+              firstDate: DateTime.now(),
+              lastDate: DateTime.now().add(const Duration(days: 365 * 4)),
+              onDateSelected: (date)
+              async {
+                setState(()
+                {
+                  _selectedDate = date;
+                });
+                print("Select Date");
+                print(_selectedDate);
+                var accountController;
+                accountController.incomeExpenseDate.value = await _selectedDate;
+                accountController.getIncomeAndExpenses();
+              },
+              leftMargin: 20,
+              monthColor: Colors.black,
+              dayColor: Color(0xFF704a9f),
+              dayNameColor: Colors.white,
+              activeDayColor: Colors.white,
+              activeBackgroundDayColor: Color(0xFF704a9f),
+              dotsColor: const Color(0xFF333A47),
+              // selectableDayPredicate: (date) => date.day != 23,
+              locale: 'en',
+
             ),
+            // AdvancedCalendar(
+            //   controller: _calendarControllerToday,
+            //   events: events,
+            //   startWeekDay: 1,
+            //   innerDot: false,
+            //   weekLineHeight: 48.0,
+            // ),
 
             const SizedBox(
               height: 10,
