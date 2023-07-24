@@ -5,6 +5,7 @@ class DataModel {
   final String remark;
   final String date;
   final String category;
+  final String category_name;
   final String contact;
   final String paymentMode;
   final String cashType;
@@ -18,6 +19,7 @@ class DataModel {
     required this.remark,
     required this.date,
     required this.category,
+    required this.category_name,
     required this.contact,
     required this.paymentMode,
     required this.cashType,
@@ -33,6 +35,7 @@ class DataModel {
       remark: json['remark']??"",
       date: json['date']??'',
       category: json['category']??"",
+      category_name: json['category_name']??"",
       contact: json['contact']??"",
       paymentMode: json['payment_mode']??"",
       cashType: json['cash_type']??"",

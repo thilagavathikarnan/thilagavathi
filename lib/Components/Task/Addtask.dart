@@ -467,18 +467,36 @@ class _AddtasknewState extends State<Addtasknew> {
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600)),
                     selectTeams.isNotEmpty ?
-                    Text('( ${selectTeams.length} team seleccted )',
+                    Text('( ${selectTeams.length} team selected )',
                         style: TextStyle(
                             fontSize: 14, color: Colors.black.withOpacity(0.4))):Container(),
                     InkWell(
                       onTap: ()
                       {
+
+
                         showDialog(
                           context: context,
                           builder: (ctx) => StatefulBuilder(
                               builder: (context,setState) {
                                 return AlertDialog(
-                                  title:  Text("Select Teams ( ${selectTeams.length} )"),
+                                  title:  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("Select Teams ( ${selectTeams.length} )"),
+                                          InkWell(
+                      onTap:()
+                      {
+                      Navigator.pop(context);
+                      },
+                      child: Container(
+                      child: Icon(
+                      Icons.close
+                      ),
+                      ),
+                      )
+                      ],
+                                  ),
                                   content: Container(
                                     height: 500,
                                     child: ListView(
@@ -488,10 +506,10 @@ class _AddtasknewState extends State<Addtasknew> {
                                             onTap: ()
                                             {
                                               setState(() {
-                                                if (selectTeams.contains(teamController.teams[i].id)) {
-                                                  selectTeams.remove(teamController.teams[i].id);
+                                                if (selectTeams.contains(teamController.teams[i].user)) {
+                                                  selectTeams.remove(teamController.teams[i].user);
                                                 } else {
-                                                  selectTeams.add(teamController.teams[i].id);
+                                                  selectTeams.add(teamController.teams[i].user);
                                                 }
                                               });
                                               print("SELECTTEAM");
@@ -504,7 +522,7 @@ class _AddtasknewState extends State<Addtasknew> {
 
                                                 decoration: BoxDecoration(
                                                   border: Border.all(
-                                                      color: selectTeams.contains(teamController.teams[i].id)?
+                                                      color: selectTeams.contains(teamController.teams[i].user)?
                                                       Colors.black.withOpacity(0.8):Colors.transparent
                                                   ),
                                                   color: getColor().withOpacity(.4),
@@ -759,7 +777,7 @@ class _AddtasknewState extends State<Addtasknew> {
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600)),
                     selectTeamsNotify.isNotEmpty ?
-                    Text('( ${selectTeamsNotify.length} team seleccted )',
+                    Text('( ${selectTeamsNotify.length} team selected )',
                         style: TextStyle(
                             fontSize: 14, color: Colors.black.withOpacity(0.4))):Container(),
                     InkWell(
@@ -770,7 +788,24 @@ class _AddtasknewState extends State<Addtasknew> {
                           builder: (ctx) => StatefulBuilder(
                             builder: (context,setState) {
                               return AlertDialog(
-                                title:  Text("Select Teams ( ${selectTeamsNotify.length} )"),
+                                title:  Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Select Teams ( ${selectTeamsNotify.length} )"),
+                                    InkWell(
+                                      onTap:()
+                                      {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                        child: Icon(
+                                            Icons.close
+                                        ),
+                                      ),
+                                    )
+
+                                  ],
+                                ),
                                 content: Container(
                                   height: 500,
                                   child: ListView(
@@ -780,10 +815,10 @@ class _AddtasknewState extends State<Addtasknew> {
                                           onTap: ()
                                           {
                                             setState(() {
-                                              if (selectTeamsNotify.contains(teamController.teams[i].id)) {
-                                                selectTeamsNotify.remove(teamController.teams[i].id);
+                                              if (selectTeamsNotify.contains(teamController.teams[i].user)) {
+                                                selectTeamsNotify.remove(teamController.teams[i].user);
                                               } else {
-                                                selectTeamsNotify.add(teamController.teams[i].id);
+                                                selectTeamsNotify.add(teamController.teams[i].user);
                                               }
                                             });
                                             print("SELECTTEAM");
@@ -796,7 +831,7 @@ class _AddtasknewState extends State<Addtasknew> {
 
                                               decoration: BoxDecoration(
                                                 border: Border.all(
-                                                    color: selectTeamsNotify.contains(teamController.teams[i].id)?
+                                                    color: selectTeamsNotify.contains(teamController.teams[i].user)?
                                                     Colors.black.withOpacity(0.8):Colors.transparent
                                                 ),
                                                 color: getColor().withOpacity(.4),

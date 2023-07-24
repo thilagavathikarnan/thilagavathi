@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habittrackergad/Components/Accounts/Automatic/AutomaticAccountspage.dart';
+import 'package:habittrackergad/Components/Accounts/Manual/ManualAccountpage.dart';
 import 'package:habittrackergad/Components/Habit/Habitpage.dart';
 import 'package:habittrackergad/Components/Home/Homepage.dart';
 import 'package:habittrackergad/Components/Task/Project_list_page.dart';
@@ -18,7 +19,8 @@ class _BottombarState extends State<Bottombar> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
     Homepage(),
-     AutomaticAccountpage(),
+    AutomaticAccountpage(),
+    // ManualAccountpage(),
     Habitpage(),
     Taskpage(),
   ];

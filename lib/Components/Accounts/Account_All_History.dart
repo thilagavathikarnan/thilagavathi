@@ -198,9 +198,8 @@ class _Account_All_HistoryState extends State<Account_All_History> {
               });
               print("Select Date");
               print(_selectedDate);
-              var accountController;
-              accountController.incomeExpenseDate.value = await _selectedDate;
-              accountController.getIncomeAndExpenses();
+              accountController.accountHistoryDate.value = await _selectedDate;
+              accountController.getAccountHistory();
             },
             leftMargin: 20,
             monthColor: Colors.black,
@@ -225,109 +224,166 @@ class _Account_All_HistoryState extends State<Account_All_History> {
                   fontWeight: FontWeight.w600,
                 )),
           ),
-          Container(
-            height: 400,
-            child: Center(child: Text("List is empty")),
-          )
-          // Expanded(
-          //     child: ListView.builder(
-          //         shrinkWrap: true,
-          //         itemCount: AccountHolderName.length,
-          //         physics: const NeverScrollableScrollPhysics(),
-          //         itemBuilder: ((context, index) {
-          //           return Padding(
-          //             padding: const EdgeInsets.all(8.0),
-          //             child: Container(
-          //                 padding: EdgeInsets.all(8),
-          //                 width: width!,
-          //                 // height: 80,
-          //                 decoration: BoxDecoration(
-          //                     borderRadius: BorderRadius.circular(12),
-          //                     border: Border.all(color: getColor()),
-          //                     color: BUTTONTEXTCOLOR),
-          //                 child: Row(
-          //                   mainAxisAlignment:
-          //                   MainAxisAlignment.spaceBetween,
-          //                   children: [
-          //                     Row(
-          //                       children: [
-          //                         // SizedBox(
-          //                         //   width: 50,
-          //                         //   height: 50,
-          //                         //   child: CircleAvatar(
-          //                         //     radius: 48, // Image radius
-          //                         //     backgroundImage: AssetImage(
-          //                         //         AccountHolderImages[
-          //                         //         index]),
-          //                         //   ),
-          //                         // ),
-          //                         // SizedBox(width: 5,),
-          //                         Column(
-          //                           crossAxisAlignment:
-          //                           CrossAxisAlignment.start,
-          //                           mainAxisAlignment:
-          //                           MainAxisAlignment.center,
-          //                           children: [
-          //                             Padding(
-          //                               padding:
-          //                               const EdgeInsets.only(
-          //                                   bottom: 5),
-          //                               child: Text(
-          //                                 AccountHolderName[
-          //                                 index],
-          //                                 style: const TextStyle(
-          //                                     fontSize: 18,
-          //                                     fontWeight:
-          //                                     FontWeight
-          //                                         .w700),
-          //                               ),
-          //                             ),
-          //                             Padding(
-          //                               padding:
-          //                               const EdgeInsets.only(
-          //                                   bottom: 5),
-          //                               child: Text(
-          //                                 AccountPaymentName[
-          //                                 index],
-          //                                 style: const TextStyle(
-          //                                     fontWeight:
-          //                                     FontWeight
-          //                                         .w600),
-          //                               ),
-          //                             ),
-          //                             Row(
-          //                               children: [
-          //                                 Text(
-          //                                   AccountTransationMonth[
-          //                                   index],
-          //                                 ),
-          //                                 Padding(
-          //                                   padding:
-          //                                   const EdgeInsets
-          //                                       .only(
-          //                                       left: 5,
-          //                                       right: 5),
-          //                                   child: Text(
-          //                                       AccountTransationDate[
-          //                                       index]),
-          //                                 ),
-          //                                 Text(
-          //                                     AccountTransationTime[
-          //                                     index]),
-          //                               ],
-          //                             ),
-          //                           ],
-          //                         )
-          //                       ],
-          //                     ),
-          //                     Text(AccountTransationAmount[index],
-          //                         style: const TextStyle(
-          //                             fontSize: 18,
-          //                             fontWeight: FontWeight.w500))
-          //                   ],
-          //                 )),
-          //           );
-          //         }))),
+          // Container(
+          //   height: 400,
+          //   child: Center(child: Text("List is empty")),
+          // )
+
+          Obx(() {
+            if(accountController.accountHistoryList.isEmpty)
+              {
+                return Container(
+                  height: 280,
+                  child: Center(child: Text("No List")),
+                );
+              }
+              else
+              {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: accountController.accountHistoryList.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: ((context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            padding: EdgeInsets.all(8),
+                            width: width!,
+                            // height: 80,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: getColor()),
+                                color: BUTTONTEXTCOLOR),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.only(
+                                          bottom: 5),
+                                      child: Text(
+                                        accountController.accountHistoryList[index].category_name,
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight:
+                                            FontWeight
+                                                .w700),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.only(
+                                          bottom: 5),
+                                      child: Text(
+                                        accountController.accountHistoryList[index].paymentMode ==0?"Offline":"Online",
+                                        style: const TextStyle(
+                                            fontWeight:
+                                            FontWeight
+                                                .w600),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5,),
+
+                                    Row(
+                                      children: [
+                                        Icon(Icons.person,color: Colors.grey.shade400,),
+                                        SizedBox(width: 5,),
+
+                                        Text(accountController.accountHistoryList[index].contact,
+                                            style:  TextStyle(
+                                              color: Colors.blue,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500)),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5,),
+
+                                    Row(
+                                      children: [
+                                        Icon(Icons.calendar_month,color: Colors.grey.shade400,),
+                                        SizedBox(width: 5,),
+
+                                        Text(DateFormat.yMMMEd().format(DateTime.parse(accountController.accountHistoryList[index].date))),
+
+                                        // Text(
+                                        //   AccountTransationMonth[
+                                        //   index],
+                                        // ),
+                                        // Padding(
+                                        //   padding:
+                                        //   const EdgeInsets
+                                        //       .only(
+                                        //       left: 5,
+                                        //       right: 5),
+                                        //   child: Text(
+                                        //       AccountTransationDate[
+                                        //       index]),
+                                        // ),
+
+
+                                        //                       SizedBox(width: 5,),
+                                        //                       Text("at ${
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "13"?
+                                        //                               "01":
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "14"?
+                                        //                               "02":
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "15"?
+                                        //                               "03":
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "16"?
+                                        //                               "04":
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "17"?
+                                        //                               "05":
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "18"?
+                                        //                               "06":
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "19"?
+                                        //                               "07":
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "20"?
+                                        //                               "08":
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "21"?
+                                        //                               "09":
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "22"?
+                                        //                               "10":
+                                        //                           DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString() == "23"?
+                                        //                               "11":
+                                        // DateTime.parse(accountController.accountHistoryList[index].createdAt).hour.toString().padLeft(2, '0')+":"+  DateTime.parse(accountController.accountHistoryList[index].createdAt).minute.toString().padLeft(2, '0')}"
+                                        //
+                                        //
+                                        //                       ),
+                                        //                       SizedBox(width: 5,),
+                                        //                        Text(DateTime.parse(accountController.accountHistoryList[index].createdAt).hour >12 ?"PM":"AM"
+                                        //
+                                        //
+                                        //                       ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    accountController.accountHistoryList[index].cashType.toString() == "cash_out"?
+                                    Text("- ₹"+double.parse(accountController.accountHistoryList[index].amount).toStringAsFixed(2),
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500)):
+                                    Text("+ ₹"+double.parse(accountController.accountHistoryList[index].amount).toStringAsFixed(2),
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500)),
+                                  ],
+                                )                              ],
+                            )),
+                      );
+                    }));
+              }
+            }
+          ),
           // SizedBox(
           //   height: height = 80 * 6,
           //   child: Column(

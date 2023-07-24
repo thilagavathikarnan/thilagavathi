@@ -1,6 +1,7 @@
 import 'package:animated_horizontal_calendar/utils/color.dart';
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -15,8 +16,9 @@ import '../../model/task_model.dart';
 class Taskpageprogress extends StatefulWidget {
 
   TaskModel task;
+  final taskPage;
   Taskpageprogress(
-      {required this.task});
+      {required this.task, this.taskPage});
 
   @override
   State<Taskpageprogress> createState() => _TaskpageprogressState();
@@ -32,7 +34,6 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
   final List<String> names = <String>[];
   final List<String> Subtask = <String>[];
   final List<int> msgCount = <int>[];
-  String? _selectedItemstatus;
   TextEditingController nameController2 = TextEditingController();
   TextEditingController SubtaskController1 = TextEditingController();
   bool taskisVisible = false;
@@ -532,22 +533,22 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
                           ),
                         ),
                       ),
-                    SizedBox(
-                        height: 45,
-                        width: 45,
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            width: 20,
-                            height: 20,
-                            child: const Icon(Icons.add,
-                                color: TASKPAGEVIEWTEXTCOLOR),
-                          ),
-                        )),
+                    // SizedBox(
+                    //     height: 45,
+                    //     width: 45,
+                    //     child: Card(
+                    //       shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(30)),
+                    //       child: Container(
+                    //         decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(30),
+                    //         ),
+                    //         width: 20,
+                    //         height: 20,
+                    //         child: const Icon(Icons.add,
+                    //             color: TASKPAGEVIEWTEXTCOLOR),
+                    //       ),
+                    //     )),
                   ],
                 ),
               ],
@@ -555,35 +556,159 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
              SizedBox(
               height: 30,
             ),
-            InkWell(
-              onTap: ()
-              {
-                _onButtonPressed();
-              },
-              child: Container(
-                width: width! - 50,
-                height: 55,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Color(0XFFd0a1d2),
-                      Color(0XFF3b4682),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
+            // widget.taskPage == "Assigned_by_you" || widget.taskPage == "Notify_by_you"?
+            //     Container():
+            Row(
+              children: const [
+                Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Icon(Icons.task, color: BLACKCOLOR),
                 ),
-                child: Center(
-                    child: _selectedItemstatus == null?
-                    Text(widget.task.status.toString(),
-                        style: const TextStyle(
-                            fontSize: 16, color: BUTTONTEXTCOLOR)):Text(_selectedItemstatus.toString(),
-                        style: const TextStyle(
-                            fontSize: 16, color: BUTTONTEXTCOLOR))
+                Text(
+                  "Task Status",
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: TASKPAGEVIEWTEXTCOLOR),
                 ),
-              ),
+              ],
             ),
+            // widget.taskPage == "Assigned_by_you" || widget.taskPage == "Notify_by_you"?
+            // Container():
+            SizedBox(
+              height: 30,
+            ),
+            widget.taskPage == "Assigned_by_you" || widget.taskPage == "Notify_by_you"?
+            Container(
+              child:Column(
+                children: [
+                  for(int i=0;i<widget.task.userName.length;i++)
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.person,color: Colors.grey.shade500,),
+                            SizedBox(width: 10,),
+                            Text(widget.task.userName[i].firstName),
+                          ],
+                        ),
+                        Text(widget.task.userName[i].status),
+                      ],
+                    )
+
+
+                ],
+              ),
+            ):  Obx(() {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+
+                    taskController.selectedItemstatus.isEmpty?Text(widget.task.status.toString(),
+                        style: const TextStyle(
+                            fontSize: 18, color: Colors.black)):Text(taskController.selectedItemstatus.toString(), style: const TextStyle(fontSize: 18, color: Colors.black)),
+                    taskController.selectedItemstatus.isEmpty?
+                    InkWell(
+                      onTap: ()
+                      {
+                        _onButtonPressed();
+
+                      },
+                      child: Container(
+                        child: Icon(Icons.arrow_drop_down),
+                      ),
+                    ):
+                    Obx(() {
+                      if(taskController.taskStatusLoader.isTrue)
+                      {
+                        return InkWell(
+                          onTap: ()
+                          {
+
+
+
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 120,
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                                colors: [
+                                  Color(0XFFd0a1d2),
+                                  Color(0XFF3b4682),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Center(child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            )),
+                          ),
+                        );
+                      }
+                      else
+                      {
+                        return InkWell(
+                            onTap: ()
+                            {
+                              if(taskController.selectedItemstatus.isNotEmpty)
+                                {
+                                  setState(() {
+                                    widget.task.status = taskController.selectedItemstatus.toString();
+                                  });
+
+                                  taskController.taskUpdate(widget.task.id, taskController.selectedItemstatus);
+                                  taskController.fetchTasks();
+                                }
+                              else
+                                {
+                                  Get.snackbar("Alert", "Please select task",
+                                      backgroundColor: Colors.black.withOpacity(0.8),
+                                      colorText: Colors.white,
+                                      icon: Icon(
+                                        Icons.warning,
+                                        color: Colors.white,
+                                      ),
+                                      snackPosition: SnackPosition.BOTTOM);
+                                }
+
+
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Color(0XFFd0a1d2),
+                                    Color(0XFF3b4682),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Center(
+                                  child: Text("Status Change",
+                                      style: const TextStyle(
+                                          fontSize: 16, color: BUTTONTEXTCOLOR))
+                              ),
+                            )
+                        );
+                      }
+
+                    })
+
+                  ],
+                );
+              }
+            ),
+
              SizedBox(
               height: 30,
             ),
@@ -879,186 +1004,285 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
         ),
         context: context,
         builder: (context) {
-          return Container(
-            height: 260,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15, right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 60),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.black,
+          return StatefulBuilder(
+            builder: (context,setState) {
+              return Container(
+                height: 260,
+                padding: EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 15, right: 20),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.end,
+                    //     children: [
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(right: 60),
+                    //         child: Container(
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             color: Colors.black,
+                    //           ),
+                    //           width: 200,
+                    //           height: 10,
+                    //         ),
+                    //       ),
+                    //       InkWell(
+                    //         onTap: () => Navigator.pop(context),
+                    //         child: Container(
+                    //           decoration: BoxDecoration(
+                    //             gradient: const LinearGradient(
+                    //               begin: Alignment.topRight,
+                    //               end: Alignment.bottomLeft,
+                    //               colors: [
+                    //                 Color(0xff59d6f9),
+                    //                 Color(0xff7f85f1),
+                    //               ],
+                    //             ),
+                    //             borderRadius: BorderRadius.circular(12),
+                    //           ),
+                    //           width: 30,
+                    //           height: 30,
+                    //           child: const Center(
+                    //               child: Icon(
+                    //                 Icons.cancel,
+                    //                 color: Colors.white,
+                    //                 size: 20,
+                    //               )),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // const SizedBox(
+                    //   height: 30,
+                    // ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Select anyone ",style: TextStyle(fontSize: 16),),
+
+                        // Obx(() {
+                        //   if(taskController.taskStatusLoader.isTrue)
+                        //     {
+                        //       return InkWell(
+                        //         onTap: ()
+                        //         {
+                        //
+                        //
+                        //
+                        //         },
+                        //         child: Container(
+                        //           height: 40,
+                        //           width: 120,
+                        //           padding: EdgeInsets.all(8),
+                        //           decoration: BoxDecoration(
+                        //               borderRadius: BorderRadius.circular(10),
+                        //               color: Colors.purple
+                        //           ),
+                        //           child: Center(child: CircularProgressIndicator(
+                        //             strokeWidth: 2,
+                        //             color: Colors.white,
+                        //           )),
+                        //         ),
+                        //       );
+                        //     }
+                        //   else
+                        //     {
+                        //       return InkWell(
+                        //         onTap: ()
+                        //         {
+                        //
+                        //           taskController.taskUpdate(widget.task.id, taskController.selectedItemstatus);
+                        //           taskController.fetchTasks();
+                        //
+                        //         },
+                        //         child: Container(
+                        //           height: 40,
+                        //           width: 120,
+                        //           padding: EdgeInsets.all(8),
+                        //           decoration: BoxDecoration(
+                        //               borderRadius: BorderRadius.circular(10),
+                        //               color: Colors.purple
+                        //           ),
+                        //           child: Center(child: Text("Change",style: TextStyle(fontSize: 14,color: Colors.white),)),
+                        //         ),
+                        //       );
+                        //     }
+                        //
+                        //   }
+                        //)
+                      ],
+                    ),
+                    SizedBox(height: 12,),
+
+                    InkWell(
+                      onTap: ()
+                        {
+                          setState(()
+                              {
+                                taskController.selectedItemstatus.value = "in_progress";
+                              }
+                          );
+                        },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xffBFEAF5),
+                          border: Border.all(
+                            color: taskController.selectedItemstatus.toString() == "in_progress"?Colors.grey:Colors.transparent
+                          )
+                        ),
+                        width: width! - 10,
+                        height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 15),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color(0xff5CB8E4),
+                                  ),
+                                  width: 10,
+                                  height: 10,
+                                ),
+                              ),
+                              const Text(
+                                "In-progress",
+                                style: TextStyle(
+                                    color: Color(0xff5CB8E4),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16),
+                              ),
+                            ],
                           ),
-                          width: 200,
-                          height: 10,
                         ),
                       ),
-                      InkWell(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                Color(0xff59d6f9),
-                                Color(0xff7f85f1),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
+                      onTap: ()
+                        {
+                          setState(()
+                          {
+                            taskController.selectedItemstatus.value = "completed";
+                          }
+                          );
+                        },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xffFFE5F1),
+                            border: Border.all(
+                                color: taskController.selectedItemstatus.toString() == "completed"?Colors.grey:Colors.transparent
+                            )
+                        ),
+                        width: width! - 10,
+                        height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 15),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color(0xffE98EAD),
+                                  ),
+                                  width: 10,
+                                  height: 10,
+                                ),
+                              ),
+                              const Text(
+                                "Completed",
+                                style: TextStyle(
+                                    color: Color(0xffE98EAD),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16),
+                              ),
+                            ],
                           ),
-                          width: 30,
-                          height: 30,
-                          child: const Center(
-                              child: Icon(
-                                Icons.cancel,
-                                color: Colors.white,
-                                size: 20,
-                              )),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                InkWell(
-                  onTap: () => _selectItemstatus("In-progress"),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xffBFEAF5),
                     ),
-                    width: width! - 10,
-                    height: 50,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: const Color(0xff5CB8E4),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
+                      onTap: ()
+                      {
+                        setState(()
+                        {
+                          taskController.selectedItemstatus.value = "over_due";
+                        }
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xffDEF5E5),
+                            border: Border.all(
+                                color: taskController.selectedItemstatus.toString() == "over_due"?Colors.grey:Colors.transparent
+                            )
+                        ),
+                        width: width! - 10,
+                        height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 15),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color(0xff4FA095),
+                                  ),
+                                  width: 10,
+                                  height: 10,
+                                ),
                               ),
-                              width: 10,
-                              height: 10,
-                            ),
+                              const Text(
+                                "Over due",
+                                style: TextStyle(
+                                    color: Color(0xff4FA095),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16),
+                              ),
+                            ],
                           ),
-                          const Text(
-                            "In-progress",
-                            style: TextStyle(
-                                color: Color(0xff5CB8E4),
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () => _selectItemstatus("Completed"),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xffFFE5F1),
-                    ),
-                    width: width! - 10,
-                    height: 50,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: const Color(0xffE98EAD),
-                              ),
-                              width: 10,
-                              height: 10,
-                            ),
-                          ),
-                          const Text(
-                            "Completed",
-                            style: TextStyle(
-                                color: Color(0xffE98EAD),
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () => _selectItemstatus("Over due"),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xffDEF5E5),
-                    ),
-                    width: width! - 10,
-                    height: 50,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: const Color(0xff4FA095),
-                              ),
-                              width: 10,
-                              height: 10,
-                            ),
-                          ),
-                          const Text(
-                            "Over due",
-                            style: TextStyle(
-                                color: Color(0xff4FA095),
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              );
+            }
           );
-        });
+        }).then((value) {
+      setState(() {
+
+      });
+    });
   }
 
   void _selectItemstatus(String name) {
-    Navigator.pop(context);
+    // Navigator.pop(context);
     {
       setState(() {
-        _selectedItemstatus = name == "Completed"? "completed":  name == "In-progress"?"in_progress":"over_due";
+        taskController.selectedItemstatus.value = name == "Completed"? "completed":  name == "In-progress"?"in_progress":"over_due";
         print("TASKSTAUS");
-        print(_selectedItemstatus);
-
-        taskController.taskUpdate(widget.task.id, _selectedItemstatus);
-        taskController.fetchTasks();
+        print(taskController.selectedItemstatus);
+        //
+        // taskController.taskUpdate(widget.task.id, taskController.selectedItemstatus);
+        // taskController.fetchTasks();
 
       });
     }

@@ -33,6 +33,8 @@ class TeamController extends GetxController {
   var taskStatus = TaskStatusModel(assigned: 0, completed: 0, inProgress: 0, overDue: 0).obs;
   var taskStatusByU = TaskStatusModel(assigned: 0, completed: 0, inProgress: 0, overDue: 0).obs;
   var taskStatusNotify = TaskStatusModel(assigned: 0, completed: 0, inProgress: 0, overDue: 0).obs;
+
+
   final commentList = <CommentModel>[].obs;
 
   final notifyInprogress = <TaskModel>[].obs;
@@ -49,6 +51,8 @@ class TeamController extends GetxController {
   final assignByTaskCompleted = <TaskModel>[].obs;
   final assignByTaskOverDue = <TaskModel>[].obs;
   // GetStorage _box = GetStorage();
+  final taskStatusLoader = false.obs;
+  RxString selectedItemstatus = "".obs;
 
   @override
   void onInit() {
@@ -102,7 +106,7 @@ class TeamController extends GetxController {
   //
   //
   // }
- void fetchComments(taskId) async {
+  void fetchComments(taskId) async {
    SharedPreferences prefs = await SharedPreferences.getInstance();
         var usId = await prefs.getString('userId');
  var url = Uri.parse(mainUrl+taskCommentGet+"/${usId}/${taskId}");
@@ -127,7 +131,7 @@ class TeamController extends GetxController {
       throw Exception('$e');
     }
   }
- void fetchNotifyTasks() async {
+  void fetchNotifyTasks() async {
    SharedPreferences prefs = await SharedPreferences.getInstance();
         var usId = await prefs.getString('userId');
  var url = Uri.parse(mainUrl+taskUserNotifyUrl+"/${usId}");
@@ -173,7 +177,7 @@ class TeamController extends GetxController {
       throw Exception('$e');
     }
   }
- void fetchMyTasks() async {
+  void fetchMyTasks() async {
    SharedPreferences prefs = await SharedPreferences.getInstance();
         var usId = await prefs.getString('userId');
  var url = Uri.parse(mainUrl+taskByUrl+"/${usId}");
@@ -219,7 +223,7 @@ class TeamController extends GetxController {
       throw Exception('$e');
     }
   }
- void fetchByTasks() async {
+  void fetchByTasks() async {
    SharedPreferences prefs = await SharedPreferences.getInstance();
         var usId = await prefs.getString('userId');
  var url = Uri.parse(mainUrl+taskMyUrl+"?user_id=${usId}");
@@ -256,14 +260,16 @@ class TeamController extends GetxController {
         print("GETXDESSIER");
         print(assignMyTaskAll);
       }
-      else {
+      else
+      {
         throw Exception('Failed to fetch tasks');
       }
-    } catch (e) {
+    } catch (e)
+    {
       throw Exception('$e');
     }
   }
- void fetchTasks() async {
+  void fetchTasks() async {
    SharedPreferences prefs = await SharedPreferences.getInstance();
         var usId = await prefs.getString('userId');
  var url = Uri.parse(mainUrl+taskUserUrl+"/${usId}");
@@ -280,6 +286,7 @@ class TeamController extends GetxController {
         myTaskList.assignAll(tasks);
 
         print("GETXDESSIER");
+        print(myTaskList.length);
         print(myTaskList);
       }
       else {
@@ -297,12 +304,13 @@ class TeamController extends GetxController {
     var body = {
     "task_id":taskId,
     "user_id":usId,
-    "status":taskSatus
+    "status":selectedItemstatus.value.toString()
     };
-    var dataJs = json.encode(body);
+    var dataJs = jsonEncode(body);
     print("STATUSUPDATE");
     print(dataJs);
     try {
+      taskStatusLoader.value = true;
       final response = await http.post(
         Uri.parse(mainUrl+taskUpdateUrl),
         headers: {
@@ -310,31 +318,57 @@ class TeamController extends GetxController {
         },
         body: dataJs,
       );
-
-      if (response.statusCode == 200) {
-        print(response.body);
-        var res = json.decode(response.body);
-        print("GETUPDATE");
-        print(res);
-        Get.snackbar("Success", "Comment successfully",
+      print(response.body);
+      var res = json.decode(response.body);
+      print("GETUPDATE");
+      print(mainUrl+taskUpdateUrl);
+      print(res);
+      print(res['data']);
+      if (res['data'] == true)
+      {
+        selectedItemstatus.value = '';
+        Get.snackbar("Success", "Status changed successfully",
             backgroundColor: Colors.green.withOpacity(0.8),
             colorText: Colors.white,
             icon: Icon(
               Icons.check,
               color: Colors.white,
             ),
-            snackPosition: SnackPosition.BOTTOM);      } else {
-        // Handle error response
-        print('PUT request failed with status: ${response.statusCode}');
+            snackPosition: SnackPosition.BOTTOM);
+
+        fetchNotifyTasks();
+        fetchByTasks();
+        fetchMyTasks();
+        fetchTasks();
+        getTaskStatusByU();
+        getTaskStatusToMe();
+        getTaskStatusNotify();
+        getTeamList();
       }
+      else
+        {
+
+          selectedItemstatus.value = '';
+          Get.snackbar("Alert", "Already in same status",
+              backgroundColor: Colors.black.withOpacity(0.8),
+              colorText: Colors.white,
+              icon: Icon(
+                Icons.warning,
+                color: Colors.white,
+              ),
+              snackPosition: SnackPosition.BOTTOM);
+
+
+        }
+
     } catch (e) {
       // Handle network or other exceptions
       print('Error occurred: $e');
     }finally {
-      isTeamSaveLoaders.value = false;
+      taskStatusLoader.value = false;
     }
   }
-  teamAdd(name,designation, email,phone) async {
+  void teamAdd(name,designation, email,phone) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var usId = await prefs.getString('userId');
@@ -394,7 +428,7 @@ class TeamController extends GetxController {
       isTeamSaveLoaders.value = false;
     }
   }
-  commentAdd(comment,taskId) async {
+  void commentAdd(comment,taskId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var usId = await prefs.getString('userId');
@@ -450,7 +484,8 @@ class TeamController extends GetxController {
       isTeamSaveLoaders.value = false;
     }
   }
-  taskAdd(taskName, description,subTaskName,selectTeams,selectTeamsNotify,startDate,endDate,_selectedItempriority,_selectedItemstatus) async {
+  void taskAdd(taskName, description,subTaskName,selectTeams,selectTeamsNotify,startDate,endDate,_selectedItempriority,_selectedItemstatus)
+  async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usId = await prefs.getString('userId');
 
@@ -483,7 +518,15 @@ class TeamController extends GetxController {
       var resp = json.decode(response.body);
       if (resp['success'] == true) {
         // getTeamList();
-        // Get.back();
+        fetchNotifyTasks();
+        fetchByTasks();
+        fetchMyTasks();
+        fetchTasks();
+        getTaskStatusByU();
+        getTaskStatusToMe();
+        getTaskStatusNotify();
+        getTeamList();
+        Get.back();
         Get.snackbar("Success", "Task assigned successfully",
             backgroundColor: Colors.green.withOpacity(0.8),
             colorText: Colors.white,
@@ -514,7 +557,7 @@ class TeamController extends GetxController {
       isTeamSaveLoaders.value = false;
     }
   }
-  getTaskStatusByU() async {
+  void getTaskStatusByU() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usId = await prefs.getString('userId');
 
@@ -546,7 +589,7 @@ class TeamController extends GetxController {
       isTeamLoaders.value = false;
     }
   }
-  getTaskStatusToMe() async {
+  void getTaskStatusToMe() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usId = await prefs.getString('userId');
 
@@ -578,7 +621,7 @@ class TeamController extends GetxController {
       isTeamLoaders.value = false;
     }
   }
-  getTaskStatusNotify() async {
+  void getTaskStatusNotify() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usId = await prefs.getString('userId');
 
@@ -610,7 +653,7 @@ class TeamController extends GetxController {
       isTeamLoaders.value = false;
     }
   }
-  getTeamList() async {
+  void getTeamList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var usId = await prefs.getString('userId');
 
@@ -647,4 +690,5 @@ class TeamController extends GetxController {
       isTeamLoaders.value = false;
     }
   }
+
 }

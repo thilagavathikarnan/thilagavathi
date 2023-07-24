@@ -19,102 +19,103 @@ import 'package:habittrackergad/Utils/Constants.dart';
 import 'package:habittrackergad/controller/accountController.dart';
 import 'package:intl/intl.dart';
 
-class Cashin {
-  String name = "";
-  String date;
-  String time;
-  String cashin;
-  String cashinadd;
-  String cashoutadd;
-  String Paymenttype;
+// class Cashin {
+//   String name = "";
+//   String date;
+//   String time;
+//   String cashin;
+//   String cashinadd;
+//   String cashoutadd;
+//   String Paymenttype;
+//
+//   Cashin({
+//     this.name = "",
+//     required this.date,
+//     required this.time,
+//     required this.cashin,
+//     required this.cashinadd,
+//     required this.cashoutadd,
+//     required this.Paymenttype,
+//   });
+// }
+//
+// List<Cashin> CashinList = [
+//   Cashin(
+//       name: 'salary',
+//       date: "27-08-2022",
+//       time: "01:50 pm",
+//       cashin: '+ 50,000',
+//       cashinadd: "Cash in",
+//       cashoutadd: "Cash out",
+//       Paymenttype: "Credit"),
+//   Cashin(
+//       name: 'mill',
+//       date: "27-08-2022",
+//       time: "01:50 pm",
+//       cashin: '+ 20000',
+//       cashinadd: "Cash in",
+//       cashoutadd: "Cash out",
+//       Paymenttype: "Upi funds transaction"),
+//   Cashin(
+//       name: 'Car factory',
+//       date: "27-08-2022",
+//       time: "01:50 pm",
+//       cashin: '+ 1,00,000',
+//       cashinadd: "Cash in",
+//       cashoutadd: "Cash out",
+//       Paymenttype: "Atm"),
+//   Cashin(
+//       name: 'Bike showroom',
+//       date: "27-08-2022",
+//       time: "01:50 pm",
+//       cashin: '+ 25,000',
+//       cashinadd: "Cash in",
+//       cashoutadd: "Cash out",
+//       Paymenttype: "Net banking"),
+// ];
+//
+// class Cashout {
+//   String name = "";
+//   String date;
+//   String time;
+//   String cashout;
+//   String paymenttype;
+//
+//   Cashout(
+//       {this.name = "",
+//       required this.date,
+//       required this.time,
+//       required this.cashout,
+//       required this.paymenttype});
+// }
+//
+// List<Cashout> CashoutList = [
+//   Cashout(
+//       name: 'Emi',
+//       date: "27-08-2022",
+//       time: "01:50 pm",
+//       cashout: '- 1500',
+//       paymenttype: "Credit"),
+//   Cashout(
+//       name: 'Bike petrol',
+//       date: "27-08-2022",
+//       time: "01:50 pm",
+//       cashout: '- 2000',
+//       paymenttype: "Upi funds transaction"),
+//   Cashout(
+//       name: 'College fee',
+//       date: "27-08-2022",
+//       time: "01:50 pm",
+//       cashout: '-2,00,000',
+//       paymenttype: "Atm"),
+//   Cashout(
+//       name: 'Book',
+//       date: "27-08-2022",
+//       time: "01:50 pm",
+//       cashout: '- 500',
+//       paymenttype: "Net banking"),
+// ];
 
-  Cashin({
-    this.name = "",
-    required this.date,
-    required this.time,
-    required this.cashin,
-    required this.cashinadd,
-    required this.cashoutadd,
-    required this.Paymenttype,
-  });
-}
-
-List<Cashin> CashinList = [
-  Cashin(
-      name: 'salary',
-      date: "27-08-2022",
-      time: "01:50 pm",
-      cashin: '+ 50,000',
-      cashinadd: "Cash in",
-      cashoutadd: "Cash out",
-      Paymenttype: "Credit"),
-  Cashin(
-      name: 'mill',
-      date: "27-08-2022",
-      time: "01:50 pm",
-      cashin: '+ 20000',
-      cashinadd: "Cash in",
-      cashoutadd: "Cash out",
-      Paymenttype: "Upi funds transaction"),
-  Cashin(
-      name: 'Car factory',
-      date: "27-08-2022",
-      time: "01:50 pm",
-      cashin: '+ 1,00,000',
-      cashinadd: "Cash in",
-      cashoutadd: "Cash out",
-      Paymenttype: "Atm"),
-  Cashin(
-      name: 'Bike showroom',
-      date: "27-08-2022",
-      time: "01:50 pm",
-      cashin: '+ 25,000',
-      cashinadd: "Cash in",
-      cashoutadd: "Cash out",
-      Paymenttype: "Net banking"),
-];
-
-class Cashout {
-  String name = "";
-  String date;
-  String time;
-  String cashout;
-  String paymenttype;
-
-  Cashout(
-      {this.name = "",
-      required this.date,
-      required this.time,
-      required this.cashout,
-      required this.paymenttype});
-}
-
-List<Cashout> CashoutList = [
-  Cashout(
-      name: 'Emi',
-      date: "27-08-2022",
-      time: "01:50 pm",
-      cashout: '- 1500',
-      paymenttype: "Credit"),
-  Cashout(
-      name: 'Bike petrol',
-      date: "27-08-2022",
-      time: "01:50 pm",
-      cashout: '- 2000',
-      paymenttype: "Upi funds transaction"),
-  Cashout(
-      name: 'College fee',
-      date: "27-08-2022",
-      time: "01:50 pm",
-      cashout: '-2,00,000',
-      paymenttype: "Atm"),
-  Cashout(
-      name: 'Book',
-      date: "27-08-2022",
-      time: "01:50 pm",
-      cashout: '- 500',
-      paymenttype: "Net banking"),
-];
 
 class ManualAccountpage extends StatefulWidget {
   @override
@@ -766,13 +767,13 @@ class _ManualAccountpageState extends State<ManualAccountpage>
                                                           .spaceBetween,
                                                       children: [
                                                         Text(
-                                                          accountController.cashInList[index].category.toString(),
+                                                          accountController.cashInList[index].category_name.toString(),
                                                           style: const TextStyle(
                                                               fontSize: 18,
                                                               fontWeight:
                                                               FontWeight.w600),
                                                         ),
-                                                        Text("+ "+accountController.cashInList[index].amount,
+                                                        Text("+ "+double.parse(accountController.cashInList[index].amount).toStringAsFixed(2),
                                                             style: const TextStyle(
                                                                 fontSize: 18,
                                                                 fontWeight:
@@ -797,12 +798,12 @@ class _ManualAccountpageState extends State<ManualAccountpage>
                                                       const SizedBox(
                                                         width: 10,
                                                       ),
-                                                      Text(accountController.cashInList[index].date),
+                                                      Text(DateFormat.yMMMEd().format(DateTime.parse(accountController.cashInList[index].date))),
+                                                      // Text(accountController.cashInList[index].date),
                                                       const SizedBox(
                                                         width: 10,
                                                       ),
-                                                      Text(
-                                                          DateFormat.j().format(DateTime.parse(accountController.cashInList[index].date))),
+                                                      // Text(DateFormat.j().format(DateTime.parse(accountController.cashInList[index].date))),
                                                     ],
                                                   )
                                                   // Text(numberList[index].cashType == "cash in" ?Text("cash in ",style: TextStyle(color: numberList[0].cashType =="cash type"? Colors.green:Colors.red),))
@@ -864,13 +865,13 @@ class _ManualAccountpageState extends State<ManualAccountpage>
                                                         .spaceBetween,
                                                     children: [
                                                       Text(
-                                                        accountController.cashOutList[index].category.toString(),
+                                                        accountController.cashOutList[index].category_name.toString(),
                                                         style: const TextStyle(
                                                             fontSize: 18,
                                                             fontWeight:
                                                             FontWeight.w600),
                                                       ),
-                                                      Text("- "+accountController.cashOutList[index].amount,
+                                                      Text("- "+double.parse(accountController.cashOutList[index].amount).toStringAsFixed(2),
                                                           style: const TextStyle(
                                                               fontSize: 18,
                                                               fontWeight:
@@ -895,12 +896,13 @@ class _ManualAccountpageState extends State<ManualAccountpage>
                                                     const SizedBox(
                                                       width: 10,
                                                     ),
-                                                    Text(accountController.cashOutList[index].date),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Text(
-                                                        DateFormat.j().format(DateTime.parse(accountController.cashOutList[index].date))),
+                                                    Text(DateFormat.yMMMEd().format(DateTime.parse(accountController.cashOutList[index].date))),
+
+                                                    // Text(accountController.cashOutList[index].date),
+                                                    // const SizedBox(
+                                                    //   width: 10,
+                                                    // ),
+                                                    // Text(DateFormat.j().format(DateTime.parse(accountController.cashOutList[index].date))),
                                                   ],
                                                 )
                                                 // Text(numberList[index].cashType == "cash in" ?Text("cash in ",style: TextStyle(color: numberList[0].cashType =="cash type"? Colors.green:Colors.red),))
@@ -1015,25 +1017,33 @@ class _ManualAccountpageState extends State<ManualAccountpage>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Cashinadd(type:"Cash in")),
-                  ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 2.3,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [
-                          Color(0XFFd0a1d2),
-                          Color(0XFF3b4682),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
+                  onTap: ()
+                   async{
+                     setState(() {
+                       accountController.selectContactName.clear();
+                     });
+
+                 Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Cashinadd(type:"Cash in")),
+    );
+               },
+            child: Container(
+            width: MediaQuery.of(context).size.width / 2.3,
+            height: 60,
+            decoration: BoxDecoration(
+            gradient: const LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+            Color(0XFFd0a1d2),
+            Color(0XFF3b4682),
+            ],
+            ),
+            borderRadius: BorderRadius.circular(12),
+            ),
+            child:
+             Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(
@@ -1054,8 +1064,11 @@ class _ManualAccountpageState extends State<ManualAccountpage>
                 ),
                 InkWell(
                   onTap: ()
-                  {
+                  async{
                     print("ADVNASDAD");
+                    setState(() {
+                      accountController.selectContactName.clear();
+                    });
 
                     Navigator.push(
                       context,

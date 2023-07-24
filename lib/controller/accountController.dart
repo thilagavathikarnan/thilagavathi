@@ -20,16 +20,23 @@ class AccountController extends GetxController
     getCashIn();
     getCashOut();
     getIncomeAndExpenses();
+    getAccountsCounts();
+    getAccountHistory();
+    dataClear();
     super.onInit();
   }
  final accCategory = <AcoountCategoryModel>[].obs;
  final incomeAndExpen = <ResponseModel>[].obs;
   Rx<DateTime> incomeExpenseDate = DateTime.now().obs;
+  Rx<DateTime> accountHistoryDate = DateTime.now().obs;
+  Rx<DateTime> accountChartDate = DateTime.now().obs;
   ResponseModel incomeExpenseData = ResponseModel(income: "", expenses: "");
   TextEditingController amountController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
   TextEditingController selectCatController = TextEditingController();
   TextEditingController newtCatController = TextEditingController();
+  TextEditingController cashCategoryName = TextEditingController();
+  TextEditingController selectContactName = TextEditingController();
   final selectDate = "".obs;
   final selectCate = "".obs;
   final selectCateName = "".obs;
@@ -37,14 +44,24 @@ class AccountController extends GetxController
   final cashType = "".obs;
   var cashInList = <DataModel>[].obs;
   var cashOutList = <DataModel>[].obs;
+  var accountHistoryList = <DataModel>[].obs;
+  final cashInLoader = false.obs;
+  final cashOutLoader = false.obs;
   var date = DateTime.now();
   var calendarControllerToday;
   final formatDate =  DateFormat('yyyy-MM-dd');
   var selectDateForCash;
   Rx<double> incomeValue = 0.0.obs;
   Rx<double> expensesValue = 0.0.obs;
+
+  Rx<double> incomeChart = 0.0.obs;
+  Rx<double> expensesChart = 0.0.obs;
+  Rx<double> onlineChart = 0.0.obs;
+  Rx<double> offlineChart = 0.0.obs;
+
+
   void dataClear()
-  {
+  async{
     amountController.clear();
     remarkController.clear();
     selectCatController.clear();
@@ -55,26 +72,28 @@ class AccountController extends GetxController
     amountController.clear();
     remarkController.clear();
     amountController.clear();
+    accountHistoryList.clear();
     newtCatController.clear();
     selectCate.value = "";
     selectDate.value = '';
     cashType.value = '';
+    incomeValue.value = 0.0;
+    expensesValue.value = 0.0;
 
   }
 
   void addCashInAccount()
   async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     var usId = await prefs.getString('userId');
-
     var body = {
       "user_id":usId,
       "amount":amountController.text.toString(),
       "remark":remarkController.text.toString(),
       "date":selectDate.toString(),
       "category":selectCate.toString(),
-      "contact":"test",
+      "category_name":selectCatController.text.toString(),
+      "contact":selectContactName.text.toString(),
       "payment_mode":selectPayment.value == true?"1":0,
       "cash_type":"cash_in"
     };
@@ -82,6 +101,7 @@ class AccountController extends GetxController
     print(body);
     var dataJs = json.encode(body);
     try {
+      cashInLoader.value = true;
       print("POSTAPI");
       var url = Uri.parse(mainUrl+accountUrl);
       print(url);
@@ -100,6 +120,9 @@ class AccountController extends GetxController
         dataClear();
         getCashIn();
         getCashOut();
+        getIncomeAndExpenses();
+        getAccountsCounts();
+        getAccountHistory();
         Get.back();
 
         Get.snackbar("Success", "Account add successfully",
@@ -129,6 +152,7 @@ class AccountController extends GetxController
       print("errror");
       print("----------${e}");
     } finally {
+      cashInLoader.value = false;
     }
   }
 
@@ -144,7 +168,8 @@ class AccountController extends GetxController
       "remark":remarkController.text.toString(),
       "date":selectDate.toString(),
       "category":selectCate.toString(),
-      "contact":"test",
+      "category_name":selectCatController.text.toString(),
+      "contact":selectContactName.text.toString(),
       "payment_mode":selectPayment.value == true?"1":0,
       "cash_type":"cash_out"
     };
@@ -152,6 +177,7 @@ class AccountController extends GetxController
     print(body);
     var dataJs = json.encode(body);
     try {
+      cashOutLoader.value = true;
       print("POSTAPI");
       var url = Uri.parse(mainUrl+accountUrl);
       print(url);
@@ -169,6 +195,9 @@ class AccountController extends GetxController
         dataClear();
         getCashIn();
         getCashOut();
+        getIncomeAndExpenses();
+        getAccountsCounts();
+        getAccountHistory();
         Get.back();
         Get.snackbar("Success", "Account add successfully",
             backgroundColor: Colors.green.withOpacity(0.8),
@@ -196,7 +225,9 @@ class AccountController extends GetxController
     } catch (e) {
       print("errror");
       print("----------${e}");
-    } finally {
+    } finally
+    {
+      cashOutLoader.value = false;
     }
   }
 
@@ -239,7 +270,10 @@ class AccountController extends GetxController
     var usId = await prefs.getString('userId');
     try
         {
+          print("GETVALUSESDATES");
+          print(incomeExpenseDate.value.toString());
           Uri url =
+
           // calendarControllerToday == null?
           // Uri.parse(mainUrl+cashInGetUrl+"/"+usId!+"?cash_type=cash_in&date=${formatDate.format(date)}"):
           Uri.parse(mainUrl+cashInGetUrl+"/"+usId!+"?cash_type=cash_in&date=${formatDate.format(incomeExpenseDate.value)}");
@@ -297,6 +331,39 @@ class AccountController extends GetxController
         }
   }
 
+  void getAccountHistory()
+  async
+  {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var usId = await prefs.getString('userId');
+    try
+        {
+          Uri url =
+          // calendarControllerToday == null? Uri.parse(mainUrl+cashInGetUrl+"/"+usId!+"?cash_type=cash_out&date=${formatDate.format(date)}"):
+          Uri.parse(mainUrl+accountAllHistoryGetUrl+"?date=${formatDate.format(accountHistoryDate.value)}&user_id=${usId}");
+
+          print("CASHACCOUNHISTORYGETURL");
+          print(url);
+          http.Response response = await http.get(url);
+          var parsedResponse = jsonDecode(response.body);
+          final List<dynamic> rawDataList = parsedResponse['data'];
+          accountHistoryList.clear();
+          accountHistoryList.value = rawDataList.map((data) => DataModel.fromJson(data)).toList();
+          print("CASHACCOUNHISTORY");
+          print(accountHistoryList.value);
+
+        }
+        catch(e)
+    {
+
+    }
+    finally
+        {
+
+        }
+  }
+
   void addCategory()
   async
   {
@@ -319,10 +386,12 @@ class AccountController extends GetxController
           },
           body: dataJs);
       print(response.statusCode);
+      print(response.body);
       var resp = json.decode(response.body);
       getCategory();
       if (resp['message'] == "success")
       {
+
 
 
         newtCatController.clear();
@@ -370,7 +439,6 @@ class AccountController extends GetxController
       print(url);
       http.Response response = await http.get(url);
       var parsedResponse = json.decode(response.body);
-
       print("incomeValue.value");
       print(parsedResponse['data'][0]['income']);
       print(parsedResponse['data'][0]['expenses']);
@@ -392,4 +460,48 @@ class AccountController extends GetxController
     }
   }
 
+  void getAccountsCounts()
+  async
+  {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var usId = await prefs.getString('userId');
+
+    try
+    {
+      Uri url = Uri.parse("$mainUrl$accountCountGetUrl?date=${formatDate.format(accountChartDate.value)}&user_id=${usId}");
+      print("Account Chart");
+      print(url);
+      http.Response response = await http.get(url);
+      var parsedResponse = json.decode(response.body);
+      print("----------"+response.body);
+      print("----------"+parsedResponse['data']['income'].toString());
+      print("----------"+parsedResponse['data']['expenses'].toString());
+      print("----------"+parsedResponse['data']['offline'].toString());
+
+      incomeChart.value = 0.0;
+      expensesChart.value = 0.0;
+      offlineChart.value = 0.0;
+      onlineChart.value = 0.0;
+      incomeChart.value = double.parse(parsedResponse['data']['income'].toString());
+      expensesChart.value = double.parse(parsedResponse['data']['expenses'].toString());
+      offlineChart.value = double.parse(parsedResponse['data']['offline'].toString());
+      onlineChart.value = double.parse(parsedResponse['data']['online'].toString());
+      print("incomeChart.value.toString()");
+      print(incomeChart.value.toString());
+      print(expensesChart.value.toString());
+      print(offlineChart.value.toString());
+      print("++++++++++++++++++++++"+onlineChart.value.toString());
+
+
+    }
+    catch(e)
+    {
+
+    }
+    finally
+    {
+
+    }
+  }
 }

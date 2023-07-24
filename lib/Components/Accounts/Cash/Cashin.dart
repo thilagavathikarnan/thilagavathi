@@ -4,12 +4,10 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:habittrackergad/Components/Accounts/Cash/cashcategory.dart';
 import 'package:habittrackergad/Components/Home/Homepage.dart';
-
 import 'package:habittrackergad/Utils/Constants.dart';
 import 'package:intl/intl.dart';
 import 'package:simple_time_range_picker/simple_time_range_picker.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-
 import '../../../controller/accountController.dart';
 import '../../../controller/teamController.dart';
 
@@ -27,6 +25,8 @@ class Homepage extends State<Cashinadd> {
   List<Contact>? _contacts;
   bool _permissionDenied = false;
   AccountController accountCController = Get.put(AccountController());
+  List<String>? searchResults = [];
+  List<String>? contactList = [];
 
   @override
   void initState() {
@@ -41,7 +41,19 @@ class Homepage extends State<Cashinadd> {
       setState(() => _permissionDenied = true);
     } else {
       final contacts = await FlutterContacts.getContacts();
-      setState(() => _contacts = contacts);
+      setState(()
+          {
+            _contacts = contacts;
+            searchResults!.clear();
+            contactList!.clear();
+
+            for(int i = 0; i<contacts.length;i++)
+              {
+                contactList!.add(contacts[i].displayName);
+                searchResults!.add(contacts[i].displayName);
+              }
+
+          });
     }
   }
 
@@ -235,23 +247,64 @@ class Homepage extends State<Cashinadd> {
     Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-    SizedBox(
-    width: width! - 40,
-    height: 50,
-    child: ElevatedButton(
-    style: ButtonStyle(
-    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(12.0),
-    ))),
-    child: Text('$_selected',
-    style: const TextStyle(
-    color: BUTTONTEXTCOLOR,
-    fontSize: 16,
-    fontWeight: FontWeight.w400)),
-    onPressed: () => showModalcontact(context),
+      Container(
+        width: 220,
+        child: TextField(
+          readOnly: true,
+          controller: accountCController.selectContactName,
+          decoration:InputDecoration(
+              hintText: "Select contact"
+          ),
+        ),
+      ),
+      // SizedBox(width: 10,),
+    InkWell(
+      onTap: ()
+      {
+        _fetchContacts().then((value)
+        {
+          showModalcontact(context);
+
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.blue,
+        ),
+        child: Center(
+          child: Text('Choose',
+              style: const TextStyle(
+                  color: BUTTONTEXTCOLOR,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400)),
+        ),
+      ),
     ),
-    ),
+    // SizedBox(
+    // width: width! - 40,
+    // height: 50,
+    // child: ElevatedButton(
+    // style: ButtonStyle(
+    // shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    // RoundedRectangleBorder(
+    // borderRadius: BorderRadius.circular(12.0),
+    // ))),
+    // child: Text('$_selected',
+    // style: const TextStyle(
+    // color: BUTTONTEXTCOLOR,
+    // fontSize: 16,
+    // fontWeight: FontWeight.w400)),
+    // onPressed: () {
+    //   _fetchContacts().then((value)
+    //   {
+    //     showModalcontact(context);
+    //
+    //   });
+    //     },
+    // ),
+    // ),
     ],
     ),
     Padding(
@@ -295,50 +348,82 @@ class Homepage extends State<Cashinadd> {
     const SizedBox(
     height: 40,
     ),
-    Center(
-    child: InkWell(
-    onTap: ()
+    Obx(()
     {
-    if(accountCController.selectCate.isNotEmpty && accountCController.amountController.text.isNotEmpty && accountCController.remarkController.text.isNotEmpty&& accountCController.selectDate.isNotEmpty )
-    {
+      if(accountCController.cashInLoader.isTrue || accountCController.cashOutLoader.isTrue)
+        {
+          return Center(
+            child: InkWell(
+              onTap: ()
+              {
 
-    accountCController.accCategory();
-    if(widget.type == "Cash out")
-      {
-        accountCController.addCashOutAccount();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: APPBACKGROUNDCOLOR),
+                width: width! - 20,
+                height: 50,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 1,
+                    color: Colors.white,
+                  )
+                ),
+              ),
+            ),
+          );
+        }
+      else
+        {
+          return Center(
+            child: InkWell(
+              onTap: ()
+              {
+                if(accountCController.selectCate.isNotEmpty && accountCController.amountController.text.isNotEmpty && accountCController.remarkController.text.isNotEmpty&& accountCController.selectDate.isNotEmpty )
+                {
 
-      }
-    else
-      {
-        accountCController.addCashInAccount();
+                  accountCController.accCategory();
+                  if(widget.type == "Cash out")
+                  {
+                    accountCController.addCashOutAccount();
 
-      }
-    }
-    else
-    {
-    Get.snackbar('Alert','Please enter all fields',
-    backgroundColor: Colors.black.withOpacity(0.7),
-    colorText: Colors.white,
-    icon: Icon(
-    Icons.warning,
-    color: Colors.white,
-    ),
-    snackPosition: SnackPosition.BOTTOM);
-    }
-    },
-    child: Container(
-    decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(12),
-    color: APPBACKGROUNDCOLOR),
-    width: width! - 20,
-    height: 50,
-    child: const Center(
-    child: Text('Submit',
-    style: TextStyle(color: BUTTONTEXTCOLOR, fontSize: 18)),
-    ),
-    ),
-    ),
-    ),
+                  }
+                  else
+                  {
+                    accountCController.addCashInAccount();
+
+                  }
+                }
+                else
+                {
+                  Get.snackbar('Alert','Please enter all fields',
+                      backgroundColor: Colors.black.withOpacity(0.7),
+                      colorText: Colors.white,
+                      icon: Icon(
+                        Icons.warning,
+                        color: Colors.white,
+                      ),
+                      snackPosition: SnackPosition.BOTTOM);
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: APPBACKGROUNDCOLOR),
+                width: width! - 20,
+                height: 50,
+                child: const Center(
+                  child: Text('Submit',
+                      style: TextStyle(color: BUTTONTEXTCOLOR, fontSize: 18)),
+                ),
+              ),
+            ),
+          );
+        }
+    })
+
+
     ],
     ),
     )
@@ -393,16 +478,79 @@ class Homepage extends State<Cashinadd> {
             return Center(child: Text('Permission denied'));
           if (_contacts == null)
             return Center(child: CircularProgressIndicator());
-          return ListView.builder(
-              itemCount: _contacts!.length,
-              itemBuilder: (context, i) => ListTile(
-                  title: Text(_contacts![i].displayName),
-                  onTap: () async {
-                    final fullContact =
-                        await FlutterContacts.getContact(_contacts![i].id);
-                    await Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => ContactPage(fullContact!)));
-                  }));
+          return Container(
+            height: 550,
+              // height:_contacts!.length*150,
+              child: ListView(
+              children: [
+
+                Padding(
+                  padding:  EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 50,
+                    width: 300,
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.grey.shade400
+                      )
+                    ),
+                    child: Center(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(8),
+                          hintText: "Search contact......"
+                        ),
+                     
+                          onChanged: (val)
+                        {
+                          setState(() {
+                            searchResults!.clear();
+                            searchResults = contactList!.where((item) => item.toLowerCase().contains(val.toLowerCase())).cast<String>().toList();
+                            print("SEARCH LSIT");
+                            print(searchResults);
+
+                          });
+
+                          },
+                      ),
+                    ),
+
+                  ),
+                ),
+                  searchResults!.isEmpty?
+                  Container(
+                    height: 400,
+                    child: Center(child: Text("No match")),
+                  ):Container(
+                    height:450,
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        for(int i = 0; i<searchResults!.length;i++)
+                          ListTile(
+                            title: Text(searchResults![i]),
+                            onTap: () async {
+                              // final fullContact = await FlutterContacts.getContact(_contacts![i].id);
+                              // accountCController.selectContactName.text = fullContact!.displayName;
+                              accountCController.selectContactName.text = searchResults![i].toString();
+                               Navigator.of(context).pop();
+
+                              // await Navigator.of(context).push(MaterialPageRoute(builder: (_) => ContactPage(fullContact!)));
+
+
+                            })
+                      ],
+                    ),
+                  )
+
+
+              ],
+            ),
+          );
         });
   }
 }

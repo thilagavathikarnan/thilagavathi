@@ -35,217 +35,8 @@ import 'AssignTask/Notify.dart';
 import 'package:flutter_face_pile/flutter_face_pile.dart';
 import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 
-class Morningtask {
-  final String Taskname;
-  String Taskdescription;
-  String Date;
-  String Weekdays;
-  String TimeScheduleFromtime;
-  String TimeScheduleTotime;
-  String AssignedTo;
-  String Notifiy;
-  String Status;
-  String Priority;
 
-  bool isselected = false;
 
-  Morningtask(
-      {required this.Taskname,
-      required this.Taskdescription,
-      required this.Date,
-      required this.TimeScheduleFromtime,
-      required this.TimeScheduleTotime,
-      required this.AssignedTo,
-      required this.Notifiy,
-      required this.Status,
-      required this.Priority,
-      required this.isselected,
-      required this.Weekdays});
-}
-
-List<Morningtask> Morningtasklist = [
-  Morningtask(
-      Taskname: "Functionality",
-      Status: "In-progress",
-      Priority: "Low",
-      Taskdescription:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce",
-      Date: "26/06/2022 - 30/06/2022",
-      TimeScheduleFromtime: "08:35.am   -",
-      TimeScheduleTotime: "  9:55.am",
-      AssignedTo: "Pranav",
-      Notifiy: "Naveenraj , Pranav",
-      isselected: false,
-      Weekdays: "Monday"),
-  Morningtask(
-      Taskname: "Habit Tracker",
-      Status: "To-do",
-      Priority: "Medium",
-      Taskdescription:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce",
-      Date: "26/06/2022 - 30/06/2022",
-      TimeScheduleFromtime: "09:35.am   -",
-      TimeScheduleTotime: "  10:55.am",
-      AssignedTo: "Vicky",
-      Notifiy: "Naveenraj , Pranav",
-      isselected: false,
-      Weekdays: "Thesday"),
-  Morningtask(
-      Taskname: "Figma design",
-      Status: "Resolved",
-      Priority: "High",
-      Taskdescription:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce",
-      Date: "26/06/2022 - 30/06/2022",
-      TimeScheduleFromtime: "11:35.am   -",
-      TimeScheduleTotime: "  11:40.am",
-      AssignedTo: "Prasana",
-      Notifiy: "Naveenraj , Pranav",
-      isselected: false,
-      Weekdays: "Wednesday"),
-  Morningtask(
-      Taskname: "Gad Seo",
-      Status: "In-progress",
-      Priority: "Low",
-      Taskdescription:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce",
-      Date: "26/06/2022 - 30/06/2022",
-      TimeScheduleFromtime: "10:35.am   -",
-      TimeScheduleTotime: "  11:55.amm",
-      AssignedTo: "Prabu",
-      Notifiy: "Naveenraj , Pranav",
-      isselected: false,
-      Weekdays: "Thursday"),
-];
-
-class Afternoontask {
-  final String Taskname;
-  String Taskdescription;
-  String Date;
-
-  String TimeScheduleFromtime;
-  String TimeScheduleTotime;
-  String AssignedTo;
-  String Notifiy;
-  String Status;
-  String Priority;
-  String Weekdays;
-
-  bool isselected = false;
-
-  Afternoontask(
-      {required this.Taskname,
-      required this.Taskdescription,
-      required this.Date,
-      required this.TimeScheduleFromtime,
-      required this.TimeScheduleTotime,
-      required this.AssignedTo,
-      required this.Notifiy,
-      required this.Status,
-      required this.Priority,
-      required this.isselected,
-      required this.Weekdays});
-}
-
-List<Afternoontask> Afternoontasklist = [
-  Afternoontask(
-      Taskname: "Api integration",
-      Status: "Resolved",
-      Priority: "Medium",
-      Taskdescription:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce",
-      Date: "26/06/2022",
-      TimeScheduleFromtime: "08:35.am   -",
-      TimeScheduleTotime: "  9:55.am",
-      AssignedTo: "Pranav",
-      Notifiy: "Naveenraj , Pranav",
-      isselected: false,
-      Weekdays: "Monday"),
-  Afternoontask(
-      Taskname: "Habit Tracker",
-      Status: "To-do",
-      Priority: "Low",
-      Taskdescription:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce",
-      Date: "26/06/2022",
-      TimeScheduleFromtime: "09:35.am   -",
-      TimeScheduleTotime: "  10:55.am",
-      AssignedTo: "Vicky",
-      Notifiy: "Naveenraj , Pranav",
-      isselected: false,
-      Weekdays: "Thesday"),
-  Afternoontask(
-      Taskname: "Figma design",
-      Status: "Resolved",
-      Priority: "High",
-      Taskdescription:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce",
-      Date: "26/06/2022",
-      TimeScheduleFromtime: "11:35.am   -",
-      TimeScheduleTotime: "  11:40.am",
-      AssignedTo: "Prasana",
-      Notifiy: "Naveenraj , Pranav",
-      isselected: false,
-      Weekdays: "Wednesday"),
-  Afternoontask(
-      Taskname: "Gad Seo",
-      Status: "In-progress",
-      Priority: "Low",
-      Taskdescription:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce",
-      Date: "26/06/2022",
-      TimeScheduleFromtime: "10:35.am   -",
-      TimeScheduleTotime: "  11:55.amm",
-      AssignedTo: "Prabu",
-      Notifiy: "Naveenraj , Pranav",
-      isselected: false,
-      Weekdays: "Thursday"),
-];
-
-class Eveningtask {
-  final String Taskname;
-  String Taskdescription;
-  String Date;
-  String Weekdays;
-
-  String TimeScheduleFromtime;
-  String TimeScheduleTotime;
-  String AssignedTo;
-  String Notifiy;
-  String Status;
-  String Priority;
-
-  bool isselected = false;
-
-  Eveningtask(
-      {required this.Taskname,
-      required this.Taskdescription,
-      required this.Date,
-      required this.TimeScheduleFromtime,
-      required this.TimeScheduleTotime,
-      required this.AssignedTo,
-      required this.Notifiy,
-      required this.Status,
-      required this.Priority,
-      required this.isselected,
-      required this.Weekdays});
-}
-
-List<Eveningtask> Eveningtasklist = [
-  Eveningtask(
-      Taskname: "Functionality",
-      Status: "In-progress",
-      Priority: "Low",
-      Taskdescription:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce",
-      Date: "26/06/2022",
-      TimeScheduleFromtime: "08:35.am   -",
-      TimeScheduleTotime: "  9:55.am",
-      AssignedTo: "Pranav",
-      Notifiy: "Naveenraj , Pranav",
-      isselected: false,
-      Weekdays: "Monday"),
-];
 
 class Taskpage extends StatefulWidget {
   @override
@@ -254,8 +45,7 @@ class Taskpage extends StatefulWidget {
 
 class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
   final controller = PageController(viewportFraction: 0.8, keepPage: true);
-  late DateTime _selectedDate;
-  // datepickcalender
+  late DateTime _selectedDate = DateTime.now();
   TextEditingController dateInput = TextEditingController();
   TeamController taskController = Get.put(TeamController());
 
@@ -701,10 +491,9 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                 padding:
                                 const EdgeInsets.only(left: 20, right: 20),
                                 child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
+                                     Text(
                                       "Assigned",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w500,
@@ -722,17 +511,16 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                   ],
                                 ),
                               ),
-                              const SizedBox(
+                               SizedBox(
                                 height: 10,
                               ),
                               Padding(
-                                padding:
-                                const EdgeInsets.only(left: 20, right: 20),
+                                padding: EdgeInsets.only(left: 20, right: 20),
                                 child: Row(
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
+                                     Text(
                                       "Completed",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w500,
@@ -1023,6 +811,7 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                               children: [
                                                 InkWell(
                                                   onTap: () async {
+                                                    taskController.selectedItemstatus.value = "";
                                                     TaskModel task = await TaskModel(
                                                       id: taskController.myTaskList[index].id,
                                                       userId: taskController.myTaskList[index].userId,
@@ -1059,11 +848,10 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                                           topLeft: Radius.circular(12.0),
                                                         ),
                                                         color:
-                                                        Morningtasklist[index].isselected
+                                                        taskController.myTaskList[index].status == "completed"
                                                             ? const Color(0xFF68B984)
                                                             : chooseCardColor(
-                                                            Morningtasklist[index]
-                                                                .Priority)),
+                                                            taskController.myTaskList[index].priority)),
                                                     width: width! - 30,
                                                     height: 260,
                                                     child: Padding(
@@ -1351,11 +1139,7 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                                       children: [
                                                         Row(
                                                           children: [
-                                                            Text(
-                                                              Morningtasklist[index]
-                                                                  .isselected
-                                                                  ? 'Done'
-                                                                  : taskController.myTaskList[index].priority,
+                                                            Text(taskController.myTaskList[index].priority,
                                                               style: const TextStyle(
                                                                 fontSize: 18,
                                                               ),
@@ -1378,18 +1162,14 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                                                   padding:
                                                                   EdgeInsets.all(
                                                                       8.0),
-                                                                  child: Text(taskController.myTaskList[index].status == "completed"||
-                                                                      Morningtasklist[index].isselected
-                                                                          ? "Done"
-                                                                          : "${taskController.myTaskList[index].status}"),
+                                                                  child: Text( "${taskController.myTaskList[index].status}"),
                                                                 ),
                                                               ),
                                                             ),
                                                           ],
                                                         ),
                                                         IconButton(
-                                                          icon: Morningtasklist[index]
-                                                              .isselected || taskController.myTaskList[index].status == "completed"
+                                                          icon: taskController.myTaskList[index].status == "completed"
                                                               ? const Icon(
                                                             Icons.check_box,
                                                             color: Colors.green,
@@ -1401,7 +1181,10 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                                           ),
                                                           onPressed: (() {
                                                             setState(() {
-                                                              Morningtasklist[index].isselected = !Morningtasklist[index].isselected;
+                                                              taskController.selectedItemstatus.value = "completed";
+                                                              taskController.taskUpdate(taskController.myTaskList[index].id, "completed");
+
+                                                              // Morningtasklist[index].isselected = !Morningtasklist[index].isselected;
                                                               taskController.fetchTasks();
                                                             });
                                                           }),

@@ -78,7 +78,22 @@ class _CashcategoryState extends State<Cashcategory> {
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ))),
-                          onPressed: accountCController.addCategory,
+                          onPressed: ()
+                          {
+                            if(accountCController.newtCatController.text.isNotEmpty)
+                              {
+                                accountCController.addCategory();
+                              }
+                            else
+                              {
+                                Get.snackbar("Alert", "Please enter category",
+                                colorText: Colors.white,
+                                icon: Icon(Icons.warning,color: Colors.white,),
+                                    snackPosition:SnackPosition.BOTTOM,
+                                backgroundColor: Colors.black.withOpacity(0.8),
+                                );
+                              }
+                          },
                           child: const Text('Add'))),
                 ],
               ),
@@ -106,38 +121,31 @@ class _CashcategoryState extends State<Cashcategory> {
             accountCController.accCategory.isEmpty?
                 Container():
             Obx(() {
-                return SizedBox(
-                  height: accountCController.accCategory.length*40,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: ListView.separated(
-                            itemCount: accountCController.accCategory.length,
-                            controller: ScrollController(),
-                            separatorBuilder: (_, __) => const SizedBox(height: 1),
-                            itemBuilder: (context, index) {
-                              return RadioListTile(
-                                title: Text(accountCController.accCategory[index].name),
-                                value: accountCController.accCategory[index].id,
-                                groupValue: _radioValue,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _radioValue = value.toString();
-                                    print("SELECTCATEGORY");
-                                    accountCController.selectCatController.text =  accountCController.accCategory[index].name.toString();
-                                    print(accountCController.accCategory[index].id);
-                                    accountCController.selectCate.value = accountCController.accCategory[index].id.toString();
-                                    accountCController.selectCateName.value = accountCController.accCategory[index].name.toString();
+                return ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: accountCController.accCategory.length,
+                    controller: ScrollController(),
+                    separatorBuilder: (_, __) => const SizedBox(height: 1),
+                    itemBuilder: (context, index) {
+                      return RadioListTile(
+                        title: Text(accountCController.accCategory[index].name),
+                        value: accountCController.accCategory[index].id,
+                        groupValue: _radioValue,
+                        onChanged: (value) {
+                          setState(() {
+                            _radioValue = value.toString();
+                            print("SELECTCATEGORY");
+                            accountCController.cashCategoryName.text = accountCController.accCategory[index].name.toString();
+                            accountCController.selectCatController.text =  accountCController.accCategory[index].name.toString();
+                            print(accountCController.accCategory[index].id);
+                            accountCController.selectCate.value = accountCController.accCategory[index].id.toString();
+                            accountCController.selectCateName.value = accountCController.accCategory[index].name.toString();
 
 
-                                  });
-                                },
-                              );
-                            }),
-                      ),
-                    ],
-                  ),
-                );
+                          });
+                        },
+                      );
+                    });
               }
             ),
             const Padding(

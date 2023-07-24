@@ -63,13 +63,15 @@ class TaskModel {
 class UserNameModel {
   String firstName;
   String lastName;
+  String status;
 
-  UserNameModel({required this.firstName, required this.lastName});
+  UserNameModel({required this.firstName, required this.lastName,required this.status});
 
   factory UserNameModel.fromJson(Map<String, dynamic> json) {
     return UserNameModel(
       firstName: json['first_name']??"",
       lastName: json['last_name']??"",
+      status: json['status']??"",
     );
   }
 }
