@@ -6,6 +6,8 @@ class TaskModel {
   String description;
   String status;
   String subTask;
+  String projectId;
+  String projectName;
   String priority;
   String assignId;
   String notifyId;
@@ -24,6 +26,8 @@ class TaskModel {
     required this.description,
     required this.status,
     required this.subTask,
+    required this.projectId,
+    required this.projectName,
     required this.priority,
     required this.assignId,
     required this.notifyId,
@@ -44,6 +48,8 @@ class TaskModel {
       description: json['description']??"",
       status: json['status']??"",
       subTask: json['sub_task']??"",
+      projectId: json['project_id']??"",
+      projectName: json['project_name']??"",
       priority: json['priority']??"",
       assignId: json['assign_id']??"",
       notifyId: json['notify_id']??'',

@@ -307,7 +307,7 @@ class _Assigned_by_youState extends State<Assigned_by_you>
                   ),
                   child: InkWell(
                     onTap: () => Navigator.pop(context),
-                    child: const CircleAvatar(
+                    child:  CircleAvatar(
                         backgroundColor: Colors.grey,
                         foregroundColor: Colors.white,
                         child: Icon(Icons.arrow_back_ios_new_outlined)),
@@ -538,6 +538,8 @@ class _Assigned_by_youState extends State<Assigned_by_you>
                                                       description:taskController.assignMyTaskAll[index].description,
                                                       status:taskController.assignMyTaskAll[index].status,
                                                       subTask:taskController.assignMyTaskAll[index].subTask,
+                                                      projectId:taskController.assignMyTaskAll[index].projectId,
+                                                      projectName:taskController.assignMyTaskAll[index].projectName,
                                                       priority:taskController.assignMyTaskAll[index].priority,
                                                       startDate:taskController.assignMyTaskAll[index].startDate,
                                                       endDate:taskController.assignMyTaskAll[index].endDate,

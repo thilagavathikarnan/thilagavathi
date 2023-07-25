@@ -620,6 +620,8 @@ class _NotifypageState extends State<Notifypage> with TickerProviderStateMixin {
                                                 description:taskController.myNotifyTaskList[index].description,
                                                 status:taskController.myNotifyTaskList[index].status,
                                                 subTask:taskController.myNotifyTaskList[index].subTask,
+                                                projectId:taskController.myNotifyTaskList[index].projectId,
+                                                projectName:taskController.myNotifyTaskList[index].projectName,
                                                 priority:taskController.myNotifyTaskList[index].priority,
                                                 startDate:taskController.myNotifyTaskList[index].startDate,
                                                 endDate:taskController.myNotifyTaskList[index].endDate,

@@ -19,6 +19,7 @@ import 'package:habittrackergad/Components/Task/Allteam.dart';
 import 'package:habittrackergad/Components/Task/Project_list_page.dart';
 
 import 'package:habittrackergad/Components/Task/Taskdetails.dart';
+import 'package:habittrackergad/Components/Task/projecttask/allProject.dart';
 import 'package:habittrackergad/Components/Task/projecttask/projectassignedbyyou.dart';
 import 'package:habittrackergad/Components/Task/projecttask/projectassignedtoyou.dart';
 import 'package:habittrackergad/Components/Task/projecttask/projectnotify.dart';
@@ -195,10 +196,19 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Addtasknew()),
-        ),
+        onPressed: ()
+            {
+              setState(() {
+                taskController.selectProjectName.value = "";
+                taskController.selectProject.value = "";
+              });
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Addtasknew()),
+              );
+
+            },
         label: const Text('Add task'),
       ),
       body: Padding(
@@ -208,68 +218,122 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
             const SizedBox(
               height: 20,
             ),
-            Center(
-              child: InkWell(
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: ((context) => Allteam()))),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: getColor(),
-                  ),
-                  width: width! - 40,
-                  height: 80,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 20),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(40)),
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(40),
-                                        color: Colors.white,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Image.asset(
-                                          TEAMICON,
-                                          color: Colors.black,
-                                        ),
-                                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+              children: [
+                Center(
+                  child: InkWell(
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: ((context) => Allteam()))),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: getColor(),
+                      ),
+                      // height: 80,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(40)),
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    color: Colors.white,
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      TEAMICON,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ),
-                                const Text(
-                                  "All teams",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 20),
-                                ),
-                              ],
-                            ),
-                            const Icon(
-                              Icons.arrow_forward_ios_sharp,
-                              size: 20,
-                            )
-                          ],
-                        ),
-                      )
-                    ],
+                              ),
+                              const Text(
+                                "All Teams",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16),
+                              ),
+                            ],
+                          ),
+                           Icon(
+                            Icons.arrow_forward_ios_sharp,
+                            size: 20,
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                SizedBox(width: 5,),
+                Center(
+                  child: InkWell(
+                    onTap: ()
+                    {
+                      taskController.projectName.clear();
+                      taskController.selectTeamForProject.clear();
+                      Navigator.push(context, MaterialPageRoute(builder: ((context) => AllProject())));
+                      // Navigator.push(context, MaterialPageRoute(builder: ((context) => Addprojects())));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: getColor(),
+                      ),
+                      // height: 80,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(40)),
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    color: Colors.white,
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      TEAMICON,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const Text(
+                                "Add Projects",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16),
+                              ),
+                            ],
+                          ),
+                           Icon(
+                            Icons.arrow_forward_ios_sharp,
+                            size: 20,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
              SizedBox(
               height: 20,
@@ -812,6 +876,9 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                                 InkWell(
                                                   onTap: () async {
                                                     taskController.selectedItemstatus.value = "";
+                                                    taskController.selectProjectName.value = "";
+                                                    taskController.selectProject.value = "";
+
                                                     TaskModel task = await TaskModel(
                                                       id: taskController.myTaskList[index].id,
                                                       userId: taskController.myTaskList[index].userId,
@@ -819,6 +886,8 @@ class _TaskpageState extends State<Taskpage> with TickerProviderStateMixin {
                                                       task_owner: taskController.myTaskList[index].task_owner,
                                                       description:taskController.myTaskList[index].description,
                                                       status:taskController.myTaskList[index].status,
+                                                      projectId:taskController.myTaskList[index].projectId,
+                                                      projectName:taskController.myTaskList[index].projectName,
                                                       subTask:taskController.myTaskList[index].subTask,
                                                       priority:taskController.myTaskList[index].priority,
                                                       startDate:taskController.myTaskList[index].startDate,

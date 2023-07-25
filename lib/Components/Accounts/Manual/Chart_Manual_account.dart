@@ -133,63 +133,63 @@ class ChartManualaccountState extends State<ChartManualaccount> {
                                 foregroundColor: Colors.white,
                                 child: Icon(Icons.arrow_back_ios_new_outlined)),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        showCustomDateRangePicker(
-                                          context,
-                                          dismissible: true,
-                                          minimumDate: new DateTime.now()
-                                              .subtract(
-                                                  new Duration(days: 2000)),
-                                          maximumDate: DateTime.now()
-                                              .add(const Duration(days: 0)),
-                                          endDate: endDate,
-                                          startDate: startDate,
-                                          onApplyClick: (start, end) {
-                                            setState(() {
-                                              buttonText =
-                                                  '${startDate != null ? DateFormat("dd-MMM-yy").format(startDate!) : '-'} - ${endDate != null ? DateFormat("dd-MMM-yy").format(endDate!) : ''}';
-                                              endDate = end;
-                                              startDate = start;
-                                            });
-                                          },
-                                          onCancelClick: () {
-                                            setState(() {
-                                              endDate = null;
-                                              startDate = null;
-                                            });
-                                          },
-                                        );
-                                      },
-                                      child: Row(
-                                        children: [
-                                          const Text(
-                                            "Dec",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w800),
-                                          ),
-                                          const Icon(
-                                              Icons.arrow_drop_down_outlined)
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                widget.account == false?
-                                Container():   Text(
-                                  '${startDate != null ? DateFormat("dd-MMM-yy").format(startDate!) : ''} - ${endDate != null ? DateFormat("dd-MMM-yy").format(endDate!) : 'All transcation'}',
-                                )
-                              ],
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(left: 20),
+                          //   child: Column(
+                          //     crossAxisAlignment: CrossAxisAlignment.start,
+                          //     children: [
+                          //       Row(
+                          //         children: [
+                          //           InkWell(
+                          //             onTap: () {
+                          //               showCustomDateRangePicker(
+                          //                 context,
+                          //                 dismissible: true,
+                          //                 minimumDate: new DateTime.now()
+                          //                     .subtract(
+                          //                         new Duration(days: 2000)),
+                          //                 maximumDate: DateTime.now()
+                          //                     .add(const Duration(days: 0)),
+                          //                 endDate: endDate,
+                          //                 startDate: startDate,
+                          //                 onApplyClick: (start, end) {
+                          //                   setState(() {
+                          //                     buttonText =
+                          //                         '${startDate != null ? DateFormat("dd-MMM-yy").format(startDate!) : '-'} - ${endDate != null ? DateFormat("dd-MMM-yy").format(endDate!) : ''}';
+                          //                     endDate = end;
+                          //                     startDate = start;
+                          //                   });
+                          //                 },
+                          //                 onCancelClick: () {
+                          //                   setState(() {
+                          //                     endDate = null;
+                          //                     startDate = null;
+                          //                   });
+                          //                 },
+                          //               );
+                          //             },
+                          //             child: Row(
+                          //               children: [
+                          //                 const Text(
+                          //                   "Dec",
+                          //                   style: TextStyle(
+                          //                       fontSize: 16,
+                          //                       fontWeight: FontWeight.w800),
+                          //                 ),
+                          //                 const Icon(
+                          //                     Icons.arrow_drop_down_outlined)
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //       widget.account == false?
+                          //       Container():   Text(
+                          //         '${startDate != null ? DateFormat("dd-MMM-yy").format(startDate!) : ''} - ${endDate != null ? DateFormat("dd-MMM-yy").format(endDate!) : 'All transcation'}',
+                          //       )
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                       Center(
@@ -215,7 +215,7 @@ class ChartManualaccountState extends State<ChartManualaccount> {
                   ),
                 ),
               )),
-          const SizedBox(
+          SizedBox(
             height: 10,
           ),
     widget.account == false?
@@ -253,8 +253,6 @@ class ChartManualaccountState extends State<ChartManualaccount> {
             locale: 'en',
 
           ),
-
-
           // AdvancedCalendar(
           //   controller: _calendarControllerToday,
           //   events: events,
@@ -278,7 +276,7 @@ class ChartManualaccountState extends State<ChartManualaccount> {
           //   selectableDayPredicate: (date) => date.day != 23,
           //   locale: 'en',
           // ),
-          const SizedBox(
+           SizedBox(
             height: 20,
           ),
           widget.account == false?
@@ -531,9 +529,10 @@ class ChartManualaccountState extends State<ChartManualaccount> {
           //     ),
           //   ],
           // ),
-          const SizedBox(
+           SizedBox(
             height: 20,
           ),
+
           // widget.account == false?
           // Container():
           Obx(() {
@@ -579,7 +578,8 @@ class ChartManualaccountState extends State<ChartManualaccount> {
               {
                 return Container(
                   padding:  EdgeInsets.symmetric(horizontal: 18),
-                  child: widget.account == false?
+                  child:
+                  widget.account == false?
                   PieChart(
                     dataMap: <String, double>
                     {

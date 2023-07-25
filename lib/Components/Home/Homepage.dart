@@ -1786,6 +1786,8 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                                             task_owner: taskController.myTaskList[index].task_owner,
                                             description:taskController.myTaskList[index].description,
                                             status:taskController.myTaskList[index].status,
+                                            projectId:taskController.myTaskList[index].projectId,
+                                            projectName:taskController.myTaskList[index].projectName,
                                             subTask:taskController.myTaskList[index].subTask,
                                             priority:taskController.myTaskList[index].priority,
                                             startDate:taskController.myTaskList[index].startDate,
@@ -2150,6 +2152,8 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
                                                 ),
                                                 onPressed: (() {
                                                   setState(() {
+                                                    taskController.selectedItemstatus.value = "completed";
+
                                                     taskController.taskUpdate(taskController.myTaskList[index].id, "completed");
 
                                                     // Morningtasklist[index].isselected = !Morningtasklist[index].isselected;

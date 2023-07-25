@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:colorize_text_avatar/colorize_text_avatar.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 import 'package:calendar_timeline/calendar_timeline.dart';
@@ -38,6 +39,7 @@ class _AddtasknewState extends State<Addtasknew> {
   TeamController teamController = Get.put(TeamController());
   var selectTeams = [];
   var selectTeamsNotify = [];
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +62,7 @@ class _AddtasknewState extends State<Addtasknew> {
 
   //////////////////contact
   late DateTime _selectedDate;
+
   // datepickcalender
 
   TextEditingController dateInput = TextEditingController();
@@ -70,7 +73,6 @@ class _AddtasknewState extends State<Addtasknew> {
   TextEditingController descriptionController = TextEditingController();
   var taskSatus;
   var taskPriority;
-
 
   DateTime? startDate;
   DateTime? endDate;
@@ -115,6 +117,7 @@ class _AddtasknewState extends State<Addtasknew> {
 
   double? height;
   double? width;
+
   // datepick calender......
   List<DayInWeek> _days = [
     DayInWeek(
@@ -206,6 +209,7 @@ class _AddtasknewState extends State<Addtasknew> {
 
   String _selected = '';
   List<String> _items = ['A', 'B', 'C', 'D'];
+  int? ctxx;
 
   @override
   Widget build(BuildContext context) {
@@ -300,58 +304,46 @@ class _AddtasknewState extends State<Addtasknew> {
                 ),
               ),
 
-              const SizedBox(
-                height: 20,
-              ),
-
               SizedBox(
-                height: 100,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ListView.separated(
-                          itemCount: Subtask.length,
-                          controller: ScrollController(),
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: 25),
-                          itemBuilder: (context, index) {
-                            return Container(
-                              height: 20,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '${Subtask[index]}',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w400,
-                                        color: TASKPAGEVIEWTEXTCOLOR),
-                                  ),
-                                  // Checkbox(
-                                  //   value: this.value3,
-                                  //   onChanged: (bool? value) {
-                                  //     setState(() {
-                                  //       this.value3 = value!;
-                                  //     });
-                                  //   },
-                                  // ),
-                                ],
-                              ),
-                            );
-                          }),
-                    ),
-                  ],
-                ),
+                height: 50,
+                child: ListView.separated(
+                    itemCount: Subtask.length,
+                    controller: ScrollController(),
+                    separatorBuilder: (_, __) => const SizedBox(height: 25),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        height: 20,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${Subtask[index]}',
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400,
+                                  color: TASKPAGEVIEWTEXTCOLOR),
+                            ),
+                            // Checkbox(
+                            //   value: this.value3,
+                            //   onChanged: (bool? value) {
+                            //     setState(() {
+                            //       this.value3 = value!;
+                            //     });
+                            //   },
+                            // ),
+                          ],
+                        ),
+                      );
+                    }),
               ),
 
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 5),
                 child: Text('Description',
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 10,
               ),
               TextFormField(
@@ -371,7 +363,7 @@ class _AddtasknewState extends State<Addtasknew> {
                       borderSide: BorderSide.none),
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               Padding(
@@ -414,7 +406,7 @@ class _AddtasknewState extends State<Addtasknew> {
                   ],
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               Padding(
@@ -463,144 +455,570 @@ class _AddtasknewState extends State<Addtasknew> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Assign',
+                    const Text('Projects',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600)),
-                    selectTeams.isNotEmpty ?
-                    Text('( ${selectTeams.length} team selected )',
-                        style: TextStyle(
-                            fontSize: 14, color: Colors.black.withOpacity(0.4))):Container(),
+                    teamController.selectProjectName.isNotEmpty
+                        ? Text('( ${teamController.selectProjectName}  selected )',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black.withOpacity(0.4)))
+                        : Container(),
                     InkWell(
-                      onTap: ()
-                      {
-
-
+                      onTap: () {
                         showDialog(
                           context: context,
-                          builder: (ctx) => StatefulBuilder(
-                              builder: (context,setState) {
-                                return AlertDialog(
-                                  title:  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("Select Teams ( ${selectTeams.length} )"),
-                                          InkWell(
-                      onTap:()
-                      {
-                      Navigator.pop(context);
-                      },
-                      child: Container(
-                      child: Icon(
-                      Icons.close
-                      ),
-                      ),
-                      )
-                      ],
-                                  ),
-                                  content: Container(
-                                    height: 500,
-                                    child: ListView(
-                                      children: [
-                                        for(int i = 0;i <teamController.teams.length;i++)
-                                          InkWell(
-                                            onTap: ()
-                                            {
-                                              setState(() {
-                                                if (selectTeams.contains(teamController.teams[i].user)) {
-                                                  selectTeams.remove(teamController.teams[i].user);
-                                                } else {
-                                                  selectTeams.add(teamController.teams[i].user);
-                                                }
-                                              });
-                                              print("SELECTTEAM");
-                                              print(selectTeams);
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: 8.0),
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
+                          builder: (ctx) =>
+                              StatefulBuilder(builder: (context, setState) {
+                            return AlertDialog(
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  teamController.selectProject.isNotEmpty
+                                  ?
+                                  InkWell(
+                                    onTap: ()
+                                    {
+                                      setState(()
+                                      {
+                                        teamController.selectProject.value ='';
+                                        teamController.selectProjectName.value = "";
+                                        selectTeams.clear();
+                                        selectTeamsNotify.clear();
 
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: selectTeams.contains(teamController.teams[i].user)?
-                                                      Colors.black.withOpacity(0.8):Colors.transparent
-                                                  ),
-                                                  color: getColor().withOpacity(.4),
-                                                  borderRadius: BorderRadius.circular(8),
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          teamController.teams[i].name,
-                                                          style: const TextStyle(
-                                                            fontSize: 21,
-                                                            fontWeight: FontWeight.w700,
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          height: 20,
-                                                          width: 1,
-                                                          color: Colors.grey,
-                                                        ),
-                                                        const SizedBox(width: 10),
-                                                        Text(
-                                                          teamController.teams[i].designation,
-                                                          style: const TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight: FontWeight.w400,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.phone,
-                                                          size: 18,
-                                                        ),
-                                                        SizedBox(width: 10),
-                                                        Text(teamController.teams[i].phone),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Image.asset(
-                                                          MAIL_ICON,
-                                                          height: 25,
-                                                          width: 25,
-                                                        ),
-                                                        SizedBox(width: 8,),
-                                                        Flexible(
-                                                          child: Text(
-                                                            teamController.teams[i].email,
+                                      });
 
-                                                            style: const TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.w400,
-                                                              overflow: TextOverflow.ellipsis
-                                                            ),
-                                                            maxLines: 1,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
 
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                          )
-                                      ],
+                                    },
+                                    child: Container(
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                              "Remove Project"),
+                                          SizedBox(width: 4,),
+                                          Icon(Icons.remove)
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }
+                                  ):
+                                  Text(
+                                      "Select Project"),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      child: Icon(Icons.close),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              content: Container(
+                                height: 500,
+                                child: ListView(
+                                  children: [
+                                    Obx(() {
+                                      if (teamController.isLoaderProjectGet.isTrue) {
+                                        return Container(
+                                          height: 300,
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        if (teamController.projects.isNotEmpty) {
+                                          return Container(
+                                            // padding: EdgeInsets.all(10),
+                                            // height: 110 * teamController.teams.length.toDouble(),
+                                            child: ListView.builder(
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount: teamController.projects.length,
+                                                itemBuilder: ((context, index) {
+                                                  return Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(vertical: 5),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(()
+                                                        {
+                                                          ctxx = index;
+                                                          teamController.selectProject.value = teamController.projects[index].id;
+                                                          teamController.selectProjectName.value = teamController.projects[index].projectName;
+                                                          teamController.selectTeamList.clear();
+                                                          for(int i = 0; i<teamController.projects[index].teamList.length;i++)
+                                                            {
+                                                              teamController.selectTeamList.add(teamController.projects[index].teamList[i].id);
+
+                                                            }
+
+
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                          padding:
+                                                              EdgeInsets.all(8),
+                                                          decoration: BoxDecoration(
+                                                              color: getColor().withOpacity(.4),
+                                                              borderRadius: BorderRadius.circular(8),
+                                                            border: Border.all(
+                                                              color:ctxx == index && teamController.selectProject.isNotEmpty? Colors.grey:Colors.transparent
+                                                            )
+
+                                                          ),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                "Project",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                              Row(
+                                                                children: [
+                                                                  Padding(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              8),
+                                                                      child:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .work,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade800,
+                                                                      )),
+                                                                  // Container(
+                                                                  //   height: 20,
+                                                                  //   width: 1,
+                                                                  //   color: Colors.grey,
+                                                                  // ),
+                                                                  Padding(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            10),
+                                                                    child: Text(
+                                                                      teamController
+                                                                          .projects[
+                                                                              index]
+                                                                          .projectName,
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Row(
+                                                                children: [
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            8.0),
+                                                                    child:
+                                                                        SizedBox(
+                                                                      width: 25,
+                                                                      height:
+                                                                          25,
+                                                                      child: Image
+                                                                          .asset(
+                                                                        ASSIGNTOYOU,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  for (int i = 0; i < teamController.projects[index].teamList.length; i++)
+                                                                    Padding(
+                                                                      padding: EdgeInsets.all(4.0),
+                                                                      child: SizedBox(
+                                                                        height:
+                                                                            30,
+                                                                        width:
+                                                                            30,
+                                                                        child:
+                                                                            TextAvatar(
+                                                                          textColor:
+                                                                              Colors.white,
+                                                                          shape:
+                                                                              Shape.Circular,
+                                                                          text:
+                                                                              "${teamController.projects[index].teamList[i].name}",
+                                                                          fontSize:
+                                                                              14,
+                                                                          numberLetters:
+                                                                              2,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          )),
+                                                    ),
+                                                  );
+                                                })),
+                                          );
+                                        } else {
+                                          return Container(
+                                            height: 300,
+                                            child: Center(
+                                                child: Text("No projects")),
+                                          );
+                                        }
+                                      }
+                                    }),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                        ).then((value) {
+                          setState(() {
+                            selectTeams;
+                          });
+                        });
+                      },
+                      // onTap: () => showModal(context),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Color(0xff59d6f9),
+                              Color(0xff7f85f1),
+                            ],
                           ),
-                        ).then((value)
-                        {
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        width: 100,
+                        height: 40,
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(
+                                Icons.add,
+                                color: BUTTONTEXTCOLOR,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Add',
+                                    style: TextStyle(
+                                        color: BUTTONTEXTCOLOR,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                     Text('Assign',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w600)),
+                    selectTeams.isNotEmpty
+                        ? Text('( ${selectTeams.length} team selected )',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black.withOpacity(0.4)))
+                        : Container(),
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) =>
+                              StatefulBuilder(builder: (context, setState) {
+                            return AlertDialog(
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      "Select Teams ( ${selectTeams.length} )"),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      child: Icon(Icons.close),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              content: Obx(() {
+                                if(teamController.selectProject.isEmpty)
+                                  {
+                                    return Container(
+                                      height: 500,
+                                      child: ListView(
+                                        children: [
+                                          for (int i = 0; i < teamController.teams.length; i++)
+                                            InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    if (selectTeams.contains(
+                                                        teamController
+                                                            .teams[i].user)) {
+                                                      selectTeams.remove(
+                                                          teamController
+                                                              .teams[i].user);
+                                                    } else {
+                                                      selectTeams.add(teamController
+                                                          .teams[i].user);
+                                                    }
+                                                  });
+                                                  print("SELECTTEAM");
+                                                  print(selectTeams);
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.only(top: 8.0),
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(10),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: selectTeams.contains(
+                                                              teamController
+                                                                  .teams[i].user)
+                                                              ? Colors.black
+                                                              .withOpacity(0.8)
+                                                              : Colors.transparent),
+                                                      color:
+                                                      getColor().withOpacity(.4),
+                                                      borderRadius:
+                                                      BorderRadius.circular(8),
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              teamController
+                                                                  .teams[i].name,
+                                                              style: const TextStyle(
+                                                                fontSize: 21,
+                                                                fontWeight:
+                                                                FontWeight.w700,
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              height: 20,
+                                                              width: 1,
+                                                              color: Colors.grey,
+                                                            ),
+                                                            const SizedBox(width: 10),
+                                                            Text(
+                                                              teamController.teams[i]
+                                                                  .designation,
+                                                              style: const TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                FontWeight.w400,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons.phone,
+                                                              size: 18,
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            Text(teamController
+                                                                .teams[i].phone),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Image.asset(
+                                                              MAIL_ICON,
+                                                              height: 25,
+                                                              width: 25,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 8,
+                                                            ),
+                                                            Flexible(
+                                                              child: Text(
+                                                                teamController
+                                                                    .teams[i].email,
+                                                                style: const TextStyle(
+                                                                    fontSize: 16,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                    overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis),
+                                                                maxLines: 1,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ))
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                else
+                                  {
+
+                                    return Container(
+                                      height: 500,
+                                      child: ListView(
+                                        children: [
+                                          for (int i = 0; i < teamController.teams.length; i++)
+                                          for (int j = 0; j < teamController.selectTeamList.length; j++)
+                                            if(teamController.selectTeamList[j] == teamController.teams[i].id)
+                                            InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    if (selectTeams.contains(
+                                                        teamController
+                                                            .teams[i].user)) {
+                                                      selectTeams.remove(
+                                                          teamController
+                                                              .teams[i].user);
+                                                    } else {
+                                                      selectTeams.add(teamController
+                                                          .teams[i].user);
+                                                    }
+                                                  });
+                                                  print("SELECTTEAM");
+                                                  print(selectTeams);
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.only(top: 8.0),
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(10),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: selectTeams.contains(
+                                                              teamController
+                                                                  .teams[i].user)
+                                                              ? Colors.black
+                                                              .withOpacity(0.8)
+                                                              : Colors.transparent),
+                                                      color:
+                                                      getColor().withOpacity(.4),
+                                                      borderRadius:
+                                                      BorderRadius.circular(8),
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              teamController
+                                                                  .teams[i].name,
+                                                              style: const TextStyle(
+                                                                fontSize: 21,
+                                                                fontWeight:
+                                                                FontWeight.w700,
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              height: 20,
+                                                              width: 1,
+                                                              color: Colors.grey,
+                                                            ),
+                                                            const SizedBox(width: 10),
+                                                            Text(
+                                                              teamController.teams[i]
+                                                                  .designation,
+                                                              style: const TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                FontWeight.w400,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons.phone,
+                                                              size: 18,
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            Text(teamController
+                                                                .teams[i].phone),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Image.asset(
+                                                              MAIL_ICON,
+                                                              height: 25,
+                                                              width: 25,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 8,
+                                                            ),
+                                                            Flexible(
+                                                              child: Text(
+                                                                teamController
+                                                                    .teams[i].email,
+                                                                style: const TextStyle(
+                                                                    fontSize: 16,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                    overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis),
+                                                                maxLines: 1,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ))
+                                          else
+                                            Container()
+                                        ],
+                                      ),
+                                    );
+                                  }
+
+                                }
+                              ),
+                            );
+                          }),
+                        ).then((value) {
                           setState(() {
                             selectTeams;
                           });
@@ -764,7 +1182,7 @@ class _AddtasknewState extends State<Addtasknew> {
                 ),
               ),
 
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
 
@@ -773,145 +1191,300 @@ class _AddtasknewState extends State<Addtasknew> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                     Text('Notify',
+                    Text('Notify',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600)),
-                    selectTeamsNotify.isNotEmpty ?
-                    Text('( ${selectTeamsNotify.length} team selected )',
-                        style: TextStyle(
-                            fontSize: 14, color: Colors.black.withOpacity(0.4))):Container(),
+                    selectTeamsNotify.isNotEmpty
+                        ? Text('( ${selectTeamsNotify.length} team selected )',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black.withOpacity(0.4)))
+                        : Container(),
                     InkWell(
-                      onTap: ()
-                      {
+                      onTap: () {
                         showDialog(
                           context: context,
-                          builder: (ctx) => StatefulBuilder(
-                            builder: (context,setState) {
-                              return AlertDialog(
-                                title:  Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Select Teams ( ${selectTeamsNotify.length} )"),
-                                    InkWell(
-                                      onTap:()
-                                      {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Container(
-                                        child: Icon(
-                                            Icons.close
-                                        ),
+                          builder: (ctx) =>
+                              StatefulBuilder(builder: (context, setState) {
+                            return AlertDialog(
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      "Select Teams ( ${selectTeamsNotify.length} )"),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      child: Icon(Icons.close),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              content: Obx(() {
+                                if(teamController.selectProject.isEmpty)
+                                  {
+                                    return Container(
+                                      height: 500,
+                                      child: ListView(
+                                        children: [
+                                          for (int i = 0;
+                                          i < teamController.teams.length;
+                                          i++)
+                                            InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    if (selectTeamsNotify.contains(
+                                                        teamController
+                                                            .teams[i].user)) {
+                                                      selectTeamsNotify.remove(
+                                                          teamController
+                                                              .teams[i].user);
+                                                    } else {
+                                                      selectTeamsNotify.add(
+                                                          teamController
+                                                              .teams[i].user);
+                                                    }
+                                                  });
+                                                  print("SELECTTEAM");
+                                                  print(selectTeamsNotify);
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.only(top: 8.0),
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(10),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: selectTeamsNotify
+                                                              .contains(
+                                                              teamController
+                                                                  .teams[i]
+                                                                  .user)
+                                                              ? Colors.black
+                                                              .withOpacity(0.8)
+                                                              : Colors.transparent),
+                                                      color:
+                                                      getColor().withOpacity(.4),
+                                                      borderRadius:
+                                                      BorderRadius.circular(8),
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              teamController
+                                                                  .teams[i].name,
+                                                              style: const TextStyle(
+                                                                fontSize: 21,
+                                                                fontWeight:
+                                                                FontWeight.w700,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(width: 10),
+                                                            Container(
+                                                              height: 20,
+                                                              width: 1,
+                                                              color: Colors.grey,
+                                                            ),
+                                                            const SizedBox(width: 10),
+                                                            Text(
+                                                              teamController.teams[i]
+                                                                  .designation,
+                                                              style: const TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                FontWeight.w400,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons.phone,
+                                                              size: 18,
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            Text(teamController
+                                                                .teams[i].phone),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Image.asset(
+                                                              MAIL_ICON,
+                                                              height: 25,
+                                                              width: 25,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 8,
+                                                            ),
+                                                            Flexible(
+                                                              child: Text(
+                                                                teamController
+                                                                    .teams[i].email,
+                                                                style: const TextStyle(
+                                                                    fontSize: 16,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                    overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis),
+                                                                maxLines: 1,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ))
+                                        ],
                                       ),
-                                    )
-
-                                  ],
-                                ),
-                                content: Container(
-                                  height: 500,
-                                  child: ListView(
-                                    children: [
-                                      for(int i = 0;i <teamController.teams.length;i++)
-                                        InkWell(
-                                          onTap: ()
-                                          {
-                                            setState(() {
-                                              if (selectTeamsNotify.contains(teamController.teams[i].user)) {
-                                                selectTeamsNotify.remove(teamController.teams[i].user);
-                                              } else {
-                                                selectTeamsNotify.add(teamController.teams[i].user);
-                                              }
-                                            });
-                                            print("SELECTTEAM");
-                                            print(selectTeamsNotify);
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 8.0),
-                                            child: Container(
-                                              padding: EdgeInsets.all(10),
-
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: selectTeamsNotify.contains(teamController.teams[i].user)?
-                                                    Colors.black.withOpacity(0.8):Colors.transparent
-                                                ),
-                                                color: getColor().withOpacity(.4),
-                                                borderRadius: BorderRadius.circular(8),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        teamController.teams[i].name,
-                                                        style: const TextStyle(
-                                                          fontSize: 21,
-                                                          fontWeight: FontWeight.w700,
+                                    );
+                                  }
+                                else
+                                  {
+                                    return Container(
+                                      height: 500,
+                                      child: ListView(
+                                        children: [
+                                          for (int i = 0; i < teamController.teams.length; i++)
+                                          for (int j = 0; j < teamController.selectTeamList.length; j++)
+                                            if(teamController.selectTeamList[j].toString() == teamController.teams[i].id.toString())
+                                            InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    if (selectTeamsNotify.contains(
+                                                        teamController
+                                                            .teams[i].user)) {
+                                                      selectTeamsNotify.remove(
+                                                          teamController
+                                                              .teams[i].user);
+                                                    } else {
+                                                      selectTeamsNotify.add(
+                                                          teamController
+                                                              .teams[i].user);
+                                                    }
+                                                  });
+                                                  print("SELECTTEAM");
+                                                  print(selectTeamsNotify);
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.only(top: 8.0),
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(10),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: selectTeamsNotify
+                                                              .contains(
+                                                              teamController
+                                                                  .teams[i]
+                                                                  .user)
+                                                              ? Colors.black
+                                                              .withOpacity(0.8)
+                                                              : Colors.transparent),
+                                                      color:
+                                                      getColor().withOpacity(.4),
+                                                      borderRadius:
+                                                      BorderRadius.circular(8),
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              teamController
+                                                                  .teams[i].name,
+                                                              style: const TextStyle(
+                                                                fontSize: 21,
+                                                                fontWeight:
+                                                                FontWeight.w700,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(width: 10),
+                                                            Container(
+                                                              height: 20,
+                                                              width: 1,
+                                                              color: Colors.grey,
+                                                            ),
+                                                            const SizedBox(width: 10),
+                                                            Text(
+                                                              teamController.teams[i]
+                                                                  .designation,
+                                                              style: const TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                FontWeight.w400,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ),
-                                                      const SizedBox(width: 10),
-
-                                                      Container(
-                                                        height: 20,
-                                                        width: 1,
-                                                        color: Colors.grey,
-                                                      ),
-                                                      const SizedBox(width: 10),
-                                                      Text(
-                                                        teamController.teams[i].designation,
-                                                        style: const TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight.w400,
+                                                        Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons.phone,
+                                                              size: 18,
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            Text(teamController
+                                                                .teams[i].phone),
+                                                          ],
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.phone,
-                                                        size: 18,
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Text(teamController.teams[i].phone),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Image.asset(
-                                                        MAIL_ICON,
-                                                        height: 25,
-                                                        width: 25,
-                                                      ),
-                                                      SizedBox(width: 8,),
-                                                      Flexible(
-                                                        child: Text(
-                                                          teamController.teams[i].email,
-
-                                                          style: const TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.w400,
-                                                              overflow: TextOverflow.ellipsis
-                                                          ),
-                                                          maxLines: 1,
+                                                        Row(
+                                                          children: [
+                                                            Image.asset(
+                                                              MAIL_ICON,
+                                                              height: 25,
+                                                              width: 25,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 8,
+                                                            ),
+                                                            Flexible(
+                                                              child: Text(
+                                                                teamController
+                                                                    .teams[i].email,
+                                                                style: const TextStyle(
+                                                                    fontSize: 16,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                    overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis),
+                                                                maxLines: 1,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
+                                                ))
+                                          else
+                                            Container()
+                                        ],
+                                      ),
+                                    );
 
-                                                ],
-                                              ),
-                                            ),
-                                          )
-                                        )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-                          ),
-                        ).then((value)
-                        {
+                                  }
+
+                                }
+                              ),
+                            );
+                          }),
+                        ).then((value) {
                           setState(() {
                             selectTeamsNotify;
                           });
@@ -1033,7 +1606,6 @@ class _AddtasknewState extends State<Addtasknew> {
                         //     )
                         //
                         // );
-
                       },
                       // onTap: () => showModal(context),
                       child: Container(
@@ -1349,8 +1921,7 @@ class _AddtasknewState extends State<Addtasknew> {
 
               Center(
                 child: InkWell(
-                  onTap: ()
-                  {
+                  onTap: () {
                     String taskName = taskController.text.toString();
                     String subTaskName = sub_taskController.text.toString();
                     String description = descriptionController.text.toString();
@@ -1363,57 +1934,63 @@ class _AddtasknewState extends State<Addtasknew> {
                     print(_selectedItemstatus);
                     print(_selectedItempriority);
                     print(_selectedDate);
-                    if(_selectedDate != null && _selectedItemstatus.isNotEmpty && _selectedItempriority.isNotEmpty && taskController.text.isNotEmpty && sub_taskController.text.isNotEmpty && descriptionController.text.isNotEmpty && selectTeams.isNotEmpty && selectTeamsNotify.isNotEmpty)
-                      {
-                        teamController.taskAdd(taskName, description,subTaskName,selectTeams,selectTeamsNotify,startDate,endDate,_selectedItempriority,_selectedItemstatus);
-
-                      }
-                    else
-                      {
-                        Get.snackbar("Alert", "Please enter all the fields",
-                            backgroundColor: Colors.black.withOpacity(0.4),
-                            colorText: Colors.white,
-                            icon: Icon(
-                              Icons.warning,
-                              color: Colors.white,
-                            ),
-                            snackPosition: SnackPosition.BOTTOM);
-
-                      }
-
-
+                    if (_selectedDate != null &&
+                        _selectedItemstatus.isNotEmpty &&
+                        _selectedItempriority.isNotEmpty &&
+                        taskController.text.isNotEmpty &&
+                        sub_taskController.text.isNotEmpty &&
+                        descriptionController.text.isNotEmpty &&
+                        selectTeams.isNotEmpty &&
+                        selectTeamsNotify.isNotEmpty) {
+                      teamController.taskAdd(
+                          taskName,
+                          description,
+                          subTaskName,
+                          selectTeams,
+                          selectTeamsNotify,
+                          startDate,
+                          endDate,
+                          _selectedItempriority,
+                          _selectedItemstatus);
+                    } else {
+                      Get.snackbar("Alert", "Please enter all the fields",
+                          backgroundColor: Colors.black.withOpacity(0.4),
+                          colorText: Colors.white,
+                          icon: Icon(
+                            Icons.warning,
+                            color: Colors.white,
+                          ),
+                          snackPosition: SnackPosition.BOTTOM);
+                    }
                   },
                   child: Obx(() {
-                      return Container(
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              Color(0xffebd1ff),
-                              Color(0xffa371f3),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(12),
+                    return Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            Color(0xffebd1ff),
+                            Color(0xffa371f3),
+                          ],
                         ),
-                        width: width! - 100,
-                        height: 50,
-                        child:teamController.isTeamSaveLoaders.isTrue?
-
-                        Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          )
-                        ):
-                        Center(
-                          child: Text('Submit',
-                              style: TextStyle(
-                                  color: Color(0xfffaf9fb), fontSize: 18)),
-                        ),
-                      );
-                    }
-                  ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      width: width! - 100,
+                      height: 50,
+                      child: teamController.isTeamSaveLoaders.isTrue
+                          ? Center(
+                              child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ))
+                          : Center(
+                              child: Text('Submit',
+                                  style: TextStyle(
+                                      color: Color(0xfffaf9fb), fontSize: 18)),
+                            ),
+                    );
+                  }),
                 ),
               ),
 
@@ -1844,6 +2421,7 @@ class _AddtasknewState extends State<Addtasknew> {
 
 class ContactPage extends StatelessWidget {
   final Contact contact;
+
   ContactPage(this.contact);
 
   @override

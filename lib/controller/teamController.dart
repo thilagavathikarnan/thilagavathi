@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:habittrackergad/controller/auth_controller.dart';
 import 'package:habittrackergad/model/TaskNotifyModel.dart';
 import 'package:habittrackergad/model/comment_model.dart';
+import 'package:habittrackergad/model/project_model.dart';
 import 'package:habittrackergad/model/task_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,16 +26,12 @@ class TeamController extends GetxController {
   GetSnackBar snackbarController = Get.put(GetSnackBar());
   RxList<TeamModel> teams = <TeamModel>[].obs;
   // TaskStatusModel? taskStatus;
-  final isTeamLoaders = false.obs;
   final myTaskList = <TaskModel>[].obs;
   final myNotifyTaskList = <TaskModel>[].obs;
   // RxList<TaskModel> myTaskList = <TaskModel>[].obs;
-  final isTeamSaveLoaders = false.obs;
   var taskStatus = TaskStatusModel(assigned: 0, completed: 0, inProgress: 0, overDue: 0).obs;
   var taskStatusByU = TaskStatusModel(assigned: 0, completed: 0, inProgress: 0, overDue: 0).obs;
   var taskStatusNotify = TaskStatusModel(assigned: 0, completed: 0, inProgress: 0, overDue: 0).obs;
-
-
   final commentList = <CommentModel>[].obs;
 
   final notifyInprogress = <TaskModel>[].obs;
@@ -50,9 +47,25 @@ class TeamController extends GetxController {
   final assignByTaskInprogress = <TaskModel>[].obs;
   final assignByTaskCompleted = <TaskModel>[].obs;
   final assignByTaskOverDue = <TaskModel>[].obs;
-  // GetStorage _box = GetStorage();
-  final taskStatusLoader = false.obs;
+
   RxString selectedItemstatus = "".obs;
+
+  //projects
+  TextEditingController projectName = TextEditingController();
+  final selectTeamForProject = [].obs;
+  final selectTeamForWholeProject = [].obs;
+  var projects = <ProjectModel>[].obs;
+
+
+  //Loaders
+  final taskStatusLoader = false.obs;
+  final isProjectSaveLoaders = false.obs;
+  final isTeamSaveLoaders = false.obs;
+  final isTeamLoaders = false.obs;
+  final isLoaderProjectGet = false.obs;
+  RxString selectProject = "".obs;
+  RxString selectProjectName = "".obs;
+  final selectTeamList = [].obs;
 
   @override
   void onInit() {
@@ -65,6 +78,7 @@ class TeamController extends GetxController {
     fetchTasks();
     fetchNotifyTasks();
     fetchByTasks();
+    getProjectList();
   }
   //  fetchTasks() async {
   // SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -377,8 +391,7 @@ class TeamController extends GetxController {
     "name":name,
     "designation":designation,
     "email":email,
-    "phone":phone,
-      "user_id": usId
+    "phone":phone, "user_id": usId
     };
     var dataJs = json.encode(body);
     try {
@@ -398,7 +411,7 @@ class TeamController extends GetxController {
       if (resp['success'] == true) {
         getTeamList();
         Get.back();
-        Get.snackbar("Success", "Habit request send successfully",
+        Get.snackbar("Success", "Team add successfully",
             backgroundColor: Colors.green.withOpacity(0.8),
             colorText: Colors.white,
             icon: Icon(
@@ -500,11 +513,13 @@ class TeamController extends GetxController {
     "start_date":DateFormat('yyyy-MM-dd').format(startDate),
     "end_date":DateFormat('yyyy-MM-dd').format(endDate),
       "user_id": usId,
+      "project_id":selectProject.isEmpty?"": int.parse(selectProject.toString()),
+      "project_name":selectProjectName.isEmpty?"":selectProjectName.toString(),
     };
     var dataJs = json.encode(body);
     try {
       isTeamSaveLoaders.value = true;
-      print("POSTAPI");
+      print("TaskSAVE");
       var url = Uri.parse('https://habitseveryday.com/public/api/task_assign');
       print(url);
       print(body);
@@ -688,6 +703,123 @@ class TeamController extends GetxController {
       print("----------${e}");
     } finally {
       isTeamLoaders.value = false;
+    }
+  }
+  void getProjectList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var usId = await prefs.getString('userId');
+
+    try {
+
+      isLoaderProjectGet.value = true;
+      print("Get Project");
+      var url = Uri.parse('${mainUrl}${getProjectUrl}/${usId}');
+      print(url);
+
+      http.Response response = await http.get(url);
+      print(response.statusCode);
+      final parsedResponse = json.decode(response.body);
+      print(parsedResponse);
+      final jsonData = json.decode(response.body);
+      projects.value = List<ProjectModel>.from(
+        jsonData["data"].map((x) => ProjectModel(
+          id: x["id"]??"",
+          userId: x["user_id"]??"",
+          projectName: x["project_name"]??"",
+          teamList: List<TeamMember>.from(
+            x["team_list"].map((t) => TeamMember(
+              id: t["id"]??"",
+              userId: t["user_id"]??"",
+              user: t["user"]??"",
+              name: t["name"]??'',
+              designation: t["designation"]??"",
+              email: t["email"]??"",
+              phone: t["phone"]??"",
+              // createdAt: t["created_at"] == null?"": DateTime.parse(t["created_at"]),
+              // updatedAt: DateTime.parse(t["updated_at"]),
+            )),
+          ),
+          // createdAt: DateTime.parse(x["created_at"]),
+          // updatedAt: DateTime.parse(x["updated_at"])
+        )),
+      );
+      print("GETPROJECTS");
+      print(projects.value);
+
+
+
+    } catch (e) {
+      print("errror");
+      print("----------${e}");
+    } finally {
+      isLoaderProjectGet.value = false;
+    }
+  }
+
+  void addProject(project_name)
+ async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var usId = await prefs.getString('userId');
+
+    var body = {
+      "user_id": usId,
+      "project_name":"${project_name}",
+      "team_list":selectTeamForWholeProject
+    };
+    print("ADDPROJECTS");
+    var url = Uri.parse('${mainUrl+addProjectUrl}');
+    print(url);
+    print(body);
+    var dataJs = json.encode(body);
+    try {
+      isProjectSaveLoaders.value = true;
+      print("ADDPROJECTS");
+      var url = Uri.parse('${mainUrl+addProjectUrl}');
+      print(url);
+      print(body);
+
+      http.Response response = await http.post(url,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: dataJs);
+      print(response.statusCode);
+      var resp = json.decode(response.body);
+      if (resp['status'] == 200 || resp['status'] == 201)
+      {
+        projects.clear();
+        getProjectList();
+        Get.back();
+        Get.snackbar("Success", "Project save successfully",
+            backgroundColor: Colors.green.withOpacity(0.8),
+            colorText: Colors.white,
+            icon: Icon(
+              Icons.check,
+              color: Colors.white,
+            ),
+            snackPosition: SnackPosition.BOTTOM);
+      }
+      else
+      {
+        Get.snackbar("Alert", "${resp['message']}",
+            backgroundColor: Colors.black.withOpacity(0.4),
+            colorText: Colors.white,
+            icon: Icon(
+              Icons.warning,
+              color: Colors.white,
+            ),
+            snackPosition: SnackPosition.BOTTOM);
+      }
+      print(resp);
+
+      return resp;
+    } catch (e) {
+      print("errror");
+      print("----------${e}");
+    } finally {
+      selectTeamForWholeProject.clear();
+      projectName.clear();
+      isProjectSaveLoaders.value = false;
     }
   }
 

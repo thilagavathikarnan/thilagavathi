@@ -123,13 +123,13 @@ class UserController extends GetxController {
 
   Future<void> loginUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     final fcm =  await FirebaseMessaging.instance.getToken();
+     // final fcm =  await FirebaseMessaging.instance.getToken();
     if (email.text.isNotEmpty && password.text.isNotEmpty)
     {
       var body = {
         "email": email.text,
         "password": password.text,
-         "device_token":fcm
+         "device_token":"fcm"
       };
       var dataJs = json.encode(body);
 
@@ -158,6 +158,7 @@ class UserController extends GetxController {
         {
                userModel = await UserModel.fromJson(resp['data']);
              await prefs.setString('userId', userModel!.id.toString());
+             await prefs.setString('token', userModel!.token.toString());
              var uid = prefs.getString('userId');
              await prefs.setBool('userLoggedIn', true);
                await Get.put(TeamController);
@@ -179,6 +180,7 @@ class UserController extends GetxController {
                Get.put(AccountController()).incomeValue.value = 0.0;
                Get.put(AccountController()).expensesValue.value = 0.0;
 
+               Get.put(TeamController()).projects.clear();
                Get.put(TeamController()).getTaskStatusToMe();
                Get.put(TeamController()).getTaskStatusByU();
                Get.put(TeamController()).fetchMyTasks();

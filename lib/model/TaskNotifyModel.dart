@@ -7,6 +7,8 @@ class TaskNotify {
   String task_owner;
   String description;
   String status;
+  String projectId;
+  String projectName;
   String subTask;
   String priority;
   String assignId;
@@ -25,6 +27,8 @@ class TaskNotify {
     required this.task_owner,
     required this.description,
     required this.status,
+    required this.projectId,
+    required this.projectName,
     required this.subTask,
     required this.priority,
     required this.assignId,
@@ -45,6 +49,8 @@ class TaskNotify {
       task_owner: json['task_owner']??"",
       description: json['description']??"",
       status: json['status']??"",
+      projectId: json['project_id']??"",
+      projectName: json['project_name']??"",
       subTask: json['sub_task']??"",
       priority: json['priority']??"",
       assignId: json['assign_id']??"",

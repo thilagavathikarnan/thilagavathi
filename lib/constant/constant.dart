@@ -20,3 +20,5 @@ const addCategoryUrl = "api/cash-category-post";
 const cashInGetUrl = "api/accounts-get";
 const accountCountGetUrl = "api/accounts_count";
 const accountAllHistoryGetUrl = "api/account_all_history";
+const addProjectUrl = "api/project-save";
+const getProjectUrl = "api/project-get";

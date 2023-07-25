@@ -622,6 +622,8 @@ class _Assigned_to_youState extends State<Assigned_to_you>
                                                 task_owner: taskController.assignByTaskAll[index].task_owner,
                                                 description:taskController.assignByTaskAll[index].description,
                                                 status:taskController.assignByTaskAll[index].status,
+                                                projectId:taskController.assignByTaskAll[index].projectId,
+                                                projectName:taskController.assignByTaskAll[index].projectName,
                                                 subTask:taskController.assignByTaskAll[index].subTask,
                                                 priority:taskController.assignByTaskAll[index].priority,
                                                 startDate:taskController.assignByTaskAll[index].startDate,
@@ -1043,6 +1045,8 @@ class _Assigned_to_youState extends State<Assigned_to_you>
                                                 task_owner: taskController.assignByTaskCompleted[index].task_owner,
                                                 description:taskController.assignByTaskCompleted[index].description,
                                                 status:taskController.assignByTaskCompleted[index].status,
+                                                projectId:taskController.assignByTaskCompleted[index].projectId,
+                                                projectName:taskController.assignByTaskCompleted[index].projectName,
                                                 subTask:taskController.assignByTaskCompleted[index].subTask,
                                                 priority:taskController.assignByTaskCompleted[index].priority,
                                                 startDate:taskController.assignByTaskCompleted[index].startDate,
@@ -1299,10 +1303,12 @@ class _Assigned_to_youState extends State<Assigned_to_you>
                                                     ),
                                                     onPressed: (() {
                                                       setState(() {
-                                                        // Morningtasklist[index]
-                                                        //     .isselected =
-                                                        // !Morningtasklist[index]
-                                                        //     .isselected;
+                                                        taskController.selectedItemstatus.value = "completed";
+
+                                                        taskController.taskUpdate(taskController.myTaskList[index].id, "completed");
+
+                                                        // Morningtasklist[index].isselected = !Morningtasklist[index].isselected;
+                                                        taskController.fetchTasks();
                                                       });
                                                     }),
                                                   ),
@@ -1333,434 +1339,425 @@ class _Assigned_to_youState extends State<Assigned_to_you>
                           {
                             return SizedBox(
                               height: taskController.assignByTaskInprogress.length * 350,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                      child: ListView.builder(
-                                          shrinkWrap: true,
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          itemCount: taskController.assignByTaskInprogress.length,
-                                          itemBuilder: ((context, index) {
-                                            Color colorstatus;
-                                            switch (Morningtasklist[index].Status) {
-                                              case "In-progress":
-                                                colorstatus = Colors.red;
-                                                break;
-                                              case "To-do":
-                                                colorstatus = Colors.blue;
-                                                break;
-                                              case "Resolved":
-                                                colorstatus = Colors.yellow;
-                                                break;
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: taskController.assignByTaskInprogress.length,
+                                  itemBuilder: ((context, index) {
+                                    Color colorstatus;
+                                    switch (Morningtasklist[index].Status) {
+                                      case "In-progress":
+                                        colorstatus = Colors.red;
+                                        break;
+                                      case "To-do":
+                                        colorstatus = Colors.blue;
+                                        break;
+                                      case "Resolved":
+                                        colorstatus = Colors.yellow;
+                                        break;
 
-                                              default:
-                                                colorstatus = Colors.black;
-                                            }
+                                      default:
+                                        colorstatus = Colors.black;
+                                    }
 
-                                            return Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  vertical: 10, horizontal: 20),
-                                              child: Column(
-                                                children: [
-                                                  InkWell(
-                                                    onTap: () async {
-                                                      TaskModel task = await TaskModel(
-                                                        id: taskController.assignByTaskInprogress[index].id,
-                                                        userId: taskController.assignByTaskInprogress[index].userId,
-                                                        taskName: taskController.assignByTaskInprogress[index].taskName,
-                                                        task_owner: taskController.assignByTaskInprogress[index].task_owner,
-                                                        description:taskController.assignByTaskInprogress[index].description,
-                                                        status:taskController.assignByTaskInprogress[index].status,
-                                                        subTask:taskController.assignByTaskInprogress[index].subTask,
-                                                        priority:taskController.assignByTaskInprogress[index].priority,
-                                                        startDate:taskController.assignByTaskInprogress[index].startDate,
-                                                        endDate:taskController.assignByTaskInprogress[index].endDate,
-                                                        assignId: taskController.assignByTaskInprogress[index].assignId,
-                                                        notifyId: taskController.assignByTaskInprogress[index].notifyId,
-                                                        createdAt:  taskController.assignByTaskInprogress[index].createdAt,
-                                                        updatedAt:  taskController.assignByTaskInprogress[index].updatedAt,
-                                                        userName: taskController.assignByTaskInprogress[index].userName,
-                                                        notify_names: taskController.assignByTaskInprogress[index].notify_names,
-                                                      );
-                                                      taskController.fetchComments(task.id);
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 20),
+                                      child: Column(
+                                        children: [
+                                          InkWell(
+                                            onTap: () async {
+                                              TaskModel task = await TaskModel(
+                                                id: taskController.assignByTaskInprogress[index].id,
+                                                userId: taskController.assignByTaskInprogress[index].userId,
+                                                taskName: taskController.assignByTaskInprogress[index].taskName,
+                                                task_owner: taskController.assignByTaskInprogress[index].task_owner,
+                                                description:taskController.assignByTaskInprogress[index].description,
+                                                status:taskController.assignByTaskInprogress[index].status,
+                                                projectId:taskController.assignByTaskInprogress[index].projectId,
+                                                projectName:taskController.assignByTaskInprogress[index].projectName,
+                                                subTask:taskController.assignByTaskInprogress[index].subTask,
+                                                priority:taskController.assignByTaskInprogress[index].priority,
+                                                startDate:taskController.assignByTaskInprogress[index].startDate,
+                                                endDate:taskController.assignByTaskInprogress[index].endDate,
+                                                assignId: taskController.assignByTaskInprogress[index].assignId,
+                                                notifyId: taskController.assignByTaskInprogress[index].notifyId,
+                                                createdAt:  taskController.assignByTaskInprogress[index].createdAt,
+                                                updatedAt:  taskController.assignByTaskInprogress[index].updatedAt,
+                                                userName: taskController.assignByTaskInprogress[index].userName,
+                                                notify_names: taskController.assignByTaskInprogress[index].notify_names,
+                                              );
+                                              taskController.fetchComments(task.id);
 
 
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: ((context) =>
-                                                                  Taskpageprogress(
-                                                                      task:task
-                                                                  ))));
-                                                    },
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: const BorderRadius.only(
-                                                            topRight: Radius.circular(12.0),
-                                                            topLeft: Radius.circular(12.0),
-                                                          ),
-                                                          color:
-                                                          Morningtasklist[index].isselected
-                                                              ? const Color(0xFF68B984)
-                                                              : chooseCardColor(
-                                                              Morningtasklist[index]
-                                                                  .Priority)),
-                                                      width: width! - 30,
-                                                      height: 260,
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.only(
-                                                            left: 20, top: 10, right: 20),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                          CrossAxisAlignment.start,
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                              children: [
-                                                                Flexible(
-                                                                  child: Text(
-                                                                    taskController.assignByTaskInprogress[index].taskName,
-                                                                    maxLines: 1,
-                                                                    style: const TextStyle(
-                                                                        overflow: TextOverflow.ellipsis,
-
-                                                                        color: BLACKCOLOR,
-                                                                        fontSize: 24,
-                                                                        fontWeight:
-                                                                        FontWeight.w800),
-                                                                  ),
-                                                                ),
-                                                                InkWell(
-                                                                  // onTap: (() => Navigator.push(
-                                                                  //     context,
-                                                                  //     MaterialPageRoute(
-                                                                  //         builder: ((context) =>
-                                                                  //             Taskpageprogress())
-                                                                  //             )
-                                                                  //             )
-                                                                  //             ),
-                                                                  child: Container(
-                                                                    decoration: BoxDecoration(
-                                                                      borderRadius:
-                                                                      BorderRadius.circular(12),
-                                                                      color: taskController.assignByTaskInprogress[index].status == "In-progress"
-                                                                          ? Colors.blue
-                                                                          : taskController.assignByTaskInprogress[index].status  == "To-do"
-                                                                          ? Colors.amber
-                                                                          : taskController.assignByTaskInprogress[index].status == "Resolved" ? Colors.pink : Colors.lime,
-                                                                    ),
-                                                                    width: 90,
-                                                                    height: 40,
-                                                                    child: Center(
-                                                                        child: Text(
-                                                                          taskController.assignByTaskInprogress[index].status,
-                                                                          style: const TextStyle(
-                                                                              color:
-                                                                              BUTTONTEXTCOLOR),
-                                                                        )),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 10,
-                                                            ),
-                                                            Text(
-                                                              taskController.assignByTaskInprogress[index].description,
-                                                              style: const TextStyle(
-                                                                  color: BLACKCOLOR,
-                                                                  fontSize: 18,
-                                                                  fontWeight: FontWeight.w400),
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 15,
-                                                            ),
-                                                            // Row(
-                                                            //   children: [
-                                                            //     Icon(
-                                                            //       Icons.alarm,
-                                                            //       color: BLACKCOLOR,
-                                                            //     ),
-                                                            //     SizedBox(
-                                                            //       width: 10,
-                                                            //     ),
-                                                            //     Text(
-                                                            //       Morningtasklist[index]
-                                                            //           .TimeScheduleFromtime,
-                                                            //       style: TextStyle(
-                                                            //           color: BLACKCOLOR,
-                                                            //           fontSize: 16,
-                                                            //           fontWeight:
-                                                            //               FontWeight.w400),
-                                                            //     ),
-                                                            //     Text(
-                                                            //       Morningtasklist[index]
-                                                            //           .TimeScheduleTotime,
-                                                            //       style: TextStyle(
-                                                            //           color: BLACKCOLOR,
-                                                            //           fontSize: 16,
-                                                            //           fontWeight:
-                                                            //               FontWeight.w400),
-                                                            //     ),
-                                                            //   ],
-                                                            // ),
-
-                                                            // SizedBox(
-                                                            //   height: 10,
-                                                            // ),
-                                                            Row(
-                                                              children: [
-                                                                SizedBox(
-                                                                  width: 25,
-                                                                  height: 25,
-                                                                  child: Image.asset(
-                                                                    ASSIGNTOYOU,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding:
-                                                                  const EdgeInsets.only(
-                                                                      left: 10),
-                                                                  child: Row(
-                                                                    crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
-                                                                    mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                    children: [
-                                                                      for(int i=0;i<taskController.assignByTaskInprogress[index].userName.length;i++)
-                                                                        SizedBox(
-                                                                          height: 35,
-                                                                          width: 35,
-                                                                          child: TextAvatar(
-                                                                            textColor:
-                                                                            Colors.white,
-                                                                            shape: Shape.Circular,
-                                                                            text:
-                                                                            "${taskController.assignByTaskInprogress[index].userName[i].firstName} ${taskController.assignByTaskInprogress[index].userName[i].lastName}",
-                                                                            fontSize: 14,
-                                                                            numberLetters: 2,
-                                                                          ),
-                                                                        ),
-                                                                      // const SizedBox(
-                                                                      //   width: 1,
-                                                                      // ),
-                                                                      // SizedBox(
-                                                                      //   height: 35,
-                                                                      //   width: 35,
-                                                                      //   child: TextAvatar(
-                                                                      //     textColor:
-                                                                      //     Colors.white,
-                                                                      //     shape: Shape.Circular,
-                                                                      //     text: "Bhive team",
-                                                                      //     fontSize: 14,
-                                                                      //     numberLetters: 2,
-                                                                      //   ),
-                                                                      // ),
-                                                                      // const SizedBox(
-                                                                      //   width: 1,
-                                                                      // ),
-                                                                      // SizedBox(
-                                                                      //   height: 35,
-                                                                      //   width: 35,
-                                                                      //   child: TextAvatar(
-                                                                      //     textColor:
-                                                                      //     Colors.white,
-                                                                      //     shape: Shape.Circular,
-                                                                      //     text: "Vicky b",
-                                                                      //     fontSize: 14,
-                                                                      //     numberLetters: 2,
-                                                                      //   ),
-                                                                      // ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-
-                                                            const SizedBox(
-                                                              height: 15,
-                                                            ),
-                                                            Row(
-                                                              children: [
-                                                                const Icon(Icons.notifications,
-                                                                    color: BLACKCOLOR),
-                                                                Padding(
-                                                                  padding:
-                                                                  const EdgeInsets.only(
-                                                                      left: 10),
-                                                                  child: Row(
-                                                                    crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
-                                                                    mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                    children: [
-                                                                      for(int i=0;i<taskController.assignByTaskInprogress[index].notify_names.length;i++)
-                                                                        SizedBox(
-                                                                          height: 35,
-                                                                          width: 35,
-                                                                          child: TextAvatar(
-                                                                            textColor:
-                                                                            Colors.white,
-                                                                            shape: Shape.Circular,
-                                                                            text:
-                                                                            "${taskController.assignByTaskInprogress[index].notify_names[i].firstName} ${taskController.assignByTaskInprogress[index].notify_names[i].lastName}",
-                                                                            fontSize: 14,
-                                                                            numberLetters: 2,
-                                                                          ),
-                                                                        ),
-                                                                      // const SizedBox(
-                                                                      //   width: 1,
-                                                                      // ),
-                                                                      // SizedBox(
-                                                                      //   height: 35,
-                                                                      //   width: 35,
-                                                                      //   child: TextAvatar(
-                                                                      //     textColor:
-                                                                      //     Colors.white,
-                                                                      //     shape: Shape.Circular,
-                                                                      //     text: "Bhive team",
-                                                                      //     fontSize: 14,
-                                                                      //     numberLetters: 2,
-                                                                      //   ),
-                                                                      // ),
-                                                                      // const SizedBox(
-                                                                      //   width: 1,
-                                                                      // ),
-                                                                      // SizedBox(
-                                                                      //   height: 35,
-                                                                      //   width: 35,
-                                                                      //   child: TextAvatar(
-                                                                      //     textColor:
-                                                                      //     Colors.white,
-                                                                      //     shape: Shape.Circular,
-                                                                      //     text: "Vicky b",
-                                                                      //     fontSize: 14,
-                                                                      //     numberLetters: 2,
-                                                                      //   ),
-                                                                      // ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 15,
-                                                            ),
-                                                            Row(
-                                                              children: [
-                                                                const Icon(Icons.calendar_today,
-                                                                    color: BLACKCOLOR),
-                                                                const SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                Text(
-                                                                  taskController.assignByTaskInprogress[index].startDate +"  -  "+taskController.assignByTaskInprogress[index].endDate,
-                                                                  style: const TextStyle(
-                                                                      color: BLACKCOLOR,
-                                                                      fontSize: 16,
-                                                                      fontWeight:
-                                                                      FontWeight.w400),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: ((context) =>
+                                                          Taskpageprogress(
+                                                              task:task
+                                                          ))));
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius: const BorderRadius.only(
+                                                    topRight: Radius.circular(12.0),
+                                                    topLeft: Radius.circular(12.0),
                                                   ),
-                                                  Container(
-                                                    decoration: const BoxDecoration(
-                                                      borderRadius: BorderRadius.only(
-                                                          bottomRight: Radius.circular(12.0),
-                                                          bottomLeft: Radius.circular(12.0)),
-                                                      color: Color.fromARGB(179, 208, 208, 208),
+                                                  color:
+                                                  Morningtasklist[index].isselected
+                                                      ? const Color(0xFF68B984)
+                                                      : chooseCardColor(
+                                                      Morningtasklist[index]
+                                                          .Priority)),
+                                              width: width! - 30,
+                                              height: 260,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 20, top: 10, right: 20),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                      children: [
+                                                        Flexible(
+                                                          child: Text(
+                                                            taskController.assignByTaskInprogress[index].taskName,
+                                                            maxLines: 1,
+                                                            style: const TextStyle(
+                                                                overflow: TextOverflow.ellipsis,
+
+                                                                color: BLACKCOLOR,
+                                                                fontSize: 24,
+                                                                fontWeight:
+                                                                FontWeight.w800),
+                                                          ),
+                                                        ),
+                                                        InkWell(
+                                                          // onTap: (() => Navigator.push(
+                                                          //     context,
+                                                          //     MaterialPageRoute(
+                                                          //         builder: ((context) =>
+                                                          //             Taskpageprogress())
+                                                          //             )
+                                                          //             )
+                                                          //             ),
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                              BorderRadius.circular(12),
+                                                              color: taskController.assignByTaskInprogress[index].status == "In-progress"
+                                                                  ? Colors.blue
+                                                                  : taskController.assignByTaskInprogress[index].status  == "To-do"
+                                                                  ? Colors.amber
+                                                                  : taskController.assignByTaskInprogress[index].status == "Resolved" ? Colors.pink : Colors.lime,
+                                                            ),
+                                                            width: 90,
+                                                            height: 40,
+                                                            child: Center(
+                                                                child: Text(
+                                                                  taskController.assignByTaskInprogress[index].status,
+                                                                  style: const TextStyle(
+                                                                      color:
+                                                                      BUTTONTEXTCOLOR),
+                                                                )),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    width: width! - 30,
-                                                    height: 50,
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(
-                                                          left: 10, right: 10),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Row(
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      taskController.assignByTaskInprogress[index].description,
+                                                      style: const TextStyle(
+                                                          color: BLACKCOLOR,
+                                                          fontSize: 18,
+                                                          fontWeight: FontWeight.w400),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 15,
+                                                    ),
+                                                    // Row(
+                                                    //   children: [
+                                                    //     Icon(
+                                                    //       Icons.alarm,
+                                                    //       color: BLACKCOLOR,
+                                                    //     ),
+                                                    //     SizedBox(
+                                                    //       width: 10,
+                                                    //     ),
+                                                    //     Text(
+                                                    //       Morningtasklist[index]
+                                                    //           .TimeScheduleFromtime,
+                                                    //       style: TextStyle(
+                                                    //           color: BLACKCOLOR,
+                                                    //           fontSize: 16,
+                                                    //           fontWeight:
+                                                    //               FontWeight.w400),
+                                                    //     ),
+                                                    //     Text(
+                                                    //       Morningtasklist[index]
+                                                    //           .TimeScheduleTotime,
+                                                    //       style: TextStyle(
+                                                    //           color: BLACKCOLOR,
+                                                    //           fontSize: 16,
+                                                    //           fontWeight:
+                                                    //               FontWeight.w400),
+                                                    //     ),
+                                                    //   ],
+                                                    // ),
+
+                                                    // SizedBox(
+                                                    //   height: 10,
+                                                    // ),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 25,
+                                                          height: 25,
+                                                          child: Image.asset(
+                                                            ASSIGNTOYOU,
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10),
+                                                          child: Row(
+                                                            crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
                                                             children: [
-                                                              Text(
-                                                                Morningtasklist[index]
-                                                                    .isselected
-                                                                    ? 'Done'
-                                                                    : taskController.assignByTaskInprogress[index].priority,
-                                                                style: const TextStyle(
-                                                                  fontSize: 18,
-                                                                ),
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets.only(
-                                                                    left: 60),
-                                                                child: index % 1 == 1
-                                                                    ? Container()
-                                                                    : Container(
-                                                                  decoration: BoxDecoration(
-                                                                      borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                          30),
-                                                                      border: Border.all(
-                                                                          color: const Color(
-                                                                              0xffe94c89))),
-                                                                  child: Padding(
-                                                                    padding:
-                                                                    EdgeInsets.all(
-                                                                        8.0),
-                                                                    child: Text(
-                                                                        Morningtasklist[
-                                                                        index]
-                                                                            .isselected
-                                                                            ? "Done"
-                                                                            : "Overdue"),
+                                                              for(int i=0;i<taskController.assignByTaskInprogress[index].userName.length;i++)
+                                                                SizedBox(
+                                                                  height: 35,
+                                                                  width: 35,
+                                                                  child: TextAvatar(
+                                                                    textColor:
+                                                                    Colors.white,
+                                                                    shape: Shape.Circular,
+                                                                    text:
+                                                                    "${taskController.assignByTaskInprogress[index].userName[i].firstName} ${taskController.assignByTaskInprogress[index].userName[i].lastName}",
+                                                                    fontSize: 14,
+                                                                    numberLetters: 2,
                                                                   ),
                                                                 ),
-                                                              ),
+                                                              // const SizedBox(
+                                                              //   width: 1,
+                                                              // ),
+                                                              // SizedBox(
+                                                              //   height: 35,
+                                                              //   width: 35,
+                                                              //   child: TextAvatar(
+                                                              //     textColor:
+                                                              //     Colors.white,
+                                                              //     shape: Shape.Circular,
+                                                              //     text: "Bhive team",
+                                                              //     fontSize: 14,
+                                                              //     numberLetters: 2,
+                                                              //   ),
+                                                              // ),
+                                                              // const SizedBox(
+                                                              //   width: 1,
+                                                              // ),
+                                                              // SizedBox(
+                                                              //   height: 35,
+                                                              //   width: 35,
+                                                              //   child: TextAvatar(
+                                                              //     textColor:
+                                                              //     Colors.white,
+                                                              //     shape: Shape.Circular,
+                                                              //     text: "Vicky b",
+                                                              //     fontSize: 14,
+                                                              //     numberLetters: 2,
+                                                              //   ),
+                                                              // ),
                                                             ],
                                                           ),
-                                                          IconButton(
-                                                            icon: Morningtasklist[index]
-                                                                .isselected
-                                                                ? const Icon(
-                                                              Icons.check_box,
-                                                              color: Colors.green,
-                                                            )
-                                                                : const Icon(
-                                                              Icons
-                                                                  .check_box_outline_blank,
-                                                              color: Colors.blue,
-                                                            ),
-                                                            onPressed: (() {
-                                                              setState(() {
-                                                                Morningtasklist[index]
-                                                                    .isselected =
-                                                                !Morningtasklist[index]
-                                                                    .isselected;
-                                                              });
-                                                            }),
-                                                          ),
-                                                        ],
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
+
+                                                    const SizedBox(
+                                                      height: 15,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(Icons.notifications,
+                                                            color: BLACKCOLOR),
+                                                        Padding(
+                                                          padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10),
+                                                          child: Row(
+                                                            crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                            children: [
+                                                              for(int i=0;i<taskController.assignByTaskInprogress[index].notify_names.length;i++)
+                                                                SizedBox(
+                                                                  height: 35,
+                                                                  width: 35,
+                                                                  child: TextAvatar(
+                                                                    textColor:
+                                                                    Colors.white,
+                                                                    shape: Shape.Circular,
+                                                                    text:
+                                                                    "${taskController.assignByTaskInprogress[index].notify_names[i].firstName} ${taskController.assignByTaskInprogress[index].notify_names[i].lastName}",
+                                                                    fontSize: 14,
+                                                                    numberLetters: 2,
+                                                                  ),
+                                                                ),
+                                                              // const SizedBox(
+                                                              //   width: 1,
+                                                              // ),
+                                                              // SizedBox(
+                                                              //   height: 35,
+                                                              //   width: 35,
+                                                              //   child: TextAvatar(
+                                                              //     textColor:
+                                                              //     Colors.white,
+                                                              //     shape: Shape.Circular,
+                                                              //     text: "Bhive team",
+                                                              //     fontSize: 14,
+                                                              //     numberLetters: 2,
+                                                              //   ),
+                                                              // ),
+                                                              // const SizedBox(
+                                                              //   width: 1,
+                                                              // ),
+                                                              // SizedBox(
+                                                              //   height: 35,
+                                                              //   width: 35,
+                                                              //   child: TextAvatar(
+                                                              //     textColor:
+                                                              //     Colors.white,
+                                                              //     shape: Shape.Circular,
+                                                              //     text: "Vicky b",
+                                                              //     fontSize: 14,
+                                                              //     numberLetters: 2,
+                                                              //   ),
+                                                              // ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 15,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(Icons.calendar_today,
+                                                            color: BLACKCOLOR),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          taskController.assignByTaskInprogress[index].startDate +"  -  "+taskController.assignByTaskInprogress[index].endDate,
+                                                          style: const TextStyle(
+                                                              color: BLACKCOLOR,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                              FontWeight.w400),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                  bottomRight: Radius.circular(12.0),
+                                                  bottomLeft: Radius.circular(12.0)),
+                                              color: Color.fromARGB(179, 208, 208, 208),
+                                            ),
+                                            width: width! - 30,
+                                            height: 50,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, right: 10),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                    taskController.assignByTaskInprogress[index].priority,
+                                                        style: const TextStyle(
+                                                          fontSize: 18,
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding: const EdgeInsets.only(
+                                                            left: 60),
+                                                        child: index % 1 == 1
+                                                            ? Container()
+                                                            : Container(
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  30),
+                                                              border: Border.all(
+                                                                  color: const Color(
+                                                                      0xffe94c89))),
+                                                          child: Padding(
+                                                            padding:
+                                                            EdgeInsets.all(
+                                                                8.0),
+                                                            child: Text(taskController.assignByTaskInprogress[index].status),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  IconButton(
+                                                    icon:taskController.assignByTaskInprogress[index].status == "completed"
+                                                        ? const Icon(
+                                                      Icons.check_box,
+                                                      color: Colors.green,
+                                                    )
+                                                        : const Icon(
+                                                      Icons
+                                                          .check_box_outline_blank,
+                                                      color: Colors.blue,
+                                                    ),
+                                                    onPressed: (() {
+                                                      setState(() {
+                                                        taskController.selectedItemstatus.value = "completed";
+
+                                                        taskController.taskUpdate(taskController.myTaskList[index].id, "completed");
+
+                                                        // Morningtasklist[index].isselected = !Morningtasklist[index].isselected;
+                                                        taskController.fetchTasks();
+
+                                                      });
+                                                    }),
                                                   ),
                                                 ],
                                               ),
-                                            );
-                                          })))
-                                ],
-                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  })),
                             );
                           }
 
@@ -1801,6 +1798,8 @@ class _Assigned_to_youState extends State<Assigned_to_you>
                                                 task_owner: taskController.assignByTaskOverDue[index].task_owner,
                                                 description:taskController.assignByTaskOverDue[index].description,
                                                 status:taskController.assignByTaskOverDue[index].status,
+                                                projectId:taskController.assignByTaskOverDue[index].projectId,
+                                                projectName:taskController.assignByTaskOverDue[index].projectName,
                                                 subTask:taskController.assignByTaskOverDue[index].subTask,
                                                 priority:taskController.assignByTaskOverDue[index].priority,
                                                 startDate:taskController.assignByTaskOverDue[index].startDate,
@@ -2166,10 +2165,12 @@ class _Assigned_to_youState extends State<Assigned_to_you>
                                                     ),
                                                     onPressed: (() {
                                                       setState(() {
-                                                        Morningtasklist[index]
-                                                            .isselected =
-                                                        !Morningtasklist[index]
-                                                            .isselected;
+                                                        taskController.selectedItemstatus.value = "completed";
+
+                                                        taskController.taskUpdate(taskController.myTaskList[index].id, "completed");
+
+                                                        // Morningtasklist[index].isselected = !Morningtasklist[index].isselected;
+                                                        taskController.fetchTasks();
                                                       });
                                                     }),
                                                   ),

@@ -131,13 +131,13 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children:  [
                         Text("Project"),
                         SizedBox(
                           height: 5,
                         ),
                         Text(
-                          "Gad",
+                          "${widget.task.projectName}",
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -433,7 +433,7 @@ class _TaskpageprogressState extends State<Taskpageprogress> {
                         ],
                       ),
                     ),
-                    // SizedBox(
+            // SizedBox(
                     //     height: 45,
                     //     width: 45,
                     //     child: Card(
