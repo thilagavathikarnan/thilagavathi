@@ -1,11 +1,11 @@
 class TeamModel {
   final int id;
-  final String userId;
+  final int userId;
   final String name;
   final String designation;
   final String email;
-  final String user;
-  final String phone;
+  final int user;
+  final int phone;
   final DateTime createdAt;
   final DateTime updatedAt;
 

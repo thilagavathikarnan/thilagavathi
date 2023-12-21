@@ -1,7 +1,7 @@
 // project_model.dart
 class ProjectModel {
-  final String id;
-  final String userId;
+  final int id;
+  final int userId;
   final String projectName;
   final List<TeamMember> teamList;
   // final DateTime createdAt;
